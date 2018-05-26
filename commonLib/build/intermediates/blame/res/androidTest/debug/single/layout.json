@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/layout/bottom_nav_right_menu.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/layout/bottom_nav_right_menu.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/layout/bottom_nav_right_menu_item.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/layout/bottom_nav_right_menu_item.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/layout/bottom_nav.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/layout/bottom_nav.xml"
+    }
+]

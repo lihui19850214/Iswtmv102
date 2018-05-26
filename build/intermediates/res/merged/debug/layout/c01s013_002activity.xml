@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView android:text="卸下设备" style="@style/FunctionalTitleTextViewStyle" />
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="left|center"
+                    android:text="卸下原因"/>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent">
+                <LinearLayout
+                        android:id="@+id/ll_01"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border"
+                        android:clickable="true"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:id="@+id/tv_01"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center_vertical" />
+
+                    <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|center_vertical"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/arrow" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="left|center"
+                    android:text="加工零部件"/>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent">
+                <LinearLayout
+                        android:id="@+id/ll_02"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border"
+                        android:clickable="true"
+                        android:orientation="horizontal">
+
+                    <TextView
+                            android:id="@+id/tv_02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="5dp"
+                            android:textSize="@dimen/daoju_all"
+                            android:textColor="@color/baseColor"
+                            android:gravity="center_vertical" />
+
+                    <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                    <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|center_vertical"
+                            android:layout_marginRight="20dp"
+                            android:src="@drawable/arrow" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="left|center"
+                    android:text="加工数量"/>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent">
+                <EditText
+                        android:id="@+id/et_01"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/border"
+                        android:inputType="number"
+                        android:maxLength="6"
+                        android:numeric="integer"
+                        android:singleLine="true"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/daoju_all" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View style="@style/View_1"/>
+        <View style="@style/View_1"/>
+        <View style="@style/View_1"/>
+        <View style="@style/View_1"/>
+        <View style="@style/View_1"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button android:id="@+id/btn_return" android:text="@string/returnBy" android:onClick="cancel" style="@style/BottomButtonStyle" />
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button android:id="@+id/btn_confirm" android:text="@string/disboard" android:onClick="appConfirm" style="@style/BottomButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

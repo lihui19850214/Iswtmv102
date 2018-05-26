@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="devices">
+        <item>合成刀具：HCDJ0001 选择装入设备：</item>
+        <item>S01</item>
+        <item>S02</item>
+        <item>S03</item>       
+    </string-array>
+    <string-array name="RemoveReason">
+        <item>正常卸下</item>
+        <item>加工尺寸不满足</item>
+        <item>表面质量不满足</item>
+        <item>机床原因</item>
+        <item>其他</item>
+    </string-array>
+    <string-array name="QueryType">
+        <item>库位标签</item>
+        <item>单品刀</item>
+        <item>合成刀具</item>
+        <item>员工卡</item>
+        <item>设备</item>
+        <item>容器</item>
+    </string-array>
+    <string-array name="ComponentsType">
+        <item>零部件01</item>
+    </string-array>
+    <string-array name="repairway">
+        <item>厂内复磨</item>
+        <item>厂内维修</item>
+        <item>厂内图层</item>
+        <item>出厂图层</item>
+        <item>出厂维修</item>
+    </string-array>
+    <string-array name="ReplacementReason">
+        <item>扩能</item>
+        <item>外借</item>
+        <item>工艺试验</item>
+    </string-array>
+    <string-array name="ScraptReason">
+        <item>断刀</item>
+        <item>丢刀</item>
+        <item>到寿</item>
+        <item>其他</item>
+    </string-array>
+    <string-array name="containerCarrierType">
+        <item>备用刀</item>
+        <item>一次性报废</item>
+        <item>待分拣容器</item>
+        <item>厂内待刃磨</item>
+        <item>厂外待刃磨</item>
+        <item>刃磨完毕</item>
+        <item>刃磨报废</item>
+        <item>待涂层</item>
+        <item>库房报废</item>
+        <item>其他</item>
+    </string-array>
+</resources>

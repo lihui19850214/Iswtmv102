@@ -1,0 +1,59 @@
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/table_height"
+    android:orientation="horizontal"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:background="@drawable/table_border_c"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/table_height"
+        android:layout_weight="0.9"
+        android:orientation="horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+
+        <TextView
+            android:id="@+id/tvNum"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/table_height"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:textSize="@dimen/table_textsize"
+            android:textColor="@color/baseColor"
+            android:gravity="center"/>
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="@dimen/table_height"
+            android:background="@color/baseColor"/>
+
+        <TextView
+            android:id="@+id/tvHeChengNum"
+            android:layout_width="0dp"
+            android:layout_gravity="center"
+            android:layout_height="@dimen/table_height"
+            android:textSize="@dimen/table_textsize"
+            android:layout_weight="2"
+            android:textColor="@color/baseColor"
+            android:text=""
+            android:background="@null"
+            android:gravity="center"/>
+        <ImageView
+            android:layout_width="1dp"
+            android:layout_height="@dimen/table_height"
+            android:background="@color/baseColor"/>
+
+        <TextView
+            android:id="@+id/tvDelete"
+            android:layout_width="0dp"
+            android:layout_gravity="center"
+            android:layout_height="@dimen/table_height"
+            android:layout_weight="1"
+            android:textColor="@color/baseColor"
+            android:textSize="@dimen/table_textsize"
+            android:background="@null"
+            android:gravity="center"/>
+
+
+    </LinearLayout>
+</LinearLayout>

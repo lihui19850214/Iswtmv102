@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="backgroundcolor">#F1F1F3</color>
+    <color name="hintcolor">#CCCCCC</color>
+    <color name="itemtextColor">#000000</color>
+    <!--<color name="edittextColor">#000000</color>-->
+    <color name="textviewcolor">#959597</color>
+
+    <!-- FanLL Start -->
+    <color name="baseColor">#2E75B3</color><!-- #313d9c -->
+    <color name="textColor">#FFFFFF</color>
+    <color name="tong">#d60606</color>
+    <color name="clickColor">#1e90ff</color>
+    <color name="edittextColor">#de434242</color>
+    <color name="transport">#00ffffff</color>
+</resources>

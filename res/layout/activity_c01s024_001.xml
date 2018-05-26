@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/OverallSituationLinerLayoutStyle">
+
+    <TextView android:text="@string/C01S024" style="@style/FunctionalTitleTextViewStyle" />
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
+        <TextView
+                style="@style/MiddleTextPromptStule"
+                android:layout_height="wrap_content"
+                android:gravity="start|bottom"
+                android:text="@string/c01s024_001_001"/>
+
+
+        <LinearLayout
+                android:id="@+id/cailiaoInfo"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="8"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="材料号"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_cailiaoInfo_materialNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="最后执行操作"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_cailiaoInfo_finalExecution"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="操作者"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_cailiaoInfo_operator"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="操作时间"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_cailiaoInfo_operationTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="修磨次数"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_cailiaoInfo_grindingTimes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="累计加工量"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_cailiaoInfo_cumulativeAmountOfProcessing"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+                android:id="@+id/hechengInfo"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="8"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="合成刀具编码"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_hechengInfo_syntheticToolCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="最后执行操作"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_hechengInfo_finalExecution"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="操作者"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_hechengInfo_operator"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="操作时间"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_hechengInfo_operationTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="修磨次数"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_hechengInfo_grindingTimes"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="累计加工量"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_hechengInfo_cumulativeAmountOfProcessing"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+                android:id="@+id/equipmentInfo"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="8"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="设备名称"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_equipmentInfo_equipmentName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+                android:id="@+id/personnelInfo"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="8"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="员工号"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_personnelInfo_employeeNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="真实姓名"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_personnelInfo_realName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:text="部门"/>
+
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:id="@+id/tv_personnelInfo_department"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/text_content_size"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="10dp"
+                            android:background="@drawable/border"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button android:id="@+id/btnCancel" android:text="@string/cancel" android:onClick="btnCancel" style="@style/BottomButtonStyle" />
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button android:id="@+id/btnScan" android:text="@string/scan" style="@style/BottomButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

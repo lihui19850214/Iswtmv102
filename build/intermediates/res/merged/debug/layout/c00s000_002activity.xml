@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <RelativeLayout style="@style/laouthead">
+
+        <TextView
+            style="@style/title"
+            android:background="@color/baseColor"
+            android:text="系统菜单"
+            android:textColor="@color/textColor"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/tv_01"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:textColor="@color/textColor" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp">
+        <GridView
+            android:id="@+id/gv_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:stretchMode="columnWidth"
+            android:numColumns = "2"
+            android:scrollbars="none"
+            android:gravity="center"
+            android:listSelector="@drawable/x_selectshape3"
+            android:fastScrollEnabled="true"
+            />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView android:text="卸下设备" style="@style/FunctionalTitleTextViewStyle" />
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+        <TextView
+                android:text="请扫描要卸下设备的合成刀具标签"
+                android:layout_weight="2"
+                style="@style/MiddleTextPromptStule" />
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                >
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="left"
+                    android:text="合成刀具编码"/>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:id="@+id/tv_01"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_content_size"
+                />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                >
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="left"
+                    android:text="对应设备名称"/>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:id="@+id/tv_02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_content_size"
+                />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                >
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="left"
+                    android:text="对应轴号"/>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:id="@+id/tv_03"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_content_size"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                >
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="left"
+                    android:text="对应工序"/>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:id="@+id/tv_04"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_content_size"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View style="@style/View_1"/>
+
+        <TextView
+                android:id="@+id/btn_scan"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:background="@drawable/border_c"
+                android:text="@string/scan"
+                android:textColor="@color/baseColor"
+                android:gravity="center"
+                android:layout_marginBottom="20dp"
+                android:textSize="@dimen/button_textsize"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"/>
+
+        <View style="@style/View_1"/>
+        <View style="@style/View_1"/>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button android:id="@+id/btn_return" android:text="@string/returnBy" style="@style/BottomButtonStyle" />
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button android:id="@+id/btn_confirm" android:text="@string/confirm" style="@style/BottomButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/OverallSituationLinerLayoutStyle">
+
+    <TextView
+        android:text="@string/C01S018"
+        style="@style/FunctionalTitleTextViewStyle" />
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TableRow style="TableRowStyle">
+
+                <TextView
+                    android:text="@string/serialNumber"
+                    android:layout_height="40dp"
+                    style="@style/TableRowTextViewStyle" />
+
+                <TextView
+                    android:text="@string/materialNumber"
+                    style="@style/TableRowTextViewStyle" />
+
+                <TextView
+                    android:text="@string/singleProductCode"
+                    android:layout_weight="1.5"
+                    style="@style/TableRowTextViewStyle" />
+
+            </TableRow>
+
+        </TableLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:fadingEdge="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_01"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button
+            android:text="@string/returnBy"
+            android:onClick="btnReturn"
+            style="@style/BottomButtonStyle" />
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button
+            android:text="@string/confirm"
+            android:onClick="btnConfirm"
+            style="@style/BottomButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

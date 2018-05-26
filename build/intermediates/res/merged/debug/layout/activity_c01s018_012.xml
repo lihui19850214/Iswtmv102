@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/OverallSituationLinerLayoutStyle">
+
+    <TextView
+        android:text="@string/C01S018"
+        style="@style/FunctionalTitleTextViewStyle" />
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp">
+
+            <TableRow style="TableRowStyle">
+
+                <TextView
+                    android:text="@string/operate"
+                    android:layout_height="40dp"
+                    style="@style/TableRowTextViewStyle" />
+
+                <TextView
+                    android:text="@string/materialNumber"
+                    style="@style/TableRowTextViewStyle" />
+
+                <TextView
+                    android:text="@string/singleProductCode"
+                    android:layout_weight="1.5"
+                    style="@style/TableRowTextViewStyle" />
+
+            </TableRow>
+
+        </TableLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:scrollbars="vertical"
+            android:fadingEdge="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_01"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/btnScan"
+            android:text="@string/scan"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            style="@style/OneButtonStyle" />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button
+            android:text="@string/returnBy"
+            android:onClick="btnReturn"
+            style="@style/BottomButtonStyle" />
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button
+            android:text="@string/next"
+            android:onClick="btnNext"
+            style="@style/BottomButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

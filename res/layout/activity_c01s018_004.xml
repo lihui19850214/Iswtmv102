@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/OverallSituationLinerLayoutStyle">
+
+
+    <TextView android:text="@string/C01S018" style="@style/FunctionalTitleTextViewStyle"/>
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle" android:gravity="center_vertical">
+        <TextView
+                android:text="修磨成功"
+                android:drawableTop="@drawable/success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textColor="@color/baseColor"
+                android:gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button android:id="@+id/btnComplete" android:text="@string/complete" style="@style/BottomButtonStyle"/>
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button android:id="@+id/btnGoOn" android:text="@string/keepOn" style="@style/BottomButtonStyle"/>
+
+    </LinearLayout>
+</LinearLayout>

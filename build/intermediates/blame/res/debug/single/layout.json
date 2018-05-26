@@ -1,0 +1,626 @@
+[
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s002_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s002_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_list_menu_item_layout.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_list_menu_item_layout.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s008_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s008_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_daojuzuzhuang_data_c.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_daojuzuzhuang_data_c.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_c01s017_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_c01s017_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c01s013_002activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c01s013_002activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c00s000_010activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c00s000_010activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s005_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s005_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s000_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s000_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_c01s003_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_c01s003_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_daojuzuzhuang.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_daojuzuzhuang.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s012_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s012_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s009_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s009_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s000_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s000_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_c01s018_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_c01s018_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_alert.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_alert.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_action_bar_title_item.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_action_bar_title_item.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s012_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s012_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_c01s019_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_c01s019_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s018_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s018_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_action_bar_home.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_action_bar_home.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s019_000.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s019_000.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_yiti_daojubaofei.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_yiti_daojubaofei.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s018_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s018_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_spanner.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_spanner.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s010_004.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s010_004.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c02s001_001activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c02s001_001activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c00s000_002activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c00s000_002activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c00s000_006activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c00s000_006activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/bottom_nav_right_menu_item.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/default/res/layout/bottom_nav_right_menu_item.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s008_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s008_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_action_bar_decor_overlay.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_action_bar_decor_overlay.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_tongdao_daojubaofei.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_tongdao_daojubaofei.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c00s000_003activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c00s000_003activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/updatemanager.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/updatemanager.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_list_menu_item_radio.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_list_menu_item_radio.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_c00s000_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_c00s000_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c01s004_004activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c01s004_004activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_expanded_menu_layout.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_expanded_menu_layout.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_action_bar_tab.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_action_bar_tab.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s000_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s000_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_c01s019_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_c01s019_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s019_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s019_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/bottom_nav_right_menu.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/default/res/layout/bottom_nav_right_menu.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s002_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s002_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_spinner_text.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_spinner_text.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_action_bar_decor_include.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_action_bar_decor_include.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_c01s017_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_c01s017_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_changwaixiumo.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_changwaixiumo.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s001_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s001_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_daojuzuzhuang_1.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_daojuzuzhuang_1.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_lv.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_lv.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_daojubaofei.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_daojubaofei.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s019_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s019_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_changneixiumo2.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_changneixiumo2.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s010_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s010_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s018_013.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s018_013.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_huanzhuang_static.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_huanzhuang_static.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_daojuzuzhuang_c.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_daojuzuzhuang_c.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s001_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s001_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s001_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s001_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s002_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s002_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c00s000_015activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c00s000_015activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s005_002_1.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s005_002_1.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_c00s000_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_c00s000_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s005_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s005_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/authorization.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/authorization.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c01s011_003activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c01s011_003activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_bulingchuku_static.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_bulingchuku_static.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s007_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s007_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_action_bar_view_list_nav_layout.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_action_bar_view_list_nav_layout.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_c01s005_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_c01s005_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_sign.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_sign.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s018_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s018_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/options.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/options.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_yiti_daojubaofei_static.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_yiti_daojubaofei_static.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_popup_menu_item_layout.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_popup_menu_item_layout.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s024_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s024_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/bottom_nav.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/default/res/layout/bottom_nav.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/adapter_c03s001_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/adapter_c03s001_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_alert_table.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_alert_table.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_baofei1_c.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_baofei1_c.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/spinner_c03s004_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/spinner_c03s004_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s018_004.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s018_004.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_dialog_fujulist.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_dialog_fujulist.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_c03s004_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_c03s004_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_c01s005_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_c01s005_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_huanzhuang.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_huanzhuang.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_action_mode_close_item.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_action_mode_close_item.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_changneixiumo.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_changneixiumo.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s015_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s015_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/spinner_style.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/spinner_style.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c01s013_004activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c01s013_004activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01_s009_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01_s009_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s003_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s003_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s003_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s003_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_c01s018_012.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_c01s018_012.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c00s000_016activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c00s000_016activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_buling.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_buling.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01_s009_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01_s009_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c01s013_0041activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c01s013_0041activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s024_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s024_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_list_menu_item_icon.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_list_menu_item_icon.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_daojuchaifen_1.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_daojuchaifen_1.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c00s000_001_1activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c00s000_001_1activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s005_002_4.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s005_002_4.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_changwaixiumo2.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_changwaixiumo2.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_c01s007_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_c01s007_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_search_dropdown_item_icons_2line.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_search_dropdown_item_icons_2line.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_c01s020_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_c01s020_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_search_view.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_search_view.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_action_mode_bar.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_action_mode_bar.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_huanlingchuku2.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_huanlingchuku2.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_danpin_daojubaofei_static.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_danpin_daojubaofei_static.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_daojuchaifen_0.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_daojuchaifen_0.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c00s000_004activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c00s000_004activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_action_bar_tabbar.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_action_bar_tabbar.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_list_menu_item_checkbox.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_list_menu_item_checkbox.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_c01s018_001_1.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_c01s018_001_1.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01_s009_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01_s009_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s005_002_2.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s005_002_2.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/support_simple_spinner_dropdown_item.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/support_simple_spinner_dropdown_item.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s004_004.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s004_004.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_baofei2_c.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_baofei2_c.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_bulingchuku.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_bulingchuku.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_c01s001_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_c01s001_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c01s013_003activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c01s013_003activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_c01s019_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_c01s019_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/gridview_layout.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/gridview_layout.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s008_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s008_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s004_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s004_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_dialog_list.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_dialog_list.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c01s013_0021activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c01s013_0021activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s010_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s010_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c02s005_001activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c02s005_001activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_activity_chooser_view_list_item.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_activity_chooser_view_list_item.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_huanling_c.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_huanling_c.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c00s000_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c00s000_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c00s000_001_2activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c00s000_001_2activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s015_003.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s015_003.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s005_002_3.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s005_002_3.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c01s011_002activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c01s011_002activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s019_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s019_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/dialog_c01s017_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/dialog_c01s017_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s001_004.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s001_004.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_action_menu_item_layout.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_action_menu_item_layout.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/aaaa.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/aaaa.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s005_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s005_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/adapter_c01s024_002.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/adapter_c01s024_002.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_danpin_daojubaofei.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_danpin_daojubaofei.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/c01s013_001activity.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/c01s013_001activity.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_action_menu_layout.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_action_menu_layout.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c03s001_001.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c03s001_001.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/abc_activity_chooser_view_include.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/layout/abc_activity_chooser_view_include.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/activity_c01s018_012.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/activity_c01s018_012.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/layout/item_huanlingchuku.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/res/layout/item_huanlingchuku.xml"
+    }
+]

@@ -1,0 +1,4 @@
+#Fri May 25 13:04:30 CST 2018
+base.0=/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/transforms/dex/debug/folders/1000/5/slice_5
+renamed.0=classes.dex
+file.0=/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/transforms/dex/debug/folders/1000/5/slice_5/classes.dex

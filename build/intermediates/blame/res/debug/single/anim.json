@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/anim/abc_fade_out.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/anim/abc_fade_out.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/anim/abc_slide_out_top.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/anim/abc_slide_out_top.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/anim/abc_slide_in_bottom.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/anim/abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/anim/abc_slide_in_top.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/anim/abc_slide_in_top.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/anim/abc_slide_out_bottom.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/anim/abc_slide_out_bottom.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/build/intermediates/res/merged/debug/anim/abc_fade_in.xml",
+        "source": "/Users/storm/.android/build-cache/cad9691c8adf02a4b4c66121d6d8f474f93d69a8/output/res/anim/abc_fade_in.xml"
+    }
+]

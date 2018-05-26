@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/OverallSituationLinerLayoutStyle">
+
+    <TextView
+        android:text="@string/c03s000_001_001"
+        style="@style/FunctionalTitleTextViewStyle" />
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
+        <TextView
+            android:text="@string/c03s001_001_001"
+            android:layout_weight="3"
+            style="@style/MiddleTextPromptStule" />
+
+        <EditText
+            android:id="@+id/et_01"
+            android:hint="@string/c03s001_001_002"
+            android:maxLength="10"
+            android:digits="@string/allowInput"
+            style="@style/MiddleEditTextStyle" />
+
+        <View style="@style/View_1" />
+
+        <LinearLayout style="@style/MiddleTwoButtonLinerLayoutStyle">
+
+            <Button
+                android:id="@+id/btnScan"
+                android:text="@string/scan"
+                style="@style/TwoButtonStyle" />
+
+            <Button
+                android:id="@+id/btnSearch"
+                android:text="@string/search"
+                style="@style/TwoButtonStyle" />
+
+        </LinearLayout>
+
+        <View style="@style/View_1" />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button
+            android:text="@string/returnBy"
+            android:id="@+id/btnReturn"
+            android:onClick="btnReturn"
+            style="@style/BottomButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_c01s009_001"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.icomp.Iswtmv10.v01c01.c01s009.C01S009_002Activity">
+
+    <TextView android:id="@+id/tvTitle" android:text="刀具拆分" style="@style/FunctionalTitleTextViewStyle"/>
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+        <TextView
+                android:layout_weight="1.5"
+                android:text="请点击扫描按钮并扫描将装入钻头的刀盒标签"
+                style="@style/MiddleTextPromptStule"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal" tools:ignore="Suspicious0dp">
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="合成刀具："
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size" />
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:id="@+id/tv_01"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLength="10"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="7">
+
+            <LinearLayout
+                    android:layout_below="@id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal">
+                    <LinearLayout
+                            android:layout_marginLeft="10dp"
+                            android:background="@drawable/table_border_c"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.9"
+                            android:orientation="horizontal"
+                            android:layout_marginRight="10dp">
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:textColor="@color/baseColor"
+                                android:text="材料号"
+                                android:gravity="center"/>
+                        <ImageView
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/baseColor"/>
+
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:textColor="@color/baseColor"
+                                android:text="刀具类型"
+                                android:gravity="center"/>
+                        <ImageView
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/baseColor"/>
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:textColor="@color/baseColor"
+                                android:text="总数量"
+                                android:gravity="center"/>
+                        <ImageView
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/baseColor"/>
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:textColor="@color/baseColor"
+                                android:text="拆分数量"
+                                android:gravity="center"/>
+                        <ImageView
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/baseColor"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                        android:id="@+id/llContainer"
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+            </LinearLayout>
+        </ScrollView>
+
+        <TextView
+                android:id="@+id/tvScan"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:background="@drawable/border_c"
+                android:text="@string/scan"
+                android:textColor="@color/baseColor"
+                android:gravity="center"
+                android:layout_marginBottom="20dp"
+                android:textSize="@dimen/button_textsize"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button android:id="@+id/btnCancel" android:text="@string/returnBy" style="@style/BottomButtonStyle"/>
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button android:id="@+id/btnNext" android:text="@string/splitFinish" style="@style/BottomButtonStyle"/>
+
+    </LinearLayout>
+</LinearLayout>

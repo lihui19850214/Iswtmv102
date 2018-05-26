@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/OverallSituationLinerLayoutStyle">
+
+    <TextView
+        android:text="@string/c03s000_001_001"
+        style="@style/FunctionalTitleTextViewStyle" />
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
+        <TextView
+            android:text="@string/syntheticToolCoding"
+            style="@style/TextLeftAndBottom" />
+
+        <TextView
+            android:id="@+id/tv_01"
+            style="@style/MiddleTestViewStyle" />
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp">
+
+            <TableRow style="@style/TableRowStyle">
+
+                <TextView
+                    android:text="@string/materialNumber"
+                    android:layout_height="40dp"
+                    style="@style/TableRowTextViewStyle" />
+
+                <TextView
+                        android:text="@string/toolType"
+                        style="@style/TableRowTextViewStyle" />
+
+                <TextView
+                    android:text="@string/toolNumber"
+                    style="@style/TableRowTextViewStyle" />
+
+            </TableRow>
+
+        </TableLayout>
+
+        <ListView
+            android:id="@+id/lv_01"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="5"
+            android:background="@drawable/border_no_radius"
+            android:scrollbars="none" />
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button
+            android:text="@string/returnBy"
+            android:onClick="btnReturn"
+            style="@style/BottomButtonStyle" />
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button
+            android:text="@string/next"
+            android:onClick="btnNext"
+            style="@style/BottomButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

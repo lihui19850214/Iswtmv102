@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <TextView
+        android:id="@+id/tvmaterialNumber"
+        android:layout_height="40dp"
+        style="@style/TableRowTextViewStyle" />
+
+    <TextView
+        android:id="@+id/tvgrindingQuantity"
+        android:layout_height="40dp"
+        style="@style/TableRowTextViewStyle" />
+
+    <TextView
+        android:id="@+id/tvtoolIDs"
+        android:visibility="gone"
+        style="@style/TableRowTextViewStyle" />
+
+    <TextView
+        android:id="@+id/tvtoolTypes"
+        android:visibility="gone"
+        style="@style/TableRowTextViewStyle" />
+
+    <TextView
+        android:id="@+id/tvrfidContainerIDs"
+        android:visibility="gone"
+        style="@style/TableRowTextViewStyle" />
+
+    <TextView
+        android:id="@+id/tvauthorizationFlgs"
+        android:visibility="gone"
+        style="@style/TableRowTextViewStyle" />
+
+</LinearLayout>

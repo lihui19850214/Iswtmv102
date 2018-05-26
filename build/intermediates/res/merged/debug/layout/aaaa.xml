@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+android:layout_margin="10dp">
+
+    <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/table_border_c">
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/baseColor"
+                android:text="材料号" />
+
+        <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/baseColor"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/baseColor"
+                android:text="刀具类型" />
+
+        <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/baseColor"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/baseColor"
+                android:text="总数量" />
+
+        <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/baseColor"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/baseColor"
+                android:text="组装数量" />
+
+    </TableRow>
+
+
+    <TableRow android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/table_border_c">
+
+
+        <TableLayout android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1">
+            <TableRow android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="111" />
+            </TableRow>
+            <TableRow android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="111" />
+            </TableRow>
+            <TableRow android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="111" />
+
+            </TableRow>
+        </TableLayout>
+
+        <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/baseColor"/>
+
+        <TableLayout android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1">
+            <TableRow android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="111" />
+            </TableRow>
+            <TableRow android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="111" />
+            </TableRow>
+            <TableRow android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="111" />
+
+            </TableRow>
+        </TableLayout>
+
+        <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/baseColor"/>
+
+        <TextView android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:gravity="center"
+                  android:layout_weight="1"
+                  android:text="111" />
+
+        <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/baseColor"/>
+
+        <TableLayout android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1">
+            <TableRow android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="111" />
+            </TableRow>
+            <TableRow android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="111" />
+            </TableRow>
+            <TableRow android:layout_width="match_parent"
+                      android:layout_height="wrap_content">
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:text="111" />
+            </TableRow>
+        </TableLayout>
+
+    </TableRow>
+
+</TableLayout>

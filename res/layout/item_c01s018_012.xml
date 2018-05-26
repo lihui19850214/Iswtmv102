@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <ImageView
+        android:id="@+id/iv_01"
+        android:layout_height="40dp"
+        android:src="@drawable/cancel"
+        android:padding="5dp"
+        android:layout_gravity="center"
+        style="@style/TableRowTextViewStyle" />
+
+    <TextView
+        android:id="@+id/tvmaterialNumber"
+        style="@style/TableRowTextViewStyle" />
+
+    <TextView
+        android:id="@+id/tvsingleProductCode"
+        android:layout_weight="1.5"
+        style="@style/TableRowTextViewStyle" />
+
+    <TextView
+        android:id="@+id/tvRfidContainerID"
+        android:visibility="gone"
+        style="@style/TableRowTextViewStyle" />
+
+    <TextView
+        android:id="@+id/tvRfidString"
+        android:visibility="gone"
+        style="@style/TableRowTextViewStyle" />
+
+    <TextView
+        android:id="@+id/tvauthorizationFlgs"
+        android:visibility="gone"
+        style="@style/TableRowTextViewStyle" />
+
+</LinearLayout>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal" tools:ignore="Suspicious0dp">
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="right"
+                    android:text="合成刀具："
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size" />
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:id="@+id/tv_01"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:maxLength="10"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="left"
+                        android:paddingLeft="10dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="7" tools:ignore="Suspicious0dp">
+            <LinearLayout
+                    android:layout_below="@id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal">
+                    <LinearLayout
+                            android:layout_marginLeft="30dp"
+                            android:background="@drawable/table_border_c"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.9"
+                            android:orientation="horizontal"
+                            android:layout_marginRight="30dp">
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:textColor="@color/baseColor"
+                                android:text="材料号"
+                                android:gravity="center"/>
+                        <ImageView
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/baseColor"/>
+
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="2"
+                                android:textColor="@color/baseColor"
+                                android:text="刀具类型"
+                                android:gravity="center"/>
+                        <ImageView
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:background="@color/baseColor"/>
+
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:textColor="@color/baseColor"
+                                android:text="总数量"
+                                android:gravity="center"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                        android:id="@+id/llContainer"
+                        android:layout_width="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"/>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+        <Button
+                android:text="取消"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:textColor="@color/baseColor"
+                android:textSize="25dp"
+                android:background="@drawable/btn_border_c4"
+                android:id="@+id/btn_cancel"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:textStyle="bold"/>
+
+        <Button
+                android:text="确定"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:textColor="@color/baseColor"
+                android:textSize="25dp"
+                android:background="@drawable/btn_border_c4"
+                android:id="@+id/btn_confirm"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:textStyle="bold"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

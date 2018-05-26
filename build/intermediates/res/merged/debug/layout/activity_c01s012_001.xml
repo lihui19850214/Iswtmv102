@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/OverallSituationLinerLayoutStyle">
+
+    <TextView
+        android:text="@string/C01S012"
+        style="@style/FunctionalTitleTextViewStyle" />
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
+        <TextView
+                android:layout_height="wrap_content"
+                android:text="请输入要置换标签刀具的刀身码"
+                style="@style/MiddleTextPromptStule"/>
+
+        <EditText
+                android:id="@+id/et_01"
+                android:hint="模糊查询"
+                android:maxLength="15"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:layout_marginTop="10dp"
+                android:digits="@string/allowInput"
+                style="@style/MiddleEditTextStyle"/>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button android:text="@string/returnBy" android:onClick="btnReturn" style="@style/BottomButtonStyle" />
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button android:text="@string/search" android:onClick="btnSubmit" style="@style/BottomButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

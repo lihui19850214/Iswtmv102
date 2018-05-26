@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/baseColor">
+
+    <View
+        android:layout_weight="0.5"
+        style="@style/View_1" />
+
+    <Button
+        android:id="@+id/btnInputAuthorization"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:text="@string/inputAuthorization"
+        android:textSize="20sp"
+        android:textColor="@color/textColor"
+        android:background="@drawable/button_click_style_3"/>
+
+    <View
+        android:layout_weight="0.5"
+        style="@style/View_1" />
+
+    <Button
+        android:id="@+id/btnScanAuthorization"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:text="@string/scanAuthorization"
+        android:textSize="20sp"
+        android:textColor="@color/textColor"
+        android:background="@drawable/button_click_style_3"/>
+
+    <View
+        android:layout_weight="0.5"
+        style="@style/View_1" />
+
+    <Button
+        android:id="@+id/btnReturnAuthorization"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:text="@string/returnBy"
+        android:textSize="20sp"
+        android:onClick="cancle"
+        android:textColor="@color/textColor"
+        android:background="@drawable/button_click_style_3" />
+
+    <View
+        android:layout_weight="0.5"
+        style="@style/View_1" />
+
+</LinearLayout>

@@ -1,0 +1,50 @@
+[
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/shape_ico_home_normal.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/shape_ico_home_normal.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/shape_ico_menu_pressed.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/shape_ico_menu_pressed.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/shape_ico_android_normal.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/shape_ico_android_normal.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/selector_ico_android.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/selector_ico_android.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/ico_andriod.png",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/ico_andriod.png"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/ico_menu.png",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/ico_menu.png"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/ico_home.png",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/ico_home.png"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/shape_ico_home_pressed.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/shape_ico_home_pressed.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/shape_ico_android_pressed.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/shape_ico_android_pressed.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/shape_ico_menu_normal.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/shape_ico_menu_normal.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/selector_ico_menu.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/selector_ico_menu.xml"
+    },
+    {
+        "merged": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/res/merged/androidTest/debug/drawable/selector_ico_home.xml",
+        "source": "/Users/storm/Desktop/Android/Iswtmv102/commonLib/build/intermediates/bundles/debug/res/drawable/selector_ico_home.xml"
+    }
+]
