@@ -401,21 +401,24 @@ public class C01S019_001Activity extends CommonActivity {
                 Message message = new Message();
                 overtimeHandler.sendMessage(message);
             } else if (null != rfidString && !"close".equals(rfidString)) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTvScan.setClickable(true);
+                        ivAdd.setClickable(true);
+                        mBtnCancel.setClickable(true);
+                        mBtnNext.setClickable(true);
+                        isCanScan = true;
+                        if (null != popupWindow && popupWindow.isShowing()) {
+                            popupWindow.dismiss();
+                        }
+                    }
+                });
                 // 判断是否已经扫描此 rfid
                 if (rfidToMap.containsKey(rfidString)) {
-                    mTvScan.setClickable(true);
-                    ivAdd.setClickable(true);
-                    mBtnCancel.setClickable(true);
-                    mBtnNext.setClickable(true);
-                    isCanScan = true;
-
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (null != popupWindow && popupWindow.isShowing()) {
-                                popupWindow.dismiss();
-                            }
-
                             createAlertDialog(C01S019_001Activity.this, "已存在", 1);
                         }
                     });
