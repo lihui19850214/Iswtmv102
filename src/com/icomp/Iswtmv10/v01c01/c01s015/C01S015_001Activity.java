@@ -250,9 +250,10 @@ public class C01S015_001Activity extends CommonActivity {
                         }.getType();
                         cuttingToolBindList = gson.fromJson(response.body(), type);
 
-                        // 重置下拉列表
-                        cuttingToolBind = new CuttingToolBind();
-                        tv01.setText("");
+                        // 重置下拉列表，默认选中第一个
+                        tv01.setText(cuttingToolBindList.get(0).getBladeCode());
+                        //刀具
+                        cuttingToolBind = cuttingToolBindList.get(0);
                     } else {
                         createAlertDialog(C01S015_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
                     }
