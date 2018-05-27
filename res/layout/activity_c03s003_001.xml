@@ -32,7 +32,7 @@
         </LinearLayout>
 
         <TextView
-            android:text="@string/deviceName"
+            android:text="@string/device"
             style="@style/TextLeftAndBottom" />
 
         <LinearLayout
