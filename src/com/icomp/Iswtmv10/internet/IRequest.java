@@ -4,6 +4,8 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.*;
 
+import java.util.Map;
+
 
 /**
  * Created by Think on 2016/9/12.
@@ -137,7 +139,7 @@ public interface IRequest {
      * @return
      */
     @POST("/synthesisCuttingToolBusiness/getConfig")
-    Call<String> getSynthesisCuttingConfig(@Body RequestBody info);
+    Call<String> getSynthesisCuttingConfig(@Body RequestBody info, @HeaderMap Map<String, String> headers);
 
     /**
      * 初始化合成刀具
@@ -222,7 +224,7 @@ public interface IRequest {
      * @return
      */
     @POST("/synthesisCuttingToolBusiness/getBind")
-    Call<String> getBind(@Body RequestBody info);
+    Call<String> getBind(@Body RequestBody info, @HeaderMap Map<String, String> headers);
     // --------------刀具拆分和组装公用方法开始--------------未完成
 
 
@@ -241,7 +243,7 @@ public interface IRequest {
      * @return
      */
     @POST("/synthesisCuttingToolBusiness/exChange")
-    Call<String> exChange(@Body RequestBody info);
+    Call<String> exChange(@Body RequestBody info, @HeaderMap Map<String, String> headers);
     // --------------刀具换装结束--------------
 
 
@@ -252,7 +254,7 @@ public interface IRequest {
      * @return
      */
     @POST("/synthesisCuttingToolBusiness/breakUp")
-    Call<String> breakUp(@Body RequestBody info);
+    Call<String> breakUp(@Body RequestBody info, @HeaderMap Map<String, String> headers);
     // --------------刀具拆分结束--------------
 
 
@@ -263,7 +265,7 @@ public interface IRequest {
      * @return
      */
     @POST("/synthesisCuttingToolBusiness/packageUp")
-    Call<String> packageUp(@Body RequestBody info);
+    Call<String> packageUp(@Body RequestBody info, @HeaderMap Map<String, String> headers);
     // --------------刀具组装结束--------------
 
 
@@ -312,7 +314,7 @@ public interface IRequest {
      * @return
      */
     @POST("/synthesisCuttingToolBindleRecords/searchLast")
-    Call<String> searchProductLine(@Body RequestBody info);
+    Call<String> searchProductLine(@Body RequestBody info, @HeaderMap Map<String, String> headers);
 
     /**
      * 卸下
@@ -320,7 +322,7 @@ public interface IRequest {
      * @return
      */
     @POST("/synthesisCuttingToolBusiness/unBindEquipment")
-    Call<String> unBindEquipment(@Body RequestBody info);
+    Call<String> unBindEquipment(@Body RequestBody info, @HeaderMap Map<String, String> headers);
 
     /**
      * 卸下
@@ -339,7 +341,7 @@ public interface IRequest {
      * @return
      */
     @POST("/inFactoryBusiness/getCuttingToolBind")
-    Call<String> getInCuttingToolBind(@Body RequestBody info);
+    Call<String> getInCuttingToolBind(@Body RequestBody info, @HeaderMap Map<String, String> headers);
 
     /**
      * 根据材料号获取材料刀
@@ -510,5 +512,15 @@ public interface IRequest {
     @POST("/power/getPowerForUser")
     Call<String> getPowerForUser(@Body RequestBody info);
     // --------------权限查询结束--------------
+
+    // --------------快速查询开始--------------
+    /**
+     * 快速查询
+     * @param info
+     * @return
+     */
+    @POST("/RFID/fastQuery")
+    Call<String> fastQuery(@Body RequestBody info);
+    // --------------快速查询结束--------------
 
 }
