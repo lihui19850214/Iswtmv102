@@ -1,6 +1,7 @@
 package com.apiclient.pojo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -86,6 +87,7 @@ public class RfidContainer implements Serializable {
      */
     private String operatorName;
 
+    private Timestamp operatorTime;
 
     private List<AuthCustomer> authCustomerList;
     private List<CuttingToolBind> cuttingToolBindList;
@@ -208,6 +210,14 @@ public class RfidContainer implements Serializable {
 
     public void setSynthesisCuttingToolBindList(List<SynthesisCuttingToolBind> synthesisCuttingToolBindList) {
         this.synthesisCuttingToolBindList = synthesisCuttingToolBindList;
+    }
+
+    public Timestamp getOperatorTime() {
+        return operatorTime;
+    }
+
+    public void setOperatorTime(Timestamp operatorTime) {
+        this.operatorTime = operatorTime;
     }
 
 }
