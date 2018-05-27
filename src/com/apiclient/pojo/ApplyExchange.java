@@ -10,6 +10,8 @@ import java.sql.Timestamp;
 */
 public class ApplyExchange implements Serializable{
 
+
+    ///
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
     /**

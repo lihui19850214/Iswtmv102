@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="wsdlclient">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/libs/wsdlclient.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
