@@ -4,9 +4,11 @@ package com.icomp.Iswtmv10.v01c01.c01s009;
  * 刀具组装
  */
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +16,26 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.apiclient.pojo.OperationEnum;
 import com.apiclient.pojo.SynthesisCuttingToolConfig;
 import com.apiclient.vo.SynthesisCuttingToolInitVO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
+import com.icomp.common.activity.ExceptionProcessCallBack;
+import okhttp3.Headers;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class C01S009_001Activity extends CommonActivity {
@@ -42,6 +52,8 @@ public class C01S009_001Activity extends CommonActivity {
     private Retrofit retrofit;
     //扫描线程
     private scanThread scanThread;
+
+    SynthesisCuttingToolConfig synthesisCuttingToolConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -138,20 +150,23 @@ public class C01S009_001Activity extends CommonActivity {
                 String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
                 RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body);
+                Map<String, String> headsMap = new HashMap<>();
+                headsMap.put("impower", OperationEnum.SynthesisCuttingTool_Config.getKey().toString());
+
+                Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, headsMap);
                 getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
                     @Override
                     public void _onResponse(Response<String> response) {
                         try {
+                            String inpower = response.headers().get("impower");
+
                             if (response.raw().code() == 200) {
                                 Gson gson = new Gson();
-                                SynthesisCuttingToolConfig synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
-                                //跳转到库存盘点刀具信息详细页面
-                                Intent intent = new Intent(C01S009_001Activity.this, C01S009_002Activity.class);
-                                intent.putExtra(PARAM, synthesisCuttingToolConfig);
-                                intent.putExtra("rfidString", rfidString);
-                                startActivity(intent);
-                                finish();
+                                synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
+
+                                Message message = new Message();
+                                message.obj = inpower;
+                                scanHandler.sendMessage(message);
                             } else {
                                 final String errorStr = response.errorBody().string();
                                 runOnUiThread(new Runnable() {
@@ -191,6 +206,79 @@ public class C01S009_001Activity extends CommonActivity {
             }
         }
     }
+
+
+
+
+    //扫描Handler
+    @SuppressLint("HandlerLeak")
+    Handler scanHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            String inpower = msg.obj.toString();
+
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, String> inpowerMap = new HashMap<>();
+            try {
+                inpowerMap = mapper.readValue(inpower, Map.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // 判断是否显示提示框
+            if ("1".equals(inpowerMap.get("type"))) {
+                // 是否需要授权 true为需要授权；false为不需要授权
+                is_need_authorization = false;
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //跳转到库存盘点刀具信息详细页面
+                        Intent intent = new Intent(C01S009_001Activity.this, C01S009_002Activity.class);
+                        intent.putExtra(PARAM, synthesisCuttingToolConfig);
+                        intent.putExtra("rfidString", rfidString);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+
+            } else if ("2".equals(inpowerMap.get("type"))) {
+                is_need_authorization = true;
+                exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                    @Override
+                    public void confirm() {
+                        //跳转到库存盘点刀具信息详细页面
+                        Intent intent = new Intent(C01S009_001Activity.this, C01S009_002Activity.class);
+                        intent.putExtra(PARAM, synthesisCuttingToolConfig);
+                        intent.putExtra("rfidString", rfidString);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void cancel() {
+                        // 不做任何操作
+                    }
+                });
+            } else if ("3".equals(inpowerMap.get("type"))) {
+                is_need_authorization = false;
+                stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                    @Override
+                    public void confirm() {
+                        finish();
+                    }
+
+                    @Override
+                    public void cancel() {
+                        // 实际上没有用
+                        finish();
+                    }
+                });
+            }
+        }
+    };
+
+
 
 
     /**
