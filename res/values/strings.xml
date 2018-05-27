@@ -215,6 +215,7 @@
     <string name="generateUniqueCode">生成唯一码</string>
     <string name="assemblyLine">流水线</string>
     <string name="deviceName">设备编码</string>
+    <string name="device">设备</string>
     <string name="axle">对应轴号</string>
     <string name="employeeNumber">员工号</string>
     <string name="name">姓名</string>
@@ -283,5 +284,6 @@
     <!-- 一期 -->
 
     <string name="initFail">初始化读头失败</string>
+    <string name="queryNoMessage">没有查询到信息</string>
 
 </resources>
