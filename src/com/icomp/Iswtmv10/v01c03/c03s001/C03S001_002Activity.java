@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.apiclient.constants.CuttingToolConsumeTypeEnum;
+import com.apiclient.constants.CuttingToolTypeEnum;
 import com.apiclient.pojo.CuttingTool;
 import com.apiclient.pojo.SynthesisCuttingToolConfig;
 import com.apiclient.pojo.SynthesisCuttingToolLocationConfig;
@@ -61,17 +63,24 @@ public class C03S001_002Activity extends CommonActivity {
         if (null != synthesisCuttingToolLocationConfigList && synthesisCuttingToolLocationConfigList.size() >= 0) {
             for (int i = 0; i < synthesisCuttingToolLocationConfigList.size(); i++) {
                 CuttingTool cuttingTool = synthesisCuttingToolLocationConfigList.get(i).getCuttingTool();
-                //刀具类型：1钻头、2刀片、3一体刀、4专机、9其他
-                if (ONE == cuttingTool.getConsumeType() || cuttingTool.getConsumeType().equals(ONE)) {
-                    cuttingTool.setConsumeType("钻头");
-                } else if (TWO == cuttingTool.getConsumeType() || cuttingTool.getConsumeType().equals(TWO)) {
-                    cuttingTool.setConsumeType("刀片");
-                } else if (THREE == cuttingTool.getConsumeType() || cuttingTool.getConsumeType().equals(THREE)) {
-                    cuttingTool.setConsumeType("一体刀");
-                } else if (FOUR == cuttingTool.getConsumeType() || cuttingTool.getConsumeType().equals(NINE)) {
-                    cuttingTool.setConsumeType("专机");
-                } else if (NINE == cuttingTool.getConsumeType() || cuttingTool.getConsumeType().equals(NINE)) {
-                    cuttingTool.setConsumeType("其他");
+
+                // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
+                if (CuttingToolTypeEnum.dj.getKey().equals(cuttingTool.getType())) {
+                    if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(cuttingTool.getConsumeType())) {
+                        cuttingTool.setConsumeType(CuttingToolConsumeTypeEnum.griding_zt.getName());
+                    } else if (CuttingToolConsumeTypeEnum.griding_dp.getKey().equals(cuttingTool.getConsumeType())) {
+                        cuttingTool.setConsumeType(CuttingToolConsumeTypeEnum.griding_dp.getName());
+                    } else if (CuttingToolConsumeTypeEnum.single_use_dp.getKey().equals(cuttingTool.getConsumeType())) {
+                        cuttingTool.setConsumeType(CuttingToolConsumeTypeEnum.single_use_dp.getName());
+                    } else if (CuttingToolConsumeTypeEnum.other.getKey().equals(cuttingTool.getConsumeType())) {
+                        cuttingTool.setConsumeType(CuttingToolConsumeTypeEnum.other.getName());
+                    }
+                } else if (CuttingToolTypeEnum.fj.getKey().equals(cuttingTool.getType())) {
+                    cuttingTool.setConsumeType(CuttingToolTypeEnum.fj.getName());
+                } else if (CuttingToolTypeEnum.pt.getKey().equals(cuttingTool.getType())) {
+                    cuttingTool.setConsumeType(CuttingToolTypeEnum.pt.getName());
+                } else if (CuttingToolTypeEnum.other.getKey().equals(cuttingTool.getType())) {
+                    cuttingTool.setConsumeType(CuttingToolTypeEnum.other.getName());
                 }
             }
 
