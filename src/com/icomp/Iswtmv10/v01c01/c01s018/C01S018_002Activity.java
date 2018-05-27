@@ -12,10 +12,7 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
-import com.apiclient.pojo.AverageProcessingVolume;
-import com.apiclient.pojo.CuttingTool;
-import com.apiclient.pojo.CuttingToolBind;
-import com.apiclient.pojo.InsideFactory;
+import com.apiclient.pojo.*;
 import com.apiclient.vo.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -438,7 +435,10 @@ public class C01S018_002Activity extends CommonActivity {
                 String jsonStr = gson.toJson(cuttingToolBindVO);
                 RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                Call<String> getInCuttingToolBind = iRequest.getInCuttingToolBind(body);
+                Map<String, String> headsMap = new HashMap<>();
+                headsMap.put("impower", OperationEnum.Cutting_tool_Inside.getKey().toString());
+
+                Call<String> getInCuttingToolBind = iRequest.getInCuttingToolBind(body, headsMap);
                 getInCuttingToolBind.enqueue(new MyCallBack<String>() {
                     @Override
                     public void _onResponse(Response<String> response) {
@@ -468,10 +468,9 @@ public class C01S018_002Activity extends CommonActivity {
                                             if (null != loading && loading.isShowing()) {
                                                 loading.dismiss();
                                             }
-                                            Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
                                         }
                                     });
-
                                 }
                             } else {
                                 final String errorStr = response.errorBody().string();
@@ -517,6 +516,8 @@ public class C01S018_002Activity extends CommonActivity {
             }
         }
     }
+
+
 
     // 查询刃磨记录
     public void searchSharpening(final String rfid, final CuttingToolBind cuttingToolBind) {
