@@ -66,6 +66,7 @@ public class C03S001_002Activity extends CommonActivity {
 
                 // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
                 if (CuttingToolTypeEnum.dj.getKey().equals(cuttingTool.getType())) {
+                    // griding_zt("1","可刃磨钻头"),griding_dp("2","可刃磨刀片"),single_use_dp("3","一次性刀片"),other("9","其他");
                     if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(cuttingTool.getConsumeType())) {
                         cuttingTool.setConsumeType(CuttingToolConsumeTypeEnum.griding_zt.getName());
                     } else if (CuttingToolConsumeTypeEnum.griding_dp.getKey().equals(cuttingTool.getConsumeType())) {
