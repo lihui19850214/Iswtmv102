@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 SynthesisCuttingToolExchangeVO 
 */
-public class SynthesisCuttingToolExchangeVO implements Serializable{
+public class SynthesisCuttingToolExchangeVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -69,10 +69,22 @@ public class SynthesisCuttingToolExchangeVO implements Serializable{
 
     /**
      * @fieldName toolDownTime
-    * @fieldType  String
+    * @fieldType  Timestamp
+    * @Description  刀具卸下时间 开始时间
+     */
+    private Timestamp toolDownTimeBegin;
+    /**
+     * @fieldName toolDownTime
+    * @fieldType  Timestamp
+    * @Description  刀具卸下时间 结束时间
+     */
+    private Timestamp toolDownTimeEnd;
+    /**
+     * @fieldName toolDownTime
+    * @fieldType  Timestamp
     * @Description  刀具卸下时间
      */
-    private String toolDownTime;
+    private Timestamp toolDownTime;
 
     /**
      * @fieldName toolDownCustomerCode
@@ -255,11 +267,26 @@ public class SynthesisCuttingToolExchangeVO implements Serializable{
     public void setTollUpCustomerName(String tollUpCustomerName) {
         this.tollUpCustomerName = tollUpCustomerName;
     }
-    public String getToolDownTime() {
+    public Timestamp getToolDownTimeBegin() {
+        return toolDownTimeBegin;
+    }
+
+    public void setToolDownTimeBegin(Timestamp toolDownTimeBegin) {
+        this.toolDownTimeBegin = toolDownTimeBegin;
+    }
+
+    public Timestamp getToolDownTimeEnd() {
+        return toolDownTimeEnd;
+    }
+
+    public void setToolDownTimeEnd(Timestamp toolDownTimeEnd) {
+        this.toolDownTimeEnd = toolDownTimeEnd;
+    }
+    public Timestamp getToolDownTime() {
         return toolDownTime;
     }
 
-    public void setToolDownTime(String toolDownTime) {
+    public void setToolDownTime(Timestamp toolDownTime) {
         this.toolDownTime = toolDownTime;
     }
     public String getToolDownCustomerCode() {

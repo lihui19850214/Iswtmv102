@@ -8,7 +8,7 @@ import java.util.List;
 * Automated Build
 * 实体 ProductLineProcess 
 */
-public class ProductLineProcess implements Serializable{
+public class ProductLineProcess implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

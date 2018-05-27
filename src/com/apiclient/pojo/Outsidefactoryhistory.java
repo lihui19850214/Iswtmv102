@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 Outsidefactoryhistory 
 */
-public class Outsidefactoryhistory implements Serializable{
+public class Outsidefactoryhistory implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

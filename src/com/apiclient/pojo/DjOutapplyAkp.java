@@ -1,13 +1,14 @@
 package com.apiclient.pojo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
 * Created by jiangchenkeji
 * Automated Build
 * 实体 DjOutapplyAkp 
 */
-public class DjOutapplyAkp implements Serializable{
+public class DjOutapplyAkp implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -77,7 +78,7 @@ public class DjOutapplyAkp implements Serializable{
     * @fieldType  Date
     * @Description  读取时间
      */
-    private String outdate;
+    private Timestamp outdate;
     /**
      * @fieldName message
     * @fieldType  String
@@ -128,7 +129,7 @@ dumplogo
     * @fieldType  Date
     * @Description  创建时间
      */
-    private String createDate;
+    private Timestamp createDate;
     /**
      * @fieldName status
     * @fieldType  String
@@ -182,7 +183,7 @@ dumplogo
     * @fieldType  Date
     * @Description  
      */
-    private String lastModifyDate;
+    private Timestamp lastModifyDate;
 
 
 
@@ -368,27 +369,27 @@ dumplogo
         this.jhj = jhj;
     }
 
-    public String getOutdate() {
+    public Timestamp getOutdate() {
         return outdate;
     }
 
-    public void setOutdate(String outdate) {
+    public void setOutdate(Timestamp outdate) {
         this.outdate = outdate;
     }
 
-    public String getCreateDate() {
+    public Timestamp getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(String createDate) {
+    public void setCreateDate(Timestamp createDate) {
         this.createDate = createDate;
     }
 
-    public String getLastModifyDate() {
+    public Timestamp getLastModifyDate() {
         return lastModifyDate;
     }
 
-    public void setLastModifyDate(String lastModifyDate) {
+    public void setLastModifyDate(Timestamp lastModifyDate) {
         this.lastModifyDate = lastModifyDate;
     }
 }

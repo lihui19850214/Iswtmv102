@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 CuttingToolProductionRecords 
 */
-public class CuttingToolProductionRecords implements Serializable{
+public class CuttingToolProductionRecords implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -22,7 +22,7 @@ public class CuttingToolProductionRecords implements Serializable{
     /**
      * @fieldName businessCode
     * @fieldType  String
-    * @Description  材料刀物料码
+    * @Description  材料号
      */
     private String businessCode;
     /**
@@ -32,17 +32,17 @@ public class CuttingToolProductionRecords implements Serializable{
      */
     private String cuttingToolCode;
     /**
-     * @fieldName productLineName
+     * @fieldName processCode
     * @fieldType  String
-    * @Description  生产线名
+    * @Description  工序编码
      */
-    private String productLineName;
+    private String processCode;
     /**
-     * @fieldName productLineCode
+     * @fieldName processName
     * @fieldType  String
-    * @Description  生产线编码
+    * @Description  工序名
      */
-    private String productLineCode;
+    private String processName;
     /**
      * @fieldName equipmentName
     * @fieldType  String
@@ -70,13 +70,13 @@ public class CuttingToolProductionRecords implements Serializable{
     /**
      * @fieldName assemblylineCode
     * @fieldType  String
-    * @Description  工序编码
+    * @Description  流水线编码
      */
     private String assemblylineCode;
     /**
      * @fieldName assemblylineName
     * @fieldType  String
-    * @Description  工序名称
+    * @Description  流水线名称
      */
     private String assemblylineName;
     /**
@@ -92,23 +92,47 @@ public class CuttingToolProductionRecords implements Serializable{
      */
     private Integer processingCount;
     /**
-     * @fieldName synthesisToolConsumptionQuantity
-    * @fieldType  String
-    * @Description  材料刀消耗数量
+     * @fieldName ratedNumber
+    * @fieldType  Integer
+    * @Description  额定数量
      */
-    private Integer synthesisToolConsumptionQuantity;
+    private Integer ratedNumber;
     /**
-     * @fieldName processName
+     * @fieldName productLineCode
     * @fieldType  String
-    * @Description  工序名称
+    * @Description  生产关联关系编码
      */
-    private String processName;
+    private String productLineCode;
     /**
-     * @fieldName processCode
+     * @fieldName isDel
     * @fieldType  String
-    * @Description  工序编码
+    * @Description  逻辑删除
      */
-    private String processCode;
+    private String isDel;
+    /**
+     * @fieldName partsCode
+    * @fieldType  String
+    * @Description  零件编码
+     */
+    private String partsCode;
+    /**
+     * @fieldName partsName
+    * @fieldType  String
+    * @Description  零件名称
+     */
+    private String partsName;
+    /**
+     * @fieldName synthesisCuttingToolCode
+    * @fieldType  String
+    * @Description  合成刀编码
+     */
+    private String synthesisCuttingToolCode;
+    /**
+     * @fieldName synthesisCode
+    * @fieldType  String
+    * @Description  合成刀业务编码
+     */
+    private String synthesisCode;
 
 
 
@@ -136,19 +160,19 @@ public class CuttingToolProductionRecords implements Serializable{
     public void setCuttingToolCode(String cuttingToolCode) {
         this.cuttingToolCode = cuttingToolCode;
     }
-    public String getProductLineName() {
-        return productLineName;
+    public String getProcessCode() {
+        return processCode;
     }
 
-    public void setProductLineName(String productLineName) {
-        this.productLineName = productLineName;
+    public void setProcessCode(String processCode) {
+        this.processCode = processCode;
     }
-    public String getProductLineCode() {
-        return productLineCode;
+    public String getProcessName() {
+        return processName;
     }
 
-    public void setProductLineCode(String productLineCode) {
-        this.productLineCode = productLineCode;
+    public void setProcessName(String processName) {
+        this.processName = processName;
     }
     public String getEquipmentName() {
         return equipmentName;
@@ -206,26 +230,56 @@ public class CuttingToolProductionRecords implements Serializable{
     public void setProcessingCount(Integer processingCount) {
         this.processingCount = processingCount;
     }
-    public String getProcessName() {
-        return processName;
+    public Integer getRatedNumber() {
+        return ratedNumber;
     }
 
-    public void setProcessName(String processName) {
-        this.processName = processName;
+    public void setRatedNumber(Integer ratedNumber) {
+        this.ratedNumber = ratedNumber;
     }
-    public String getProcessCode() {
-        return processCode;
-    }
-
-    public void setProcessCode(String processCode) {
-        this.processCode = processCode;
+    public String getProductLineCode() {
+        return productLineCode;
     }
 
-    public Integer getSynthesisToolConsumptionQuantity() {
-        return synthesisToolConsumptionQuantity;
+    public void setProductLineCode(String productLineCode) {
+        this.productLineCode = productLineCode;
+    }
+    public String getIsDel() {
+        return isDel;
     }
 
-    public void setSynthesisToolConsumptionQuantity(Integer synthesisToolConsumptionQuantity) {
-        this.synthesisToolConsumptionQuantity = synthesisToolConsumptionQuantity;
+    public void setIsDel(String isDel) {
+        this.isDel = isDel;
     }
+    public String getPartsCode() {
+        return partsCode;
+    }
+
+    public void setPartsCode(String partsCode) {
+        this.partsCode = partsCode;
+    }
+    public String getPartsName() {
+        return partsName;
+    }
+
+    public void setPartsName(String partsName) {
+        this.partsName = partsName;
+    }
+    public String getSynthesisCuttingToolCode() {
+        return synthesisCuttingToolCode;
+    }
+
+    public void setSynthesisCuttingToolCode(String synthesisCuttingToolCode) {
+        this.synthesisCuttingToolCode = synthesisCuttingToolCode;
+    }
+    public String getSynthesisCode() {
+        return synthesisCode;
+    }
+
+    public void setSynthesisCode(String synthesisCode) {
+        this.synthesisCode = synthesisCode;
+    }
+
+
+
 }

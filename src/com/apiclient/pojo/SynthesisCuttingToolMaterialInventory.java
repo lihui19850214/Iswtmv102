@@ -7,7 +7,7 @@ import java.io.Serializable;
 * Automated Build
 * 实体 SynthesisCuttingToolMaterialInventory 
 */
-public class SynthesisCuttingToolMaterialInventory implements Serializable{
+public class SynthesisCuttingToolMaterialInventory implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -45,7 +45,7 @@ public class SynthesisCuttingToolMaterialInventory implements Serializable{
     /**
      * @fieldName inUseCount
     * @fieldType  Integer
-    * @Description  安装数量
+    * @Description  安装数量 设备上
      */
     private Integer inUseCount;
     /**
@@ -60,6 +60,18 @@ public class SynthesisCuttingToolMaterialInventory implements Serializable{
     * @Description  逻辑删除
      */
     private Integer isDel;
+    /**
+     * @fieldName toExchangeCount
+    * @fieldType  Integer
+    * @Description  待换装数量
+     */
+    private Integer toExchangeCount;
+    /**
+     * @fieldName toInstallCount
+    * @fieldType  Integer
+    * @Description  待组装数量
+     */
+    private Integer toInstallCount;
 
     /**
      * @fieldName synthesisCuttingToolCode
@@ -127,6 +139,20 @@ public class SynthesisCuttingToolMaterialInventory implements Serializable{
 
     public void setIsDel(Integer isDel) {
         this.isDel = isDel;
+    }
+    public Integer getToExchangeCount() {
+        return toExchangeCount;
+    }
+
+    public void setToExchangeCount(Integer toExchangeCount) {
+        this.toExchangeCount = toExchangeCount;
+    }
+    public Integer getToInstallCount() {
+        return toInstallCount;
+    }
+
+    public void setToInstallCount(Integer toInstallCount) {
+        this.toInstallCount = toInstallCount;
     }
 
     public SynthesisCuttingTool getSynthesisCuttingTool() {

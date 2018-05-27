@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 SynthesisCuttingToolProductionRecordsVO 
 */
-public class SynthesisCuttingToolProductionRecordsVO implements Serializable{
+public class SynthesisCuttingToolProductionRecordsVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -21,18 +21,18 @@ public class SynthesisCuttingToolProductionRecordsVO implements Serializable{
 
 
     /**
-     * @fieldName productLineName
+     * @fieldName assemblylineCode
     * @fieldType  String
-    * @Description  生产线名称
+    * @Description  流水线编码
      */
-    private String productLineName;
+    private String assemblylineCode;
 
     /**
-     * @fieldName productLineCode
+     * @fieldName assemblylineName
     * @fieldType  String
-    * @Description  生产线编码
+    * @Description  流水线名称
      */
-    private String productLineCode;
+    private String assemblylineName;
 
     /**
      * @fieldName equipmentName
@@ -117,11 +117,11 @@ public class SynthesisCuttingToolProductionRecordsVO implements Serializable{
     private Integer processingCount;
 
     /**
-     * @fieldName synthesisToolConsumptionQuantity
+     * @fieldName ratedNumber
     * @fieldType  Integer
-    * @Description  合成刀消耗数量
+    * @Description  额定数量
      */
-    private Integer synthesisToolConsumptionQuantity;
+    private Integer ratedNumber;
 
     /**
      * @fieldName isDel
@@ -129,6 +129,27 @@ public class SynthesisCuttingToolProductionRecordsVO implements Serializable{
     * @Description  逻辑删除
      */
     private Integer isDel;
+
+    /**
+     * @fieldName productLineCode
+    * @fieldType  String
+    * @Description  生产关联关系编码
+     */
+    private String productLineCode;
+
+    /**
+     * @fieldName partsCode
+    * @fieldType  String
+    * @Description  零件编码
+     */
+    private String partsCode;
+
+    /**
+     * @fieldName partsName
+    * @fieldType  String
+    * @Description  零件名称
+     */
+    private String partsName;
 
 
 
@@ -177,19 +198,19 @@ public class SynthesisCuttingToolProductionRecordsVO implements Serializable{
         this.id = id;
     }
 
-    public String getProductLineName() {
-        return productLineName;
+    public String getAssemblylineCode() {
+        return assemblylineCode;
     }
 
-    public void setProductLineName(String productLineName) {
-        this.productLineName = productLineName;
+    public void setAssemblylineCode(String assemblylineCode) {
+        this.assemblylineCode = assemblylineCode;
     }
-    public String getProductLineCode() {
-        return productLineCode;
+    public String getAssemblylineName() {
+        return assemblylineName;
     }
 
-    public void setProductLineCode(String productLineCode) {
-        this.productLineCode = productLineCode;
+    public void setAssemblylineName(String assemblylineName) {
+        this.assemblylineName = assemblylineName;
     }
     public String getEquipmentName() {
         return equipmentName;
@@ -276,12 +297,12 @@ public class SynthesisCuttingToolProductionRecordsVO implements Serializable{
     public void setProcessingCount(Integer processingCount) {
         this.processingCount = processingCount;
     }
-    public Integer getSynthesisToolConsumptionQuantity() {
-        return synthesisToolConsumptionQuantity;
+    public Integer getRatedNumber() {
+        return ratedNumber;
     }
 
-    public void setSynthesisToolConsumptionQuantity(Integer synthesisToolConsumptionQuantity) {
-        this.synthesisToolConsumptionQuantity = synthesisToolConsumptionQuantity;
+    public void setRatedNumber(Integer ratedNumber) {
+        this.ratedNumber = ratedNumber;
     }
     public Integer getIsDel() {
         return isDel;
@@ -289,6 +310,27 @@ public class SynthesisCuttingToolProductionRecordsVO implements Serializable{
 
     public void setIsDel(Integer isDel) {
         this.isDel = isDel;
+    }
+    public String getProductLineCode() {
+        return productLineCode;
+    }
+
+    public void setProductLineCode(String productLineCode) {
+        this.productLineCode = productLineCode;
+    }
+    public String getPartsCode() {
+        return partsCode;
+    }
+
+    public void setPartsCode(String partsCode) {
+        this.partsCode = partsCode;
+    }
+    public String getPartsName() {
+        return partsName;
+    }
+
+    public void setPartsName(String partsName) {
+        this.partsName = partsName;
     }
 
 

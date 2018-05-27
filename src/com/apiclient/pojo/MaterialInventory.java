@@ -7,7 +7,7 @@ import java.io.Serializable;
 * Automated Build
 * 实体 MaterialInventory 
 */
-public class MaterialInventory implements Serializable{
+public class MaterialInventory implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -51,7 +51,7 @@ public class MaterialInventory implements Serializable{
     /**
      * @fieldName productLineCount
     * @fieldType  Integer
-    * @Description  生产线数量
+    * @Description  生产线数量 设备上
      */
     private Integer productLineCount;
     /**
@@ -84,6 +84,12 @@ public class MaterialInventory implements Serializable{
     * @Description  待卸下数量
      */
     private Integer toUninstallCount;
+    /**
+     * @fieldName toExchangeCount
+    * @fieldType  Integer
+    * @Description  待换装数量
+     */
+    private Integer toExchangeCount;
 
     /**
      * @fieldName cuttingToolCode
@@ -179,6 +185,13 @@ public class MaterialInventory implements Serializable{
 
     public void setToUninstallCount(Integer toUninstallCount) {
         this.toUninstallCount = toUninstallCount;
+    }
+    public Integer getToExchangeCount() {
+        return toExchangeCount;
+    }
+
+    public void setToExchangeCount(Integer toExchangeCount) {
+        this.toExchangeCount = toExchangeCount;
     }
 
     public CuttingTool getCuttingTool() {

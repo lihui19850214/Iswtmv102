@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 OutsideFactoryVO 
 */
-public class OutsideFactoryVO implements Serializable{
+public class OutsideFactoryVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -23,14 +23,14 @@ public class OutsideFactoryVO implements Serializable{
     /**
      * @fieldName orderNum
     * @fieldType  String
-    * @Description  通知单号
+    * @Description  外委单号
      */
     private String orderNum;
 
     /**
      * @fieldName sharpenProviderCode
     * @fieldType  String
-    * @Description  刃磨服务商
+    * @Description  外委商
      */
     private String sharpenProviderCode;
 
@@ -49,13 +49,6 @@ public class OutsideFactoryVO implements Serializable{
     private Integer numberGrinding;
 
     /**
-     * @fieldName receiveNumber
-    * @fieldType  Integer
-    * @Description  
-     */
-    private Integer receiveNumber;
-
-    /**
      * @fieldName grindingType
     * @fieldType  String
     * @Description  修复类型（0.厂外图层1.厂外复磨）
@@ -63,25 +56,11 @@ public class OutsideFactoryVO implements Serializable{
     private String grindingType;
 
     /**
-     * @fieldName laserCode
-    * @fieldType  String
-    * @Description  激光码
-     */
-    private String laserCode;
-
-    /**
      * @fieldName toolType
     * @fieldType  String
     * @Description  刀具类型（0.钻头1.刀片）
      */
     private String toolType;
-
-    /**
-     * @fieldName outNum
-    * @fieldType  String
-    * @Description  出门单号
-     */
-    private String outNum;
 
     /**
      * @fieldName manufactureDate
@@ -103,16 +82,16 @@ public class OutsideFactoryVO implements Serializable{
     private Timestamp manufactureDate;
 
     /**
-     * @fieldName approver
+     * @fieldName approverCode
     * @fieldType  String
     * @Description  审批人
      */
-    private String approver;
+    private String approverCode;
 
     /**
      * @fieldName repairState
     * @fieldType  String
-    * @Description  修复状态(0.待出厂1.已出厂2.已送回）
+    * @Description  修复状态(1.待出厂 2.已出厂 3.已送回）
      */
     private String repairState;
 
@@ -124,18 +103,81 @@ public class OutsideFactoryVO implements Serializable{
     private Integer isDel;
 
     /**
-     * @fieldName senduser
-    * @fieldType  String
-    * @Description  
-     */
-    private String senduser;
-
-    /**
      * @fieldName cuttingToolCode
     * @fieldType  String
     * @Description  材料刀编码
      */
     private String cuttingToolCode;
+
+    /**
+     * @fieldName zcCode
+    * @fieldType  String
+    * @Description  资材单号
+     */
+    private String zcCode;
+
+    /**
+     * @fieldName handlers
+    * @fieldType  String
+    * @Description  经手人
+     */
+    private String handlers;
+
+    /**
+     * @fieldName sender
+    * @fieldType  String
+    * @Description  邮寄人
+     */
+    private String sender;
+
+    /**
+     * @fieldName outWay
+    * @fieldType  String
+    * @Description  外委方式
+     */
+    private String outWay;
+
+    /**
+     * @fieldName opratorName
+    * @fieldType  String
+    * @Description  操作人
+     */
+    private String opratorName;
+
+    /**
+     * @fieldName opratorCode
+    * @fieldType  String
+    * @Description  
+     */
+    private String opratorCode;
+
+    /**
+     * @fieldName code
+    * @fieldType  String
+    * @Description  编码
+     */
+    private String code;
+
+    /**
+     * @fieldName qmSharpenProviderCode
+    * @fieldType  String
+    * @Description  启明外委供应商编码
+     */
+    private String qmSharpenProviderCode;
+
+    /**
+     * @fieldName qmSharpenProviderName
+    * @fieldType  String
+    * @Description  启明外委供应商名称
+     */
+    private String qmSharpenProviderName;
+
+    /**
+     * @fieldName approverName
+    * @fieldType  String
+    * @Description  审批人姓名
+     */
+    private String approverName;
 
     /**
      * @fieldName cuttingToolCode
@@ -146,7 +188,7 @@ public class OutsideFactoryVO implements Serializable{
     /**
      * @fieldName sharpenProviderCode
     * @fieldType  
-    * @Description  刃磨服务商
+    * @Description  外委商
      */
     private SharpenProviderVO sharpenProviderVO;
 
@@ -224,13 +266,6 @@ public class OutsideFactoryVO implements Serializable{
     public void setNumberGrinding(Integer numberGrinding) {
         this.numberGrinding = numberGrinding;
     }
-    public Integer getReceiveNumber() {
-        return receiveNumber;
-    }
-
-    public void setReceiveNumber(Integer receiveNumber) {
-        this.receiveNumber = receiveNumber;
-    }
     public String getGrindingType() {
         return grindingType;
     }
@@ -238,26 +273,12 @@ public class OutsideFactoryVO implements Serializable{
     public void setGrindingType(String grindingType) {
         this.grindingType = grindingType;
     }
-    public String getLaserCode() {
-        return laserCode;
-    }
-
-    public void setLaserCode(String laserCode) {
-        this.laserCode = laserCode;
-    }
     public String getToolType() {
         return toolType;
     }
 
     public void setToolType(String toolType) {
         this.toolType = toolType;
-    }
-    public String getOutNum() {
-        return outNum;
-    }
-
-    public void setOutNum(String outNum) {
-        this.outNum = outNum;
     }
     public Timestamp getManufactureDateBegin() {
         return manufactureDateBegin;
@@ -281,12 +302,12 @@ public class OutsideFactoryVO implements Serializable{
     public void setManufactureDate(Timestamp manufactureDate) {
         this.manufactureDate = manufactureDate;
     }
-    public String getApprover() {
-        return approver;
+    public String getApproverCode() {
+        return approverCode;
     }
 
-    public void setApprover(String approver) {
-        this.approver = approver;
+    public void setApproverCode(String approverCode) {
+        this.approverCode = approverCode;
     }
     public String getRepairState() {
         return repairState;
@@ -302,19 +323,82 @@ public class OutsideFactoryVO implements Serializable{
     public void setIsDel(Integer isDel) {
         this.isDel = isDel;
     }
-    public String getSenduser() {
-        return senduser;
-    }
-
-    public void setSenduser(String senduser) {
-        this.senduser = senduser;
-    }
     public String getCuttingToolCode() {
         return cuttingToolCode;
     }
 
     public void setCuttingToolCode(String cuttingToolCode) {
         this.cuttingToolCode = cuttingToolCode;
+    }
+    public String getZcCode() {
+        return zcCode;
+    }
+
+    public void setZcCode(String zcCode) {
+        this.zcCode = zcCode;
+    }
+    public String getHandlers() {
+        return handlers;
+    }
+
+    public void setHandlers(String handlers) {
+        this.handlers = handlers;
+    }
+    public String getSender() {
+        return sender;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
+    public String getOutWay() {
+        return outWay;
+    }
+
+    public void setOutWay(String outWay) {
+        this.outWay = outWay;
+    }
+    public String getOpratorName() {
+        return opratorName;
+    }
+
+    public void setOpratorName(String opratorName) {
+        this.opratorName = opratorName;
+    }
+    public String getOpratorCode() {
+        return opratorCode;
+    }
+
+    public void setOpratorCode(String opratorCode) {
+        this.opratorCode = opratorCode;
+    }
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+    public String getQmSharpenProviderCode() {
+        return qmSharpenProviderCode;
+    }
+
+    public void setQmSharpenProviderCode(String qmSharpenProviderCode) {
+        this.qmSharpenProviderCode = qmSharpenProviderCode;
+    }
+    public String getQmSharpenProviderName() {
+        return qmSharpenProviderName;
+    }
+
+    public void setQmSharpenProviderName(String qmSharpenProviderName) {
+        this.qmSharpenProviderName = qmSharpenProviderName;
+    }
+    public String getApproverName() {
+        return approverName;
+    }
+
+    public void setApproverName(String approverName) {
+        this.approverName = approverName;
     }
 
     public CuttingToolVO getCuttingToolVO() {

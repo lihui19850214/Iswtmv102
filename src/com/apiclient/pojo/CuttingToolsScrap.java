@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 CuttingToolsScrap 
 */
-public class CuttingToolsScrap implements Serializable{
+public class CuttingToolsScrap implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -85,6 +85,12 @@ public class CuttingToolsScrap implements Serializable{
     * @Description  
      */
     private String cuttingToolCode;
+    /**
+     * @fieldName status
+    * @fieldType  String
+    * @Description  报废状态 1待刃磨 2待出厂 3备用刀
+     */
+    private String status;
 
     /**
      * @fieldName cuttingToolCode
@@ -180,6 +186,13 @@ public class CuttingToolsScrap implements Serializable{
 
     public void setCuttingToolCode(String cuttingToolCode) {
         this.cuttingToolCode = cuttingToolCode;
+    }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public CuttingTool getCuttingTool() {

@@ -7,7 +7,7 @@ import java.io.Serializable;
 * Automated Build
 * 实体 ProductLine 
 */
-public class ProductLine implements Serializable{
+public class ProductLine implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

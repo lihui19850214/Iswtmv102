@@ -28,8 +28,15 @@ public class SearchOutLiberaryVO {
     //修模方式
     private String grinding;
 
-    //刀具出库
-    DjOutapplyAkp djOutapplyAkp;
+    private DjOutapplyAkp djOutapplyAkp;
+
+    public DjOutapplyAkp getDjOutapplyAkp() {
+        return djOutapplyAkp;
+    }
+
+    public void setDjOutapplyAkp(DjOutapplyAkp djOutapplyAkp) {
+        this.djOutapplyAkp = djOutapplyAkp;
+    }
 
     public String getSpecifications() {
         return specifications;
@@ -109,13 +116,5 @@ public class SearchOutLiberaryVO {
 
     public void setGrinding(String grinding) {
         this.grinding = grinding;
-    }
-
-    public DjOutapplyAkp getDjOutapplyAkp() {
-        return djOutapplyAkp;
-    }
-
-    public void setDjOutapplyAkp(DjOutapplyAkp djOutapplyAkp) {
-        this.djOutapplyAkp = djOutapplyAkp;
     }
 }

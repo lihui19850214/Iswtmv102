@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 QimingRecords 
 */
-public class QimingRecords implements Serializable{
+public class QimingRecords implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

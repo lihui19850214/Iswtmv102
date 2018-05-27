@@ -9,7 +9,7 @@ import java.util.List;
 * Automated Build
 * 实体 AuthAgency 
 */
-public class AuthAgency implements Serializable{
+public class AuthAgency implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

@@ -1,18 +1,13 @@
 package com.apiclient.pojo;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 
 /**
 * Created by jiangchenkeji
 * Automated Build
 * 实体 SynthesisCuttingToolLocation 
 */
-public class SynthesisCuttingToolLocation implements Serializable{
+public class SynthesisCuttingToolLocation implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

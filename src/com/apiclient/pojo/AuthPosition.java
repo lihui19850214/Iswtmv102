@@ -8,7 +8,7 @@ import java.util.List;
 * Automated Build
 * 实体 AuthPosition 
 */
-public class AuthPosition implements Serializable{
+public class AuthPosition implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

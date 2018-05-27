@@ -7,7 +7,7 @@ import java.io.Serializable;
 * Automated Build
 * 实体 DjCircleKanbanAkpVO 
 */
-public class DjCircleKanbanAkpVO implements Serializable{
+public class DjCircleKanbanAkpVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

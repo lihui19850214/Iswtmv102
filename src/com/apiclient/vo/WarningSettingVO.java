@@ -7,7 +7,7 @@ import java.io.Serializable;
 * Automated Build
 * 实体 WarningSettingVO 
 */
-public class WarningSettingVO implements Serializable{
+public class WarningSettingVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

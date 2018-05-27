@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 SynthesisCuttingToolExchange 
 */
-public class SynthesisCuttingToolExchange implements Serializable{
+public class SynthesisCuttingToolExchange implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -51,10 +51,10 @@ public class SynthesisCuttingToolExchange implements Serializable{
     private String tollUpCustomerName;
     /**
      * @fieldName toolDownTime
-    * @fieldType  String
+    * @fieldType  Timestamp
     * @Description  刀具卸下时间
      */
-    private String toolDownTime;
+    private Timestamp toolDownTime;
     /**
      * @fieldName toolDownCustomerCode
     * @fieldType  String
@@ -175,11 +175,11 @@ public class SynthesisCuttingToolExchange implements Serializable{
     public void setTollUpCustomerName(String tollUpCustomerName) {
         this.tollUpCustomerName = tollUpCustomerName;
     }
-    public String getToolDownTime() {
+    public Timestamp getToolDownTime() {
         return toolDownTime;
     }
 
-    public void setToolDownTime(String toolDownTime) {
+    public void setToolDownTime(Timestamp toolDownTime) {
         this.toolDownTime = toolDownTime;
     }
     public String getToolDownCustomerCode() {

@@ -7,7 +7,7 @@ import java.io.Serializable;
 * Automated Build
 * 实体 DjOwnerAkpVO 
 */
-public class DjOwnerAkpVO implements Serializable{
+public class DjOwnerAkpVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
