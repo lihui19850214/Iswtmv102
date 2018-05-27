@@ -86,7 +86,11 @@ public class RfidContainer implements Serializable {
     * @Description  操作人姓名
      */
     private String operatorName;
-
+    /**
+     * @fieldName operatorTime
+     * @fieldType  Timestamp
+     * @Description  操作时间
+     */
     private Timestamp operatorTime;
 
     private List<AuthCustomer> authCustomerList;
