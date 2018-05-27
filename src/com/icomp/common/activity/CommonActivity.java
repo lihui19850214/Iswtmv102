@@ -930,6 +930,7 @@ public abstract class CommonActivity extends Activity {
             authorizationWindowCallBack = callBack;
             showAuthorizationWindow();
         } else {
+            authorizationWindowCallBack = callBack;
             // 不需要授权传 null
             authorizationWindowCallBack.success(null);
         }
