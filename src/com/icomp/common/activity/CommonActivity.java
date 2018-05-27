@@ -1315,6 +1315,31 @@ public abstract class CommonActivity extends Activity {
     }
 
 
+    /**
+     * 异常显示数据提示dialog
+     */
+    public void stopProcessShowDialogAlert(String content, final ExceptionProcessCallBack callback) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialog2);
+        final AlertDialog dialog = builder.create();
+        View view = View.inflate(this, R.layout.dialog_alert2, null);
+        Button btnConfirm = (Button) view.findViewById(R.id.btn_confirm);
+        TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
+        tvContent.setText(content);
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.confirm();
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
+        dialog.setContentView(view);
+        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
+    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
