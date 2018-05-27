@@ -500,4 +500,15 @@ public interface IRequest {
     @POST("/authCustomer/search")
     Call<String> logonRfidSearch(@Body RequestBody info);
     // --------------登陆结束--------------
+
+    // --------------权限查询开始--------------
+    /**
+     * 权限查询
+     * @param info
+     * @return
+     */
+    @POST("/power/getPowerForUser")
+    Call<String> getPowerForUser(@Body RequestBody info);
+    // --------------权限查询结束--------------
+
 }
