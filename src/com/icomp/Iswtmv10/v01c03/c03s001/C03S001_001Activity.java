@@ -24,6 +24,8 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import java.util.HashMap;
+
 /**
  * 合成刀具初始化页面1
  */
@@ -150,7 +152,7 @@ public class C03S001_001Activity extends CommonActivity {
                 String jsonStr = gson.toJson(params);
                 RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body);
+                Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
                 getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
                     @Override
                     public void _onResponse(Response<String> response) {
@@ -213,7 +215,7 @@ public class C03S001_001Activity extends CommonActivity {
         String jsonStr = gson.toJson(params);
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body);
+        Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
 
         getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
             @Override
