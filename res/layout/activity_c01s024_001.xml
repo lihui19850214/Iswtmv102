@@ -35,19 +35,17 @@
                         android:gravity="left"
                         android:text="材料号"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
+
                     <TextView
                             android:id="@+id/tv_cailiaoInfo_materialNumber"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -64,19 +62,17 @@
                         android:gravity="left"
                         android:text="最后执行操作"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
+
                     <TextView
                             android:id="@+id/tv_cailiaoInfo_finalExecution"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -93,19 +89,17 @@
                         android:gravity="left"
                         android:text="操作者"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
+
                     <TextView
                             android:id="@+id/tv_cailiaoInfo_operator"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -122,19 +116,17 @@
                         android:gravity="left"
                         android:text="操作时间"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
+
                     <TextView
                             android:id="@+id/tv_cailiaoInfo_operationTime"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -151,19 +143,17 @@
                         android:gravity="left"
                         android:text="修磨次数"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
+
                     <TextView
                             android:id="@+id/tv_cailiaoInfo_grindingTimes"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -180,19 +170,17 @@
                         android:gravity="left"
                         android:text="累计加工量"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
+
                     <TextView
                             android:id="@+id/tv_cailiaoInfo_cumulativeAmountOfProcessing"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
@@ -205,7 +193,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="8"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone"><!---->
 
             <LinearLayout
                     android:layout_width="match_parent"
@@ -221,19 +209,17 @@
                         android:gravity="left"
                         android:text="合成刀具编码"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
+
                     <TextView
                             android:id="@+id/tv_hechengInfo_syntheticToolCode"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -250,19 +236,17 @@
                         android:gravity="left"
                         android:text="最后执行操作"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
+
                     <TextView
                             android:id="@+id/tv_hechengInfo_finalExecution"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -279,19 +263,16 @@
                         android:gravity="left"
                         android:text="操作者"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
                     <TextView
                             android:id="@+id/tv_hechengInfo_operator"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -308,19 +289,17 @@
                         android:gravity="left"
                         android:text="操作时间"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
+
                     <TextView
                             android:id="@+id/tv_hechengInfo_operationTime"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -337,19 +316,16 @@
                         android:gravity="left"
                         android:text="修磨次数"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
+
                     <TextView
                             android:id="@+id/tv_hechengInfo_grindingTimes"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -366,19 +342,15 @@
                         android:gravity="left"
                         android:text="累计加工量"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
                     <TextView
                             android:id="@+id/tv_hechengInfo_cumulativeAmountOfProcessing"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
@@ -401,25 +373,23 @@
                 <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.5"
                         android:textColor="@color/baseColor"
                         android:textSize="@dimen/text_content_size"
                         android:gravity="left"
                         android:text="设备名称"/>
 
-                <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
+
                     <TextView
                             android:id="@+id/tv_equipmentInfo_equipmentName"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/text_content_size"
                             android:gravity="center_vertical"
                             android:paddingLeft="10dp"
                             android:background="@drawable/border"/>
-                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>
@@ -443,25 +413,23 @@
                 <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.5"
                         android:textColor="@color/baseColor"
                         android:textSize="@dimen/text_content_size"
                         android:gravity="left"
                         android:text="员工号"/>
 
-                <LinearLayout
+
+                <TextView
+                        android:id="@+id/tv_personnelInfo_employeeNumber"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="wrap_content">
-                    <TextView
-                            android:id="@+id/tv_personnelInfo_employeeNumber"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/text_content_size"
-                            android:gravity="center_vertical"
-                            android:paddingLeft="10dp"
-                            android:background="@drawable/border"/>
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:background="@drawable/border"/>
+
             </LinearLayout>
 
             <LinearLayout
@@ -472,25 +440,23 @@
                 <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.5"
                         android:textColor="@color/baseColor"
                         android:textSize="@dimen/text_content_size"
                         android:gravity="left"
                         android:text="真实姓名"/>
 
-                <LinearLayout
+
+                <TextView
+                        android:id="@+id/tv_personnelInfo_realName"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="wrap_content">
-                    <TextView
-                            android:id="@+id/tv_personnelInfo_realName"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/text_content_size"
-                            android:gravity="center_vertical"
-                            android:paddingLeft="10dp"
-                            android:background="@drawable/border"/>
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:background="@drawable/border"/>
+
             </LinearLayout>
 
             <LinearLayout
@@ -501,25 +467,23 @@
                 <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="0.5"
                         android:textColor="@color/baseColor"
                         android:textSize="@dimen/text_content_size"
                         android:gravity="left"
                         android:text="部门"/>
 
-                <LinearLayout
+
+                <TextView
+                        android:id="@+id/tv_personnelInfo_department"
                         android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="wrap_content">
-                    <TextView
-                            android:id="@+id/tv_personnelInfo_department"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/text_content_size"
-                            android:gravity="center_vertical"
-                            android:paddingLeft="10dp"
-                            android:background="@drawable/border"/>
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_content_size"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:background="@drawable/border"/>
+
             </LinearLayout>
 
         </LinearLayout>
