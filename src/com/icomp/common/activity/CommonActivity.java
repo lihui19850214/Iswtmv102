@@ -912,17 +912,26 @@ public abstract class CommonActivity extends Activity {
     // 授权人数，默认是 1 人
     private int authorizedPeopleNumber = 1;
 
+    // 是否需要授权 true为需要授权；false为不需要授权
+    public static boolean is_need_authorization = false;
+
     // 授权登陆回调方法
     AuthorizationWindowCallBack authorizationWindowCallBack = null;
 
     public void authorizationWindow(int authorizedPeopleNumber, AuthorizationWindowCallBack callBack){
-        if (authorizedPeopleNumber > 0) {
-            this.authorizedPeopleNumber = authorizedPeopleNumber;
-        }
+        // 需要授权
+        if (is_need_authorization) {
+            if (authorizedPeopleNumber > 0) {
+                this.authorizedPeopleNumber = authorizedPeopleNumber;
+            }
 
-        authorizationList = new ArrayList<>();
-        authorizationWindowCallBack = callBack;
-        showAuthorizationWindow();
+            authorizationList = new ArrayList<>();
+            authorizationWindowCallBack = callBack;
+            showAuthorizationWindow();
+        } else {
+            // 不需要授权传 null
+            authorizationWindowCallBack.success(null);
+        }
     }
 
     //授权弹窗
@@ -1262,6 +1271,40 @@ public abstract class CommonActivity extends Activity {
                 }
             }
         }
+    }
+
+
+    /**
+     * 异常显示数据提示dialog
+     */
+    public void exceptionProcessShowDialogAlert(String content, final ExceptionProcessCallBack callback) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialog2);
+        final AlertDialog dialog = builder.create();
+        View view = View.inflate(this, R.layout.dialog_alert, null);
+        Button btnConfirm = (Button) view.findViewById(R.id.btn_confirm);
+        Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
+        TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
+        tvContent.setText(content);
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.confirm();
+                dialog.cancel();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                callback.cancel();
+                dialog.cancel();
+            }
+        });
+
+        dialog.show();
+        dialog.setContentView(view);
+        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
     }
 
 
