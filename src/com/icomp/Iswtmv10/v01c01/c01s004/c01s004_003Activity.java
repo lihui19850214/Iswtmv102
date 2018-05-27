@@ -313,8 +313,18 @@ public class c01s004_003Activity extends CommonActivity {
         IRequest iRequest = retrofit.create(IRequest.class);
 
         outApplyVO.setDjOutapplyAkp(djOutapplyAkp);
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(outApplyVO);
+//        Gson gson = new Gson();
+//        String jsonStr = gson.toJson(outApplyVO);
+        ObjectMapper mapper = new ObjectMapper();
+
+
+        String jsonStr = "";
+        try {
+            jsonStr = mapper.writeValueAsString(outApplyVO);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
         Call<String> outApply = iRequest.outApply(body);
