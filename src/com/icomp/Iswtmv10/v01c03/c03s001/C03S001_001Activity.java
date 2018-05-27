@@ -82,6 +82,7 @@ public class C03S001_001Activity extends CommonActivity {
                 break;
             //查询按钮处理
             case R.id.btnSearch:
+                params = new SynthesisCuttingToolInitVO();
                 params.setSynthesisCode(et01.getText().toString().trim());
                 if ("".equals(params.getSynthesisCode())) {
                     createAlertDialog(C03S001_001Activity.this, getString(R.string.c03s001_001_002), Toast.LENGTH_LONG);
@@ -143,7 +144,7 @@ public class C03S001_001Activity extends CommonActivity {
 
                 //调用接口，查询合成刀具组成信息
                 IRequest iRequest = retrofit.create(IRequest.class);
-
+                params = new SynthesisCuttingToolInitVO();
                 params.setRfidCode(rfidString);
                 Gson gson = new Gson();
                 String jsonStr = gson.toJson(params);
