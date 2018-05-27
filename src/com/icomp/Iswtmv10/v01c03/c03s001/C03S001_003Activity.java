@@ -212,7 +212,7 @@ public class C03S001_003Activity extends CommonActivity {
                 tv01.setText(getResources().getString(R.string.c03s001_003_002) + scanNumber);
             } else {
                 // 重复扫描
-                Toast.makeText(getApplicationContext(), "重复扫描", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), "重复扫描", Toast.LENGTH_SHORT).show();
             }
 
             //重新启动扫描线程
