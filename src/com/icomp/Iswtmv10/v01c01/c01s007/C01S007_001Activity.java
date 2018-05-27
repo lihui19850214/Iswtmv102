@@ -13,6 +13,7 @@ import butterknife.OnClick;
 import com.apiclient.pojo.DjOutapplyAkp;
 import com.apiclient.pojo.QimingRecords;
 import com.apiclient.vo.QimingRecordsVO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.icomp.Iswtmv10.R;
@@ -178,9 +179,8 @@ public class C01S007_001Activity extends CommonActivity {
             public void _onResponse(Response<String> response) {
                 try {
                     if (response.raw().code() == 200) {
-                        Gson gson = new Gson();
-                        Type type = new TypeToken<List<DjOutapplyAkp>>() {}.getType();
-                        DjOutapplyAkpList = gson.fromJson(response.body(), type);
+                        ObjectMapper mapper = new ObjectMapper();
+                        DjOutapplyAkpList = mapper.readValue(response.body(), getCollectionType(mapper, List.class, DjOutapplyAkp.class));
 
                     } else {
                         createAlertDialog(C01S007_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
