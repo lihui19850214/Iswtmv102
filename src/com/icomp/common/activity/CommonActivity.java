@@ -34,6 +34,7 @@ import com.apiclient.vo.RfidContainerVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -1075,12 +1076,15 @@ public abstract class CommonActivity extends Activity {
             authCustomerVO.setAccount(userName);
             authCustomerVO.setPassword(passWord);
 
-            String jsonStr = "";
-            try {
-                jsonStr = mapper.writeValueAsString(authCustomerVO);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+//            String jsonStr = "";
+//            try {
+//                jsonStr = mapper.writeValueAsString(authCustomerVO);
+//            } catch (JsonProcessingException e) {
+//                e.printStackTrace();
+//            }
+
+            Gson gson = new Gson();
+            String jsonStr = gson.toJson(authCustomerVO);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             Call<String> loganForPDA = iRequest.loganForPDA(body);
@@ -1229,12 +1233,15 @@ public abstract class CommonActivity extends Activity {
                 AuthCustomerVO authCustomerVO = new AuthCustomerVO();
                 authCustomerVO.setRfidContainerVO(rfidContainerVO);
 
-                String jsonStr = "";
-                try {
-                    jsonStr = mapper.writeValueAsString(authCustomerVO);
-                } catch (JsonProcessingException e) {
-                    e.printStackTrace();
-                }
+//                String jsonStr = "";
+//                try {
+//                    jsonStr = mapper.writeValueAsString(authCustomerVO);
+//                } catch (JsonProcessingException e) {
+//                    e.printStackTrace();
+//                }
+
+                Gson gson = new Gson();
+                String jsonStr = gson.toJson(authCustomerVO);
                 RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
                 Call<String> loganForPDA = iRequest.loganForPDA(body);
