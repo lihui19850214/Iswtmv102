@@ -1,12 +1,8 @@
 package com.icomp.Iswtmv10.v01c01.c01s005;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.*;
 import android.widget.*;
 import butterknife.BindView;
@@ -22,9 +18,6 @@ import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.Iswtmv10.v01c01.c01s005.modul.TongDaoModul;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
-import com.icomp.wsdl.v01c00.c00s000.C00S000Wsdl;
-import com.icomp.wsdl.v01c00.c00s000.endpoint.UserRequest;
-import com.icomp.wsdl.v01c00.c00s000.endpoint.UserRespons;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -32,7 +25,11 @@ import retrofit2.Retrofit;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * 刀具报废页面2
+ */
 public class c01s005_002_3Activity extends CommonActivity {
 
 
@@ -72,7 +69,8 @@ public class c01s005_002_3Activity extends CommonActivity {
 
         retrofit = RetrofitSingle.newInstance();
 
-        cuttingToolsScrap = (List<CuttingToolsScrap>) getIntent().getSerializableExtra("List<CuttingToolsScrap>");
+        Map<String, Object> paramMap = PARAM_MAP.get(1);
+        cuttingToolsScrap = (List<CuttingToolsScrap>) paramMap.get("cuttingToolsScrapList");
 
         for (CuttingToolsScrap cuttingToolsScrap : cuttingToolsScrap) {
             addLayout(cuttingToolsScrap);
@@ -83,6 +81,10 @@ public class c01s005_002_3Activity extends CommonActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnCancel:
+                Intent intent = new Intent(this, c01s005_002_2Activity.class);
+                // 不清空页面之间传递的值
+                intent.putExtra("isClearParamMap", false);
+                startActivity(intent);
                 finish();
                 break;
             case R.id.btnNext:
@@ -121,77 +123,29 @@ public class c01s005_002_3Activity extends CommonActivity {
     }
 
 
-    class MyAdapter extends BaseAdapter {
-        private List<TongDaoModul> list;
-
-        public MyAdapter(List<TongDaoModul> list) {
-            this.list = list;
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            View view = LayoutInflater.from(c01s005_002_3Activity.this).inflate(R.layout.item_dialog_list, null);
-            CheckBox c = (CheckBox) view.findViewById(R.id.cb);
-            TextView tvCaiLiao = (TextView) view.findViewById(R.id.tvCaiLiao);
-            TextView tvGroupNum = (TextView) view.findViewById(R.id.tvGroupNum);
-            c.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    list.get(position).setCheck(isChecked);
-                }
-            });
-            tvCaiLiao.setText(list.get(position).getCaiLiao());
-            tvGroupNum.setText(list.get(position).getGroupNum());
-            return view;
-        }
-
-        public List<TongDaoModul> getList() {
-            return list;
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        Intent intent2 = getIntent();
-        if (intent2 == null) {
-            return;
-        } else {
-            Bundle bundle = intent2.getExtras();
-            if (bundle == null) {
-                return;
-            }
-            boolean isClear = bundle.getBoolean("isClear", false);
-            if (isClear) {
-                mLlContainer.removeAllViews();
-            }
-        }
-    }
-
-    private List<String> removeReasonList = new ArrayList<>();//保存所有卸下原因
-    private PopupWindow mPopWindow;//卸下原因下拉列表框PopupWindow
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//        setIntent(intent);
+//        Intent intent2 = getIntent();
+//        if (intent2 == null) {
+//            return;
+//        } else {
+//            Bundle bundle = intent2.getExtras();
+//            if (bundle == null) {
+//                return;
+//            }
+//            boolean isClear = bundle.getBoolean("isClear", false);
+//            if (isClear) {
+//                mLlContainer.removeAllViews();
+//            }
+//        }
+//    }
 
     /**
-     * 卸下原因下拉框
+     * 报废原因下拉框
      */
-    //显示出库单号列表
-    private void showPopupWindow() {
+    public void showPopupWindow() {
         View view = LayoutInflater.from(c01s005_002_3Activity.this).inflate(R.layout.spinner_c03s004_001, null);
         ListView listView = (ListView) view.findViewById(R.id.ll_spinner);
         ScrapStatusAdapter myAdapter = new ScrapStatusAdapter();
@@ -223,7 +177,6 @@ public class c01s005_002_3Activity extends CommonActivity {
     }
 
     class ScrapStatusAdapter extends BaseAdapter {
-
         @Override
         public int getCount() {
             return scrapStatusList.size();
@@ -293,7 +246,7 @@ public class c01s005_002_3Activity extends CommonActivity {
     }
 
 
-
+// --------------------以下代码没用，暂时保留---------------------
     /**
      * 遍历所有数据并转化为json
      */
@@ -336,5 +289,49 @@ public class c01s005_002_3Activity extends CommonActivity {
         }
         Gson gson = new Gson();
         return gson.toJson(jsonList);
+    }
+
+    class MyAdapter extends BaseAdapter {
+        private List<TongDaoModul> list;
+
+        public MyAdapter(List<TongDaoModul> list) {
+            this.list = list;
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return list.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View view = LayoutInflater.from(c01s005_002_3Activity.this).inflate(R.layout.item_dialog_list, null);
+            CheckBox c = (CheckBox) view.findViewById(R.id.cb);
+            TextView tvCaiLiao = (TextView) view.findViewById(R.id.tvCaiLiao);
+            TextView tvGroupNum = (TextView) view.findViewById(R.id.tvGroupNum);
+            c.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    list.get(position).setCheck(isChecked);
+                }
+            });
+            tvCaiLiao.setText(list.get(position).getCaiLiao());
+            tvGroupNum.setText(list.get(position).getGroupNum());
+            return view;
+        }
+
+        public List<TongDaoModul> getList() {
+            return list;
+        }
     }
 }
