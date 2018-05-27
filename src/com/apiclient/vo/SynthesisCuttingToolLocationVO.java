@@ -1,18 +1,13 @@
 package com.apiclient.vo;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 
 /**
 * Created by jiangchenkeji
 * Automated Build
 * 实体 SynthesisCuttingToolLocationVO 
 */
-public class SynthesisCuttingToolLocationVO implements Serializable{
+public class SynthesisCuttingToolLocationVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

@@ -7,7 +7,7 @@ import java.io.Serializable;
 * Automated Build
 * 实体 MaterialInventoryVO 
 */
-public class MaterialInventoryVO implements Serializable{
+public class MaterialInventoryVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -57,7 +57,7 @@ public class MaterialInventoryVO implements Serializable{
     /**
      * @fieldName productLineCount
     * @fieldType  Integer
-    * @Description  生产线数量
+    * @Description  生产线数量 设备上
      */
     private Integer productLineCount;
 
@@ -81,6 +81,27 @@ public class MaterialInventoryVO implements Serializable{
     * @Description  逻辑删除
      */
     private Integer isDel;
+
+    /**
+     * @fieldName toInstallCount
+    * @fieldType  Integer
+    * @Description  待按上数量
+     */
+    private Integer toInstallCount;
+
+    /**
+     * @fieldName toUninstallCount
+    * @fieldType  Integer
+    * @Description  待卸下数量
+     */
+    private Integer toUninstallCount;
+
+    /**
+     * @fieldName toExchangeCount
+    * @fieldType  Integer
+    * @Description  待换装数量
+     */
+    private Integer toExchangeCount;
 
     /**
      * @fieldName cuttingToolCode
@@ -125,35 +146,6 @@ public class MaterialInventoryVO implements Serializable{
      */
     private Integer startRecord;
 
-    /**
-      * @fieldName toInstallCount
-     * @fieldType  Integer
-     * @Description  待按上数量
-     */
-    private Integer toInstallCount;
-
-    /**
-      * @fieldName toInstallCount
-     * @fieldType  Integer
-     * @Description  待按上数量
-     */
-    private Integer toUninstallCount;
-
-    public Integer getToUninstallCount() {
-        return toUninstallCount;
-    }
-
-    public void setToUninstallCount(Integer toUninstallCount) {
-        this.toUninstallCount = toUninstallCount;
-    }
-
-    public Integer getToInstallCount() {
-        return toInstallCount;
-    }
-
-    public void setToInstallCount(Integer toInstallCount) {
-        this.toInstallCount = toInstallCount;
-    }
 
     /* 材料刀标识 */
     public Integer getId() {
@@ -226,6 +218,27 @@ public class MaterialInventoryVO implements Serializable{
 
     public void setIsDel(Integer isDel) {
         this.isDel = isDel;
+    }
+    public Integer getToInstallCount() {
+        return toInstallCount;
+    }
+
+    public void setToInstallCount(Integer toInstallCount) {
+        this.toInstallCount = toInstallCount;
+    }
+    public Integer getToUninstallCount() {
+        return toUninstallCount;
+    }
+
+    public void setToUninstallCount(Integer toUninstallCount) {
+        this.toUninstallCount = toUninstallCount;
+    }
+    public Integer getToExchangeCount() {
+        return toExchangeCount;
+    }
+
+    public void setToExchangeCount(Integer toExchangeCount) {
+        this.toExchangeCount = toExchangeCount;
     }
 
     public CuttingToolVO getCuttingToolVO() {

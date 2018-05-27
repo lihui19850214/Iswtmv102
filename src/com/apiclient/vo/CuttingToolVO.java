@@ -9,7 +9,7 @@ import java.util.List;
 * Automated Build
 * 实体 CuttingToolVO 
 */
-public class CuttingToolVO implements Serializable{
+public class CuttingToolVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

@@ -17,6 +17,14 @@ public class DownCuttingToolVO {
 
     private Integer lost;
 
+    public String getBladeCode() {
+        return bladeCode;
+    }
+
+    public void setBladeCode(String bladeCode) {
+        this.bladeCode = bladeCode;
+    }
+
     public Integer getLost() {
         return lost;
     }
@@ -55,13 +63,5 @@ public class DownCuttingToolVO {
 
     public void setDownCount(Integer downCount) {
         this.downCount = downCount;
-    }
-
-    public String getBladeCode() {
-        return bladeCode;
-    }
-
-    public void setBladeCode(String bladeCode) {
-        this.bladeCode = bladeCode;
     }
 }

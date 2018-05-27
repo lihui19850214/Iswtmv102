@@ -9,7 +9,7 @@ import java.util.List;
 * Automated Build
 * 实体 SynthesisCuttingToolBind 
 */
-public class SynthesisCuttingToolBind implements Serializable{
+public class SynthesisCuttingToolBind implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

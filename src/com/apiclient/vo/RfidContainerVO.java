@@ -8,7 +8,7 @@ import java.util.List;
 * Automated Build
 * 实体 RfidContainerVO 
 */
-public class RfidContainerVO implements Serializable{
+public class RfidContainerVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -110,12 +110,12 @@ public class RfidContainerVO implements Serializable{
      */
     private Integer currentPage = 1;
 
-//    /**
-//     * @fieldName totalPage
-//    * @fieldType  Integer
-//    * @Description  总页数
-//     */
-//    private Integer totalPage;
+    /**
+     * @fieldName totalPage
+    * @fieldType  Integer
+    * @Description  总页数
+     */
+    private Integer totalPage;
 
     /**
      * @fieldName pageSize
@@ -265,14 +265,14 @@ public class RfidContainerVO implements Serializable{
         this.startRecord = (this.currentPage-1)*pageSize;
     }
 
-//    public Integer getTotalPage() {
-//        return totalPage;
-//    }
-//
-//    public void setTotalPage(Integer totalPage) {
-//        this.totalPage = totalPage;
-//        this.maxPage = this.totalPage/this.pageSize+(this.totalPage%this.pageSize)>0?1:0;
-//    }
+    public Integer getTotalPage() {
+        return totalPage;
+    }
+
+    public void setTotalPage(Integer totalPage) {
+        this.totalPage = totalPage;
+        this.maxPage = this.totalPage/this.pageSize+(this.totalPage%this.pageSize)>0?1:0;
+    }
 
     public Integer getPageSize() {
         return pageSize;

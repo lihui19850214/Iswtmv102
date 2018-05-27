@@ -1,9 +1,6 @@
 package com.apiclient.vo;
 
-
-import com.apiclient.pojo.ProductLine;
-import com.apiclient.pojo.ProductLineAssemblyline;
-import com.apiclient.pojo.ProductLineEquipment;
+import com.apiclient.pojo.*;
 
 import java.util.List;
 

@@ -8,7 +8,7 @@ import java.util.Date;
 * Automated Build
 * 实体 DjItrnAkp 
 */
-public class DjItrnAkp implements Serializable{
+public class DjItrnAkp implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -17,7 +17,7 @@ public class DjItrnAkp implements Serializable{
     * @fieldType  Integer
     * @Description  序列
      */
-    private Integer id;
+    private String id;
 
     /**
      * @fieldName batchno
@@ -126,13 +126,13 @@ public class DjItrnAkp implements Serializable{
     * @fieldType  String
     * @Description  加工次数
      */
-    private String processTimes;
+    private Integer processTimes;
     /**
      * @fieldName sharpenTimes
     * @fieldType  String
     * @Description  刃磨次数
      */
-    private String sharpenTimes;
+    private Integer sharpenTimes;
     /**
      * @fieldName bfCause
     * @fieldType  String
@@ -198,11 +198,12 @@ public class DjItrnAkp implements Serializable{
 
 
     /* 序列 */
-    public Integer getId() {
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -325,20 +326,23 @@ public class DjItrnAkp implements Serializable{
     public void setCreateBy(Integer createBy) {
         this.createBy = createBy;
     }
-    public String getProcessTimes() {
+
+    public Integer getProcessTimes() {
         return processTimes;
     }
 
-    public void setProcessTimes(String processTimes) {
+    public void setProcessTimes(Integer processTimes) {
         this.processTimes = processTimes;
     }
-    public String getSharpenTimes() {
+
+    public Integer getSharpenTimes() {
         return sharpenTimes;
     }
 
-    public void setSharpenTimes(String sharpenTimes) {
+    public void setSharpenTimes(Integer sharpenTimes) {
         this.sharpenTimes = sharpenTimes;
     }
+
     public String getBfCause() {
         return bfCause;
     }

@@ -8,7 +8,7 @@ import java.util.List;
 * Automated Build
 * 实体 SynthesisCuttingToolTypeVO 
 */
-public class SynthesisCuttingToolTypeVO implements Serializable{
+public class SynthesisCuttingToolTypeVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

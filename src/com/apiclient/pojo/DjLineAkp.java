@@ -7,7 +7,7 @@ import java.io.Serializable;
 * Automated Build
 * 实体 DjLineAkp 
 */
-public class DjLineAkp implements Serializable{
+public class DjLineAkp implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

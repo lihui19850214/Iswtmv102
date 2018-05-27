@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 OptionWarningVO 
 */
-public class OptionWarningVO implements Serializable{
+public class OptionWarningVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;

@@ -1,15 +1,16 @@
 package com.apiclient.vo;
 
+import com.apiclient.pojo.CuttingToolBind;
 import com.apiclient.pojo.DjCircleKanbanAkp;
 import com.apiclient.pojo.DjMtlAkp;
 import com.apiclient.pojo.DjOutapplyAkp;
 
+import java.util.List;
+
 /**
  * Created by logan on 2018/5/7.
  */
-public class OutApplyVO {
-
-    private Integer batchno;
+public class OutApplyVO extends  WriteBaseVO{
 
     private DjOutapplyAkp djOutapplyAkp;
 
@@ -26,6 +27,8 @@ public class OutApplyVO {
     private String linglOperatorRfidCode;
 
     private String kezhangRfidCode;
+
+    private List<CuttingToolBind> cuttingToolBinds;
 
     public String getKuguanOperatorCode() {
         return kuguanOperatorCode;
@@ -49,14 +52,6 @@ public class OutApplyVO {
 
     public void setKezhangRfidCode(String kezhangRfidCode) {
         this.kezhangRfidCode = kezhangRfidCode;
-    }
-
-    public Integer getBatchno() {
-        return batchno;
-    }
-
-    public void setBatchno(Integer batchno) {
-        this.batchno = batchno;
     }
 
     public DjOutapplyAkp getDjOutapplyAkp() {
@@ -97,5 +92,15 @@ public class OutApplyVO {
 
     public void setUnitqty(Integer unitqty) {
         this.unitqty = unitqty;
+    }
+
+    @Override
+    public List<CuttingToolBind> getCuttingToolBinds() {
+        return cuttingToolBinds;
+    }
+
+    @Override
+    public void setCuttingToolBinds(List<CuttingToolBind> cuttingToolBinds) {
+        this.cuttingToolBinds = cuttingToolBinds;
     }
 }

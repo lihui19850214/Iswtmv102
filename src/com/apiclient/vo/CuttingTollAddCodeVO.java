@@ -5,7 +5,7 @@ package com.apiclient.vo;
  */
 public class CuttingTollAddCodeVO {
 
-    private String  searchCode;
+    private String searchCode;
 
     public String getSearchCode() {
         return searchCode;

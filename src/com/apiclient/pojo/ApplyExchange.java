@@ -8,10 +8,8 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 ApplyExchange 
 */
-public class ApplyExchange implements Serializable{
+public class ApplyExchange implements Serializable {
 
-
-    ///
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
     /**

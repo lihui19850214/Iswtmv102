@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 SynthesisCuttingToolBindleRecordsVO 
 */
-public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
+public class SynthesisCuttingToolBindleRecordsVO implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -23,7 +23,7 @@ public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
     /**
      * @fieldName synthesisCuttingToolCode
     * @fieldType  String
-    * @Description  
+    * @Description  合成刀编码
      */
     private String synthesisCuttingToolCode;
 
@@ -58,14 +58,14 @@ public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
     /**
      * @fieldName productLineAxleCode
     * @fieldType  String
-    * @Description  
+    * @Description  轴
      */
     private String productLineAxleCode;
 
     /**
      * @fieldName productLinePartsCode
     * @fieldType  String
-    * @Description  
+    * @Description  零件
      */
     private String productLinePartsCode;
 
@@ -79,7 +79,7 @@ public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
     /**
      * @fieldName operatorInstall
     * @fieldType  String
-    * @Description  操作者
+    * @Description  安上人
      */
     private String operatorInstall;
 
@@ -98,11 +98,11 @@ public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
     private Integer ratedNumber;
 
     /**
-     * @fieldName actualNumber
+     * @fieldName processingCount
     * @fieldType  Integer
-    * @Description  实际数量
+    * @Description  实际加工数量
      */
-    private Integer actualNumber;
+    private Integer processingCount;
 
     /**
      * @fieldName isDel
@@ -114,21 +114,21 @@ public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
     /**
      * @fieldName operatorUninstall
     * @fieldType  String
-    * @Description  
+    * @Description  卸下人
      */
     private String operatorUninstall;
 
     /**
      * @fieldName operatorInstallName
     * @fieldType  String
-    * @Description  
+    * @Description  安上人姓名
      */
     private String operatorInstallName;
 
     /**
      * @fieldName operatorUninstallName
     * @fieldType  String
-    * @Description  
+    * @Description  卸下人姓名
      */
     private String operatorUninstallName;
 
@@ -173,14 +173,14 @@ public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
     /**
      * @fieldName synthesisCuttingToolBindCode
     * @fieldType  String
-    * @Description  
+    * @Description  合成刀绑定信息
      */
     private String synthesisCuttingToolBindCode;
 
     /**
      * @fieldName bindRfid
     * @fieldType  String
-    * @Description  
+    * @Description  刀具RFID
      */
     private String bindRfid;
 
@@ -191,23 +191,11 @@ public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
      */
     private ProductLineAssemblylineVO productLineAssemblylineVO;
     /**
-     * @fieldName productLineAxleCode
-    * @fieldType  
-    * @Description  
-     */
-    private ProductLineAxleVO productLineAxleVO;
-    /**
      * @fieldName productLineEquipmentCode
     * @fieldType  
     * @Description  设备
      */
     private ProductLineEquipmentVO productLineEquipmentVO;
-    /**
-     * @fieldName productLinePartsCode
-    * @fieldType  
-    * @Description  
-     */
-    private ProductLinePartsVO productLinePartsVO;
     /**
      * @fieldName productLineProcessCode
     * @fieldType  
@@ -215,15 +203,27 @@ public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
      */
     private ProductLineProcessVO productLineProcessVO;
     /**
+     * @fieldName productLineAxleCode
+    * @fieldType  
+    * @Description  轴
+     */
+    private ProductLineAxleVO productLineAxleVO;
+    /**
+     * @fieldName productLinePartsCode
+    * @fieldType  
+    * @Description  零件
+     */
+    private ProductLinePartsVO productLinePartsVO;
+    /**
      * @fieldName synthesisCuttingToolCode
     * @fieldType  
-    * @Description  
+    * @Description  合成刀编码
      */
     private SynthesisCuttingToolVO synthesisCuttingToolVO;
     /**
      * @fieldName synthesisCuttingToolBindCode
     * @fieldType  
-    * @Description  
+    * @Description  合成刀绑定信息
      */
     private SynthesisCuttingToolBindVO synthesisCuttingToolBindVO;
 
@@ -350,12 +350,12 @@ public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
     public void setRatedNumber(Integer ratedNumber) {
         this.ratedNumber = ratedNumber;
     }
-    public Integer getActualNumber() {
-        return actualNumber;
+    public Integer getProcessingCount() {
+        return processingCount;
     }
 
-    public void setActualNumber(Integer actualNumber) {
-        this.actualNumber = actualNumber;
+    public void setProcessingCount(Integer processingCount) {
+        this.processingCount = processingCount;
     }
     public Integer getIsDel() {
         return isDel;
@@ -451,13 +451,6 @@ public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
     public void setProductLineAssemblylineVO(ProductLineAssemblylineVO productLineAssemblylineVO) {
         this.productLineAssemblylineVO = productLineAssemblylineVO;
     }
-    public ProductLineAxleVO getProductLineAxleVO() {
-        return productLineAxleVO;
-    }
-
-    public void setProductLineAxleVO(ProductLineAxleVO productLineAxleVO) {
-        this.productLineAxleVO = productLineAxleVO;
-    }
     public ProductLineEquipmentVO getProductLineEquipmentVO() {
         return productLineEquipmentVO;
     }
@@ -465,19 +458,26 @@ public class SynthesisCuttingToolBindleRecordsVO implements Serializable{
     public void setProductLineEquipmentVO(ProductLineEquipmentVO productLineEquipmentVO) {
         this.productLineEquipmentVO = productLineEquipmentVO;
     }
-    public ProductLinePartsVO getProductLinePartsVO() {
-        return productLinePartsVO;
-    }
-
-    public void setProductLinePartsVO(ProductLinePartsVO productLinePartsVO) {
-        this.productLinePartsVO = productLinePartsVO;
-    }
     public ProductLineProcessVO getProductLineProcessVO() {
         return productLineProcessVO;
     }
 
     public void setProductLineProcessVO(ProductLineProcessVO productLineProcessVO) {
         this.productLineProcessVO = productLineProcessVO;
+    }
+    public ProductLineAxleVO getProductLineAxleVO() {
+        return productLineAxleVO;
+    }
+
+    public void setProductLineAxleVO(ProductLineAxleVO productLineAxleVO) {
+        this.productLineAxleVO = productLineAxleVO;
+    }
+    public ProductLinePartsVO getProductLinePartsVO() {
+        return productLinePartsVO;
+    }
+
+    public void setProductLinePartsVO(ProductLinePartsVO productLinePartsVO) {
+        this.productLinePartsVO = productLinePartsVO;
     }
     public SynthesisCuttingToolVO getSynthesisCuttingToolVO() {
         return synthesisCuttingToolVO;

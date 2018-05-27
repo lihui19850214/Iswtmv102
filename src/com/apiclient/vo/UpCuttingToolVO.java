@@ -11,7 +11,15 @@ public class UpCuttingToolVO {
 
     private String rfidCode;
 
-    private String bladeCode;//刀身码
+    private String bladeCode;
+
+    public String getBladeCode() {
+        return bladeCode;
+    }
+
+    public void setBladeCode(String bladeCode) {
+        this.bladeCode = bladeCode;
+    }
 
     public String getRfidCode() {
         return rfidCode;
@@ -35,13 +43,5 @@ public class UpCuttingToolVO {
 
     public void setUpCount(Integer upCount) {
         this.upCount = upCount;
-    }
-
-    public String getBladeCode() {
-        return bladeCode;
-    }
-
-    public void setBladeCode(String bladeCode) {
-        this.bladeCode = bladeCode;
     }
 }

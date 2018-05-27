@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 * Automated Build
 * 实体 SynthesisCuttingToolAdjust 
 */
-public class SynthesisCuttingToolAdjust implements Serializable{
+public class SynthesisCuttingToolAdjust implements Serializable {
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -26,27 +26,15 @@ public class SynthesisCuttingToolAdjust implements Serializable{
      */
     private String synthesisCode;
     /**
-     * @fieldName rfidCode
+     * @fieldName businessCode
     * @fieldType  String
-    * @Description  rfid编码
+    * @Description  材料号
      */
-    private String rfidCode;
-    /**
-     * @fieldName cuttingToolBusinessCode
-    * @fieldType  String
-    * @Description  物料号
-     */
-    private String cuttingToolBusinessCode;
-    /**
-     * @fieldName productLineName
-    * @fieldType  String
-    * @Description  生产线名称
-     */
-    private String productLineName;
+    private String businessCode;
     /**
      * @fieldName productLineCode
     * @fieldType  String
-    * @Description  生产线编码
+    * @Description  生产关联关系code
      */
     private String productLineCode;
     /**
@@ -115,6 +103,36 @@ public class SynthesisCuttingToolAdjust implements Serializable{
     * @Description  调刀时间
      */
     private Timestamp adjustTime;
+    /**
+     * @fieldName synthesisCuttingToolCode
+    * @fieldType  String
+    * @Description  合成刀code
+     */
+    private String synthesisCuttingToolCode;
+    /**
+     * @fieldName cuttingToolCode
+    * @fieldType  String
+    * @Description  材料刀编码
+     */
+    private String cuttingToolCode;
+    /**
+     * @fieldName assemblylineCode
+    * @fieldType  String
+    * @Description  流水线code
+     */
+    private String assemblylineCode;
+    /**
+     * @fieldName assemblylineName
+    * @fieldType  String
+    * @Description  流水线名称
+     */
+    private String assemblylineName;
+    /**
+     * @fieldName isDel
+    * @fieldType  Integer
+    * @Description  逻辑删除
+     */
+    private Integer isDel;
 
 
 
@@ -135,26 +153,12 @@ public class SynthesisCuttingToolAdjust implements Serializable{
     public void setSynthesisCode(String synthesisCode) {
         this.synthesisCode = synthesisCode;
     }
-    public String getRfidCode() {
-        return rfidCode;
+    public String getBusinessCode() {
+        return businessCode;
     }
 
-    public void setRfidCode(String rfidCode) {
-        this.rfidCode = rfidCode;
-    }
-    public String getCuttingToolBusinessCode() {
-        return cuttingToolBusinessCode;
-    }
-
-    public void setCuttingToolBusinessCode(String cuttingToolBusinessCode) {
-        this.cuttingToolBusinessCode = cuttingToolBusinessCode;
-    }
-    public String getProductLineName() {
-        return productLineName;
-    }
-
-    public void setProductLineName(String productLineName) {
-        this.productLineName = productLineName;
+    public void setBusinessCode(String businessCode) {
+        this.businessCode = businessCode;
     }
     public String getProductLineCode() {
         return productLineCode;
@@ -239,6 +243,41 @@ public class SynthesisCuttingToolAdjust implements Serializable{
 
     public void setAdjustTime(Timestamp adjustTime) {
         this.adjustTime = adjustTime;
+    }
+    public String getSynthesisCuttingToolCode() {
+        return synthesisCuttingToolCode;
+    }
+
+    public void setSynthesisCuttingToolCode(String synthesisCuttingToolCode) {
+        this.synthesisCuttingToolCode = synthesisCuttingToolCode;
+    }
+    public String getCuttingToolCode() {
+        return cuttingToolCode;
+    }
+
+    public void setCuttingToolCode(String cuttingToolCode) {
+        this.cuttingToolCode = cuttingToolCode;
+    }
+    public String getAssemblylineCode() {
+        return assemblylineCode;
+    }
+
+    public void setAssemblylineCode(String assemblylineCode) {
+        this.assemblylineCode = assemblylineCode;
+    }
+    public String getAssemblylineName() {
+        return assemblylineName;
+    }
+
+    public void setAssemblylineName(String assemblylineName) {
+        this.assemblylineName = assemblylineName;
+    }
+    public Integer getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Integer isDel) {
+        this.isDel = isDel;
     }
 
 
