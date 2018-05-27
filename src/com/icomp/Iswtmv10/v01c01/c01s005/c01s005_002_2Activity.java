@@ -1,12 +1,10 @@
 package com.icomp.Iswtmv10.v01c01.c01s005;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
@@ -23,10 +21,7 @@ import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
-import com.icomp.common.utils.SysApplication;
 import okhttp3.RequestBody;
-import org.json.JSONException;
-import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -34,18 +29,20 @@ import retrofit2.Retrofit;
 import java.util.*;
 
 /**
- * 一体刀具报废
+ * 刀具报废页面1
  */
 public class c01s005_002_2Activity extends CommonActivity {
 
     @BindView(R.id.llContainer)
     LinearLayout mLlContainer;
+
     @BindView(R.id.tvScan)
     TextView mTvScan;
     @BindView(R.id.btnCancel)
     Button mBtnCancel;
     @BindView(R.id.btnNext)
     Button mBtnNext;
+
     @BindView(R.id.tvTitle)
     TextView tvTitle;
     @BindView(R.id.ivAdd)
@@ -97,11 +94,14 @@ public class c01s005_002_2Activity extends CommonActivity {
                 finish();
                 break;
             case R.id.btnNext:
+                // 用于页面之间传值，新方法
+                Map<String, Object> paramMap = new HashMap<>();
+                paramMap.put("cuttingToolsScrapList", cuttingToolsScrapList);
+                PARAM_MAP.put(1, paramMap);
+
                 Intent intent = new Intent(this, c01s005_002_3Activity.class);
-                Gson gson = new Gson();
-
-
-                intent.putExtra("json", gson.toJson(cuttingToolsScrapList));
+                // 不清空页面之间传递的值
+                intent.putExtra("isClearParamMap", false);
                 startActivity(intent);
                 break;
             case R.id.ivAdd:
@@ -145,44 +145,6 @@ public class c01s005_002_2Activity extends CommonActivity {
 
 
 
-
-    /**
-     * 下拉列表
-     */
-    private void showPopupWindow() {
-
-    }
-
-
-    //卸下原因下拉框的Adapter
-    class MyAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return scrapStatusList.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return scrapStatusList.get(i);
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return i;
-        }
-
-        @Override
-        public View getView(int i, View view, ViewGroup viewGroup) {
-            View view1 = LayoutInflater.from(c01s005_002_2Activity.this).inflate(R.layout.item_c03s004_001, null);
-            TextView textView = (TextView) view1.findViewById(R.id.tv_01);
-            textView.setText(scrapStatusList.get(i).getName());
-            return view1;
-        }
-    }
-
-
-
     //根据材料号查询合成刀具组成信息
     private void search(final String cailiao, final String scrapStatus, final String num) {
         loading.show();
@@ -205,18 +167,22 @@ public class c01s005_002_2Activity extends CommonActivity {
                         Gson gson = new Gson();
                         CuttingTool cuttingTool = gson.fromJson(response.body(), CuttingTool.class);
 
-                        // TODO 需要确认
-                        CuttingToolsScrap cuttingToolsScrap = new CuttingToolsScrap();
-                        cuttingToolsScrap.setCuttingTool(cuttingTool);
-                        cuttingToolsScrap.setMaterialNum(cailiao);
-                        cuttingToolsScrap.setCause(scrapStatus);
-                        cuttingToolsScrap.setCount(Integer.parseInt(num));
+                        if (cuttingTool != null) {
+                            // TODO 需要确认
+                            CuttingToolsScrap cuttingToolsScrap = new CuttingToolsScrap();
+                            cuttingToolsScrap.setCuttingTool(cuttingTool);
+                            cuttingToolsScrap.setMaterialNum(cailiao);
+                            cuttingToolsScrap.setCause(scrapStatus);
+                            cuttingToolsScrap.setCount(Integer.parseInt(num));
 
-                        cuttingToolsScrapList.add(cuttingToolsScrap);
+                            cuttingToolsScrapList.add(cuttingToolsScrap);
 
-                        materialNumToSet.add(cailiao);
+                            materialNumToSet.add(cailiao);
 
-                        addLayout(cailiao, scrapStatus, "rfid", num);
+                            addLayout(cailiao, scrapStatus, "", num);
+                        } else {
+                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         createAlertDialog(c01s005_002_2Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
                     }
@@ -297,6 +263,8 @@ public class c01s005_002_2Activity extends CommonActivity {
             isCanScan = false;
             mTvScan.setClickable(false);
             ivAdd.setClickable(false);
+            mBtnCancel.setClickable(false);
+            mBtnNext.setClickable(false);
             //显示扫描弹框的方法
             scanPopupWindow();
             //扫描线程
@@ -317,15 +285,43 @@ public class c01s005_002_2Activity extends CommonActivity {
             if ("close".equals(rfidString)) {
                 mTvScan.setClickable(true);
                 ivAdd.setClickable(true);
+                mBtnCancel.setClickable(true);
+                mBtnNext.setClickable(true);
                 isCanScan = true;
                 Message message = new Message();
                 overtimeHandler.sendMessage(message);
             } else if (null != rfidString && !"close".equals(rfidString)) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTvScan.setClickable(true);
+                        ivAdd.setClickable(true);
+                        mBtnCancel.setClickable(true);
+                        mBtnNext.setClickable(true);
+                        isCanScan = true;
+                        if (null != popupWindow && popupWindow.isShowing()) {
+                            popupWindow.dismiss();
+                        }
+                    }
+                });
+
                 // 判断是否已经扫描此 rfid
                 if (rfidToSet.contains(rfidString)) {
-                    createAlertDialog(c01s005_002_2Activity.this, "已存在", 1);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            createAlertDialog(c01s005_002_2Activity.this, "已存在", 1);
+                        }
+                    });
                     return;
                 }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loading.show();
+                    }
+                });
 
                 //调用接口，查询合成刀具组成信息
                 IRequest iRequest = retrofit.create(IRequest.class);
@@ -346,103 +342,74 @@ public class c01s005_002_2Activity extends CommonActivity {
                                 Gson gson = new Gson();
                                 CuttingToolBind cuttingToolBind = gson.fromJson(response.body(), CuttingToolBind.class);
 
-                                //TODO 需要确认
-                                RfidContainer rfidContainer = new RfidContainer();
-                                rfidContainer.setLaserCode(rfidString);
-                                cuttingToolBind.setRfidContainer(rfidContainer);
+                                if (cuttingToolBind != null) {
+                                    //TODO 需要确认
+                                    RfidContainer rfidContainer = new RfidContainer();
+                                    rfidContainer.setLaserCode(rfidString);
+                                    cuttingToolBind.setRfidContainer(rfidContainer);
 
-                                List<CuttingToolBind> cuttingToolBindList = new ArrayList<>();
-                                cuttingToolBindList.add(cuttingToolBind);
+                                    List<CuttingToolBind> cuttingToolBindList = new ArrayList<>();
+                                    cuttingToolBindList.add(cuttingToolBind);
 
-                                CuttingToolsScrap cuttingToolsScrap = new CuttingToolsScrap();
-                                cuttingToolsScrap.setMaterialNum(cuttingToolBind.getCuttingTool().getBusinessCode());
-                                cuttingToolsScrap.getCuttingTool().setCuttingToolBindList(cuttingToolBindList);
-                                cuttingToolsScrap.setCount(1);
+                                    CuttingToolsScrap cuttingToolsScrap = new CuttingToolsScrap();
+                                    cuttingToolsScrap.setMaterialNum(cuttingToolBind.getCuttingTool().getBusinessCode());
+                                    cuttingToolsScrap.getCuttingTool().setCuttingToolBindList(cuttingToolBindList);
+                                    cuttingToolsScrap.setCount(1);
 
-                                cuttingToolsScrapList.add(cuttingToolsScrap);
+                                    cuttingToolsScrapList.add(cuttingToolsScrap);
 
-                                rfidToSet.add(rfidString);
+                                    rfidToSet.add(rfidString);
 
-                                addLayout(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode(), rfidString, "1");
-
-
-//                                //封装传递
-//                                Message message = new Message();
-//                                message.obj = cardString;
-//                                scanfmhandler.sendMessage(message);
+                                    addLayout(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode(), rfidString, "1");
+                                } else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
                             } else {
-                                createAlertDialog(c01s005_002_2Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                final String errorStr = response.errorBody().string();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (null != loading && loading.isShowing()) {
+                                            loading.dismiss();
+                                        }
+                                        createAlertDialog(c01s005_002_2Activity.this, errorStr, Toast.LENGTH_LONG);
+                                    }
+                                });
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
                         } finally {
-                            popupWindow.dismiss();
-                            mTvScan.setClickable(true);
-                            ivAdd.setClickable(true);
-                            isCanScan = true;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (null != loading && loading.isShowing()) {
+                                        loading.dismiss();
+                                    }
+                                }
+                            });
                         }
                     }
 
                     @Override
                     public void _onFailure(Throwable t) {
-                        popupWindow.dismiss();
-                        createAlertDialog(c01s005_002_2Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                        mTvScan.setClickable(true);
-                        ivAdd.setClickable(true);
-                        isCanScan = true;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
+                                }
+                                createAlertDialog(c01s005_002_2Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                            }
+                        });
                     }
                 });
             }
         }
-    }
-
-    @SuppressLint("HandlerLeak")
-    Handler scanfmhandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Object obj = msg.obj;
-            //TODO 代码乱写，具体根据实际业务来
-            if (obj == null) {
-                createAlertDialog(c01s005_002_2Activity.this, "已存在", 1);
-            } else {
-                addLayout("材料号", "刀身码", "rfid", "数量");
-                //showDialog(jsonObject1.getString("synthesisParametersCode"), jsonObject1.getString("rfidContainerID"), jsonObject1.getString("laserCode"));
-            }
-
-        }
-    };
-
-
-    /**
-     * 显示数据提示dialog
-     */
-    private void showDialog(final String name, final String r, final String laserCode) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialog);
-        final AlertDialog dialog = builder.create();
-
-        View view = View.inflate(this, R.layout.dialog_baofei1_c, null);
-        dialog.setCanceledOnTouchOutside(false);
-        TextView tvBaoFei = (TextView) view.findViewById(R.id.tvBaofeiName);
-        tvBaoFei.setText("报废一体刀" + laserCode);
-        Button btnCancel = (Button) view.findViewById(R.id.btnCancel);
-        Button btnConfirm = (Button) view.findViewById(R.id.btnSure);
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addLayout(name, laserCode, "num", r);
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
-        dialog.setContentView(view);
-        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
-//        dialog.getWindow().setLayout(300, 400);
     }
 
     /**
@@ -456,10 +423,6 @@ public class c01s005_002_2Activity extends CommonActivity {
         dialog.setView((this).getLayoutInflater().inflate(R.layout.dialog_c01s019_001, null));
         dialog.show();
         dialog.getWindow().setContentView(view);
-
-
-//        View view = View.inflate(this, R.layout.dialog_c01s019_001, null);
-//        dialog.setCanceledOnTouchOutside(false);
 
 
         final EditText etmaterialNumber = (EditText) view.findViewById(R.id.etmaterialNumber);
@@ -554,6 +517,39 @@ public class c01s005_002_2Activity extends CommonActivity {
         dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.4));
 
     }
+
+
+    //卸下原因下拉框的Adapter
+    class MyAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return scrapStatusList.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return scrapStatusList.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            View view1 = LayoutInflater.from(c01s005_002_2Activity.this).inflate(R.layout.item_c03s004_001, null);
+            TextView textView = (TextView) view1.findViewById(R.id.tv_01);
+            textView.setText(scrapStatusList.get(i).getName());
+            return view1;
+        }
+    }
+
+
+
+
+    //-----------------------以下代码没用，暂时保留-------------------------
 
     //查询弹框
     private PopupWindow addPopupWindow;
@@ -652,6 +648,38 @@ public class c01s005_002_2Activity extends CommonActivity {
                 }
             });
         }
+    }
+
+    /**
+     * 显示数据提示dialog
+     */
+    private void showDialog(final String name, final String r, final String laserCode) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialog);
+        final AlertDialog dialog = builder.create();
+
+        View view = View.inflate(this, R.layout.dialog_baofei1_c, null);
+        dialog.setCanceledOnTouchOutside(false);
+        TextView tvBaoFei = (TextView) view.findViewById(R.id.tvBaofeiName);
+        tvBaoFei.setText("报废一体刀" + laserCode);
+        Button btnCancel = (Button) view.findViewById(R.id.btnCancel);
+        Button btnConfirm = (Button) view.findViewById(R.id.btnSure);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addLayout(name, laserCode, "num", r);
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+        dialog.setContentView(view);
+        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
+//        dialog.getWindow().setLayout(300, 400);
     }
 
 }
