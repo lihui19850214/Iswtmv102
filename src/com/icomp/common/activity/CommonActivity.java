@@ -1180,9 +1180,9 @@ public abstract class CommonActivity extends Activity {
             if (null != popupWindow && popupWindow.isShowing()) {
                 popupWindow.dismiss();
             }
-            if (null != popupWindowAuthorization && popupWindowAuthorization.isShowing()) {
-                popupWindowAuthorization.dismiss();
-            }
+//            if (null != popupWindowAuthorization && popupWindowAuthorization.isShowing()) {
+//                popupWindowAuthorization.dismiss();
+//            }
 
             // 扫描按钮不为空
             if (btnScanAuthorization != null) {
