@@ -100,7 +100,6 @@ public class C00S000_003Activity extends CommonActivity {
         generateMenu();
 
         loading.show();
-        loading.dismiss();
         initThread = new InitThread();
         initThread.start();
     }
