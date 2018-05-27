@@ -30,6 +30,9 @@ public class SearchOutLiberaryVO {
 
     private DjOutapplyAkp djOutapplyAkp;
 
+    private String cuttingToolConsumeType;
+
+
     public DjOutapplyAkp getDjOutapplyAkp() {
         return djOutapplyAkp;
     }
@@ -116,5 +119,13 @@ public class SearchOutLiberaryVO {
 
     public void setGrinding(String grinding) {
         this.grinding = grinding;
+    }
+
+    public String getCuttingToolConsumeType() {
+        return cuttingToolConsumeType;
+    }
+
+    public void setCuttingToolConsumeType(String cuttingToolConsumeType) {
+        this.cuttingToolConsumeType = cuttingToolConsumeType;
     }
 }
