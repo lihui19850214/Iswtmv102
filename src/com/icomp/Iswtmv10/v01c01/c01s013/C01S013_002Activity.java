@@ -368,8 +368,8 @@ public class C01S013_002Activity extends CommonActivity {
                 impowerRecorder.setOperatorUserName(authCustomer.getName());//操作者姓名
                 impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
                 impowerRecorder.setImpowerUserName(authorizationList.get(0).getName());//授权人名称
-                impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_Exchange.getKey().toString());//操作key
-                impowerRecorder.setOperatorValue(OperationEnum.SynthesisCuttingTool_Exchange.getName());//操作者code
+                impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_UnInstall.getKey().toString());//操作key
+                impowerRecorder.setOperatorValue(OperationEnum.SynthesisCuttingTool_UnInstall.getName());//操作者code
 
                 headsMap.put("impower", mapper.writeValueAsString(impowerRecorder));
             } catch (JsonProcessingException e) {
