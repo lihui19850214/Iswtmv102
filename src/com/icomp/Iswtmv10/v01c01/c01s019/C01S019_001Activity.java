@@ -90,8 +90,6 @@ public class C01S019_001Activity extends CommonActivity {
         //调用接口
         retrofit = RetrofitSingle.newInstance();
 
-
-
         Map<String, Object> paramMap = PARAM_MAP.get(1);
         outSideVO = (OutSideVO) paramMap.get("outSideVO");
 

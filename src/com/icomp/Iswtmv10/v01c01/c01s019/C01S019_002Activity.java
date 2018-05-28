@@ -56,6 +56,8 @@ public class C01S019_002Activity extends CommonActivity {
     private Retrofit retrofit;
 
     OutSideVO outSideVO = new OutSideVO();
+    // 根据 rfid 查询的数据
+    private Map<String, CuttingToolBind> rfidToMap = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class C01S019_002Activity extends CommonActivity {
         Map<String, Object> paramMap2 = PARAM_MAP.get(2);
         if (paramMap2 != null) {
             outSideVO = (OutSideVO) paramMap2.get("outSideVO");
+            rfidToMap = (Map<String, CuttingToolBind>) paramMap2.get("rfidToMap");
 
             for (SharpenVO sharpenVO : outSideVO.getSharpenVOS()) {
                 addLayout(sharpenVO.getCuttingToolBusinessCode(), sharpenVO.getCuttingToolBladeCode(), sharpenVO.getCount().toString());
@@ -157,6 +160,9 @@ public class C01S019_002Activity extends CommonActivity {
 
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> headsMap = new HashMap<>();
+
+        // 授权信息集合
+        List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
         // 授权信息
         ImpowerRecorder impowerRecorder = new ImpowerRecorder();
 
@@ -170,15 +176,26 @@ public class C01S019_002Activity extends CommonActivity {
 
                 AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
 
-                // 授权信息
-                impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                impowerRecorder.setOperatorUserName(authCustomer.getName());//操作者姓名
-                impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
-                impowerRecorder.setImpowerUserName(authorizationList.get(0).getName());//授权人名称
-                impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_OutSide.getKey().toString());//操作key
-                impowerRecorder.setOperatorValue(OperationEnum.Cutting_tool_OutSide.getName());//操作者code
+                Set<String> rfids = rfidToMap.keySet();
+                for (String rfid : rfids) {
+                    CuttingToolBind cuttingToolBind = rfidToMap.get(rfid);
+                    impowerRecorder = new ImpowerRecorder();
+
+                    // ------------ 授权信息 ------------
+                    impowerRecorder.setToolCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 合成刀编码
+                    impowerRecorder.setRfidLasercode(rfid);// rfid标签
+                    impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
+                    impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                    impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_OutSide.getKey().toString());//操作key
+
+//                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
+//                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
+//                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
+
+                    impowerRecorderList.add(impowerRecorder);
+                }
             }
-            headsMap.put("impower", mapper.writeValueAsString(impowerRecorder));
+            headsMap.put("impower", mapper.writeValueAsString(impowerRecorderList));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {
