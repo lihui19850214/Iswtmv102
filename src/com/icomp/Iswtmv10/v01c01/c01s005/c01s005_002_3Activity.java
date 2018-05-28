@@ -24,6 +24,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -215,7 +216,7 @@ public class c01s005_002_3Activity extends CommonActivity {
         String jsonStr = gson.toJson(cuttingToolsScrap);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> addOutsideFactory = iRequest.addOutsideFactory(body);
+        Call<String> addOutsideFactory = iRequest.addOutsideFactory(body, new HashMap<String, String>());
 
         addOutsideFactory.enqueue(new MyCallBack<String>() {
             @Override
