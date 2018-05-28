@@ -509,7 +509,7 @@ public class c01s010_002Activity extends CommonActivity {
                         }
 
                         final Map<String, String> inpowerMap = mapper.readValue(inpower, Map.class);
-                        inpowerMap.put("type","2");inpowerMap.put("message","2dddddd");
+
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
