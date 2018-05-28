@@ -18,6 +18,8 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.apiclient.constants.CuttingToolConsumeTypeEnum;
+import com.apiclient.constants.CuttingToolTypeEnum;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.*;
@@ -71,7 +73,8 @@ public class C01S009_002Activity extends CommonActivity {
     // 防止扫描重复标签
     Set<String> rfidSet = new HashSet<>();
 
-    String hechengdaoRfidString = "";
+    // 合成刀标签
+    String synthesisCuttingToolConfigRFID = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,11 +84,11 @@ public class C01S009_002Activity extends CommonActivity {
 
         retrofit = RetrofitSingle.newInstance();
 
-        hechengdaoRfidString = getIntent().getStringExtra("rfidString");
+        synthesisCuttingToolConfigRFID = getIntent().getStringExtra("synthesisCuttingToolConfigRFID");
 
         synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) getIntent().getSerializableExtra(PARAM);
 
-        tv01.setText(synthesisCuttingToolConfig.getSynthesisCuttingToolCode());
+        tv01.setText(synthesisCuttingToolConfig.getSynthesisCuttingTool().getSynthesisCode());
 
         synthesisCuttingToolLocationConfigList = synthesisCuttingToolConfig.getSynthesisCuttingToolLocationConfigList();
 
@@ -387,18 +390,39 @@ public class C01S009_002Activity extends CommonActivity {
         String daojuType = "";
         boolean isZuanTou = false;
 
-        //刀具类型(1钻头、2刀片、3一体刀、4专机、9其他)
-        if ("1".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
-            daojuType = "钻头";
-            isZuanTou = true;
-        } else if ("2".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
-            daojuType = "刀片";
-        } else if ("3".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
-            daojuType = "一体刀";
-        } else if ("4".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
-            daojuType = "专机";
-        } else if ("9".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
-            daojuType = "其他";
+//        //刀具类型(1钻头、2刀片、3一体刀、4专机、9其他)
+//        if ("1".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
+//            daojuType = "钻头";
+//            isZuanTou = true;
+//        } else if ("2".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
+//            daojuType = "刀片";
+//        } else if ("3".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
+//            daojuType = "一体刀";
+//        } else if ("4".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
+//            daojuType = "专机";
+//        } else if ("9".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
+//            daojuType = "其他";
+//        }
+
+        // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
+        if (CuttingToolTypeEnum.dj.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getType())) {
+            // griding_zt("1","可刃磨钻头"),griding_dp("2","可刃磨刀片"),single_use_dp("3","一次性刀片"),other("9","其他");
+            if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
+                isZuanTou = true;
+                daojuType = CuttingToolConsumeTypeEnum.griding_zt.getName();
+            } else if (CuttingToolConsumeTypeEnum.griding_dp.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
+                daojuType = CuttingToolConsumeTypeEnum.griding_dp.getName();
+            } else if (CuttingToolConsumeTypeEnum.single_use_dp.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
+                daojuType = CuttingToolConsumeTypeEnum.single_use_dp.getName();
+            } else if (CuttingToolConsumeTypeEnum.other.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
+                daojuType = CuttingToolConsumeTypeEnum.other.getName();
+            }
+        } else if (CuttingToolTypeEnum.fj.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getType())) {
+            daojuType = CuttingToolTypeEnum.fj.getName();
+        } else if (CuttingToolTypeEnum.pt.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getType())) {
+            daojuType = CuttingToolTypeEnum.pt.getName();
+        } else if (CuttingToolTypeEnum.other.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getType())) {
+            daojuType = CuttingToolTypeEnum.other.getName();
         }
 
 
@@ -561,8 +585,6 @@ public class C01S009_002Activity extends CommonActivity {
                 @Override
                 public void afterTextChanged(Editable s) {
                     if (et1.getText() != null && !"".equals(et1.getText().toString())) {
-                        //输入文字后的状态
-                        Log.i("ceshi", et1.getText().toString());
                         addData(cailiao, Integer.parseInt(et1.getText().toString()), null);
                     }
                 }
@@ -668,9 +690,15 @@ public class C01S009_002Activity extends CommonActivity {
 
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> headsMap = new HashMap<>();
-        // 需要授权信息
-        if (is_need_authorization && authorizationList != null) {
-            try {
+
+        // 授权信息集合
+        List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
+        // 授权信息
+        ImpowerRecorder impowerRecorder = new ImpowerRecorder();
+
+        try {
+            // 需要授权信息
+            if (is_need_authorization && authorizationList != null) {
                 //设定用户访问信息
                 @SuppressLint("WrongConstant")
                 SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
@@ -678,21 +706,24 @@ public class C01S009_002Activity extends CommonActivity {
 
                 AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
 
-                // 授权信息
-                ImpowerRecorder impowerRecorder = new ImpowerRecorder();
+                // ------------ 授权信息 ------------
+                impowerRecorder.setToolCode(synthesisCuttingToolConfig.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
+                impowerRecorder.setRfidLasercode(synthesisCuttingToolConfigRFID);// rfid标签
                 impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                impowerRecorder.setOperatorUserName(authCustomer.getName());//操作者姓名
                 impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
-                impowerRecorder.setImpowerUserName(authorizationList.get(0).getName());//授权人名称
                 impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_Config.getKey().toString());//操作key
-                impowerRecorder.setOperatorValue(OperationEnum.SynthesisCuttingTool_Config.getName());//操作者code
 
-                headsMap.put("impower", mapper.writeValueAsString(impowerRecorder));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+//                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
+//                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
+//                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
+
+                impowerRecorderList.add(impowerRecorder);
             }
+            headsMap.put("impower", mapper.writeValueAsString(impowerRecorderList));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         //调用接口，查询合成刀具组成信息
@@ -709,7 +740,7 @@ public class C01S009_002Activity extends CommonActivity {
         synthesisCuttingToolBind.setSynthesisCuttingTool(synthesisCuttingTool);
         synthesisCuttingToolBind.setSynthesisCuttingToolCode(synthesisCuttingToolConfig.getSynthesisCuttingToolCode());
         RfidContainer rfidContainer = new RfidContainer();
-        rfidContainer.setLaserCode(hechengdaoRfidString);
+        rfidContainer.setLaserCode(synthesisCuttingToolConfigRFID);
         synthesisCuttingToolBind.setRfidContainer(rfidContainer);
 
         // 删除 UpCount 为 0 的数据

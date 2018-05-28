@@ -54,6 +54,9 @@ public class C01S009_001Activity extends CommonActivity {
 
     SynthesisCuttingToolConfig synthesisCuttingToolConfig;
 
+    // 合成刀标签
+    String synthesisCuttingToolConfigRFID = "";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +165,7 @@ public class C01S009_001Activity extends CommonActivity {
                             if (response.raw().code() == 200) {
                                 Gson gson = new Gson();
                                 synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
+                                synthesisCuttingToolConfigRFID = rfidString;
 
                                 Message message = new Message();
                                 message.obj = inpower;
@@ -235,7 +239,7 @@ public class C01S009_001Activity extends CommonActivity {
                         //跳转到库存盘点刀具信息详细页面
                         Intent intent = new Intent(C01S009_001Activity.this, C01S009_002Activity.class);
                         intent.putExtra(PARAM, synthesisCuttingToolConfig);
-                        intent.putExtra("rfidString", rfidString);
+                        intent.putExtra("synthesisCuttingToolConfigRFID", synthesisCuttingToolConfigRFID);
                         startActivity(intent);
                         finish();
                     }
@@ -249,7 +253,7 @@ public class C01S009_001Activity extends CommonActivity {
                         //跳转到库存盘点刀具信息详细页面
                         Intent intent = new Intent(C01S009_001Activity.this, C01S009_002Activity.class);
                         intent.putExtra(PARAM, synthesisCuttingToolConfig);
-                        intent.putExtra("rfidString", rfidString);
+                        intent.putExtra("synthesisCuttingToolConfigRFID", synthesisCuttingToolConfigRFID);
                         startActivity(intent);
                         finish();
                     }
