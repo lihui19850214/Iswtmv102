@@ -115,7 +115,7 @@
     <string name="c03s000_001_001">合成刀具初始化</string>
     <string name="c03s000_001_002">库位标签初始化</string>
     <string name="c03s000_001_003">筒刀初始化</string>
-    <string name="c03s000_002_001">加工设备初始化</string>
+    <string name="c03s000_002_001">设备初始化</string>
     <string name="c03s000_002_002">修磨设备初始化</string>
     <string name="c03s001_001_001">请输入合成刀具编码后点击查询按钮，或扫描已初始化好的合成刀具标签</string>
     <string name="c03s001_001_002">请输入合成刀具编码</string>
