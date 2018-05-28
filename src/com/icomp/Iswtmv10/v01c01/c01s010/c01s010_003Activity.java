@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.apiclient.constants.CuttingToolConsumeTypeEnum;
 import com.apiclient.constants.CuttingToolTypeEnum;
+import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.*;
 import com.fasterxml.jackson.core.JsonProcessingException;

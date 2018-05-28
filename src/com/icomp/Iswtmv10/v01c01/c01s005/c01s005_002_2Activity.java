@@ -12,6 +12,7 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.apiclient.constants.ScrapStateEnum;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.CuttingToolBindVO;
 import com.apiclient.vo.CuttingToolVO;

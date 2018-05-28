@@ -16,6 +16,8 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.apiclient.constants.OperationEnum;
+import com.apiclient.constants.UnInstallReasonEnum;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.PackageUpVO;
 import com.apiclient.vo.ProductLineVO;

@@ -14,7 +14,7 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.apiclient.pojo.OperationEnum;
+import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.SynthesisCuttingToolBind;
 import com.apiclient.pojo.SynthesisCuttingToolConfig;
 import com.apiclient.pojo.SynthesisCuttingToolLocationConfig;

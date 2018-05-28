@@ -2,7 +2,6 @@ package com.icomp.Iswtmv10.v01c01.c01s019;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,15 +17,11 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.CuttingTool;
 import com.apiclient.pojo.CuttingToolBind;
-import com.apiclient.pojo.OperationEnum;
-import com.apiclient.pojo.OutsideFactory;
 import com.apiclient.vo.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.MapType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
@@ -34,11 +29,8 @@ import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.activity.ExceptionProcessCallBack;
-import com.icomp.common.utils.SysApplication;
 
 import okhttp3.RequestBody;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.*;

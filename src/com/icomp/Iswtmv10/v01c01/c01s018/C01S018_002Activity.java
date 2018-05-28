@@ -12,6 +12,7 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
+import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
