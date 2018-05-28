@@ -36,6 +36,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -381,9 +382,12 @@ public class c01s010_003Activity extends CommonActivity {
 
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> headsMap = new HashMap<>();
-        // 需要授权信息
-        if (is_need_authorization && authorizationList != null) {
-            try {
+        // 授权信息
+        ImpowerRecorder impowerRecorder = new ImpowerRecorder();
+
+        try {
+            // 需要授权信息
+            if (is_need_authorization && authorizationList != null) {
                 //设定用户访问信息
                 @SuppressLint("WrongConstant")
                 SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
@@ -392,21 +396,20 @@ public class c01s010_003Activity extends CommonActivity {
                 AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
 
                 // 授权信息
-                ImpowerRecorder impowerRecorder = new ImpowerRecorder();
                 impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                impowerRecorder.setOperatorUserName(authCustomer.getName());//操作者姓名
+//                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
                 impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
-                impowerRecorder.setImpowerUserName(authorizationList.get(0).getName());//授权人名称
+//                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
                 impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_Exchange.getKey().toString());//操作key
-                impowerRecorder.setOperatorValue(OperationEnum.SynthesisCuttingTool_Exchange.getName());//操作者code
-
-                headsMap.put("impower", mapper.writeValueAsString(impowerRecorder));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+//                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
             }
+            headsMap.put("impower", mapper.writeValueAsString(impowerRecorder));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
 
         for (int i=0; i<outsideListData.size(); i++) {
             List<Map<String, Object>> insideListDate = outsideListData.get(i);
@@ -470,6 +473,19 @@ public class c01s010_003Activity extends CommonActivity {
                 createAlertDialog(c01s010_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
             }
         });
+    }
+
+    private String encodeHeadInfo( String headInfo ) {
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0, length = headInfo.length(); i < length; i++) {
+            char c = headInfo.charAt(i);
+            if (c <= '\u001f' || c >= '\u007f') {
+                stringBuffer.append( String.format ("\\u%04x", (int)c) );
+            } else {
+                stringBuffer.append(c);
+            }
+        }
+        return stringBuffer.toString();
     }
 
 }
