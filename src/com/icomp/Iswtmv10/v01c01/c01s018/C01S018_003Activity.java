@@ -318,12 +318,42 @@ public class C01S018_003Activity extends CommonActivity {
     private void requestData(List<AuthCustomer> authorizationList) {
         loading.show();
 
-        IRequest iRequest = retrofit.create(IRequest.class);
 
         ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> headsMap = new HashMap<>();
+        // 授权信息
+        ImpowerRecorder impowerRecorder = new ImpowerRecorder();
+
+        try {
+            // 需要授权信息
+            if (is_need_authorization && authorizationList != null) {
+                //设定用户访问信息
+                @SuppressLint("WrongConstant")
+                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+                String userInfoJson = sharedPreferences.getString("loginInfo", null);
+
+                AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
+
+                // 授权信息
+                impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
+                impowerRecorder.setOperatorUserName(authCustomer.getName());//操作者姓名
+                impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                impowerRecorder.setImpowerUserName(authorizationList.get(0).getName());//授权人名称
+                impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_Inside.getKey().toString());//操作key
+                impowerRecorder.setOperatorValue(OperationEnum.Cutting_tool_Inside.getName());//操作者code
+            }
+            headsMap.put("impower", mapper.writeValueAsString(impowerRecorder));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        IRequest iRequest = retrofit.create(IRequest.class);
+
         insideVO.setEquipmentCode(equipmentCode);
         insideVO.setAuthCustomer(authorizationList.get(0));
-
 
         String jsonStr = "";
         try {
@@ -333,7 +363,7 @@ public class C01S018_003Activity extends CommonActivity {
         }
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> addInsideFactory = iRequest.addInsideFactory(body);
+        Call<String> addInsideFactory = iRequest.addInsideFactory(body, headsMap);
 
         addInsideFactory.enqueue(new MyCallBack<String>() {
             @Override
