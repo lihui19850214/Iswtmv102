@@ -9,7 +9,7 @@ import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.utils.SysApplication;
 
 /**
- * 加工设备初始化页面2
+ * 设备初始化页面2
  * Created by FanLL on 2017/6/14.
  */
 

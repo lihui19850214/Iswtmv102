@@ -42,7 +42,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
- * 加工设备初始化页面1
+ * 设备初始化页面1
  */
 
 public class C03S003_001Activity extends CommonActivity {
