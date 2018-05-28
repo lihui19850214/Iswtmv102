@@ -276,7 +276,7 @@ public interface IRequest {
      * @return
      */
     @POST("/productlineBusiness/querySynthesisCuttingTool")
-    Call<String> querySynthesisCuttingTool(@Body RequestBody info);
+    Call<String> querySynthesisCuttingTool(@Body RequestBody info, @HeaderMap Map<String, String> headers);
 
 
     /**
@@ -303,7 +303,7 @@ public interface IRequest {
      * @return
      */
     @POST("/synthesisCuttingToolBusiness/bindEquipment")
-    Call<String> bindEquipment(@Body RequestBody info);
+    Call<String> bindEquipment(@Body RequestBody info, @HeaderMap Map<String, String> headers);
     // --------------安上设备结束--------------
 
 
