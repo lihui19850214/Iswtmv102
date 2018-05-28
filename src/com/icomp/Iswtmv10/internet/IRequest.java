@@ -373,7 +373,7 @@ public interface IRequest {
      * @return
      */
     @POST("/inFactoryBusiness/addInsideFactory")
-    Call<String> addInsideFactory(@Body RequestBody info);
+    Call<String> addInsideFactory(@Body RequestBody info, @HeaderMap Map<String, String> headers);
     // --------------场内刃磨结束--------------
 
 
@@ -384,7 +384,7 @@ public interface IRequest {
      * @return
      */
     @POST("/outFactoryBusiness/getCuttingToolBind")
-    Call<String> getOutCuttingToolBind(@Body RequestBody info);
+    Call<String> getOutCuttingToolBind(@Body RequestBody info, @HeaderMap Map<String, String> headers);
 
     /**
      * 根据材料号获取材料刀
@@ -416,7 +416,7 @@ public interface IRequest {
      * @return
      */
     @POST("/outFactoryBusiness/addOutsideFactory")
-    Call<String> addOutsideFactory(@Body RequestBody info);
+    Call<String> addOutsideFactory(@Body RequestBody info, @HeaderMap Map<String, String> headers);
 
     /**
      * 添加场外刃磨服务商
