@@ -76,6 +76,8 @@ public class c01s010_003Activity extends CommonActivity {
     // 丢刀数量
     private List<DownCuttingToolVO> downCuttingToolVOList = new ArrayList<>();
 
+    // 合成刀标签
+    String synthesisCuttingToolConfigRFID = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,7 @@ public class c01s010_003Activity extends CommonActivity {
         outsideListData = (List<List<Map<String, Object>>>) paramMap.get("outsideListData");
         synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap.get("synthesisCuttingToolConfig");
         synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap.get("synthesisCuttingToolBind");
+        synthesisCuttingToolConfigRFID = (String) paramMap.get("synthesisCuttingToolConfigRFID");
 
 
         for (int i=0; i<outsideListData.size(); i++) {
@@ -383,6 +386,9 @@ public class c01s010_003Activity extends CommonActivity {
 
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> headsMap = new HashMap<>();
+
+        // 授权信息集合
+        List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
         // 授权信息
         ImpowerRecorder impowerRecorder = new ImpowerRecorder();
 
@@ -396,15 +402,19 @@ public class c01s010_003Activity extends CommonActivity {
 
                 AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
 
-                // 授权信息
+                // ------------ 授权信息 ------------
+                impowerRecorder.setToolCode(synthesisCuttingToolConfig.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
+                impowerRecorder.setRfidLasercode(synthesisCuttingToolConfigRFID);// rfid标签
                 impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
 //                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
                 impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
 //                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
                 impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_Exchange.getKey().toString());//操作key
 //                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
+
+                impowerRecorderList.add(impowerRecorder);
             }
-            headsMap.put("impower", mapper.writeValueAsString(impowerRecorder));
+            headsMap.put("impower", mapper.writeValueAsString(impowerRecorderList));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {

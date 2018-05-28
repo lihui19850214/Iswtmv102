@@ -79,6 +79,9 @@ public class c01s010_002Activity extends CommonActivity {
     // 防止扫描重复标签
     Set<String> rfidSet = new HashSet<>();
 
+    // 合成刀标签
+    String synthesisCuttingToolConfigRFID = "";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +99,7 @@ public class c01s010_002Activity extends CommonActivity {
             synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap.get("synthesisCuttingToolBind");
             rfidSet = (Set<String>) paramMap.get("rfidSet");
             cbDiudao.setChecked((Boolean) paramMap.get("cbDiudao"));
+            synthesisCuttingToolConfigRFID = (String) paramMap.get("synthesisCuttingToolConfigRFID");
 
             for (int i=0; i<outsideListData.size(); i++) {
                 addLayout(outsideListData.get(i));
@@ -134,6 +138,7 @@ public class c01s010_002Activity extends CommonActivity {
                 paramMap.put("synthesisCuttingToolBind", synthesisCuttingToolBind);
                 paramMap.put("rfidSet", rfidSet);
                 paramMap.put("cbDiudao", cbDiudao.isChecked());
+                paramMap.put("synthesisCuttingToolConfigRFID", synthesisCuttingToolConfigRFID);
 
                 PARAM_MAP.put(1, paramMap);
 
@@ -318,13 +323,16 @@ public class c01s010_002Activity extends CommonActivity {
                                     ObjectMapper mapper = new ObjectMapper();
 
                                     synthesisCuttingToolConfig = mapper.readValue(response.body(), SynthesisCuttingToolConfig.class);
-
+                                    synthesisCuttingToolConfigRFID = rfidString;
                                     if (synthesisCuttingToolConfig != null) {
                                         searchDownCutting(rfidString);
                                     } else {
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
+                                                if (null != loading && loading.isShowing()) {
+                                                    loading.dismiss();
+                                                }
                                                 Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
                                             }
                                         });
