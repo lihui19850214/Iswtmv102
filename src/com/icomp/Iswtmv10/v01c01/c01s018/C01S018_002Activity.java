@@ -65,9 +65,6 @@ public class C01S018_002Activity extends CommonActivity {
 
     private int position = 0;
 
-    // 提交数据，表格中剩下的数据
-    private HashMap<Integer, String> dataMap = new HashMap<>();
-
     // 根据 rfid 查询的数据
     private Map<String, CuttingToolBind> rfidToMap = new HashMap<>();
     // 根据物料号查询的数据
@@ -328,7 +325,6 @@ public class C01S018_002Activity extends CommonActivity {
 
         tvCaiLiao.setTag(position);
         mLinearLayout.setTag(position);
-//        dataMap.put(position, cailiao);
 
         tvRemove.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -37,10 +37,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 厂内修磨页面3
@@ -322,6 +319,9 @@ public class C01S018_003Activity extends CommonActivity {
 
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> headsMap = new HashMap<>();
+
+        // 授权信息集合
+        List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
         // 授权信息
         ImpowerRecorder impowerRecorder = new ImpowerRecorder();
 
@@ -335,15 +335,26 @@ public class C01S018_003Activity extends CommonActivity {
 
                 AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
 
-                // 授权信息
-                impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                impowerRecorder.setOperatorUserName(authCustomer.getName());//操作者姓名
-                impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
-                impowerRecorder.setImpowerUserName(authorizationList.get(0).getName());//授权人名称
-                impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_Inside.getKey().toString());//操作key
-                impowerRecorder.setOperatorValue(OperationEnum.Cutting_tool_Inside.getName());//操作者code
+                Set<String> rfids = rfidToMap.keySet();
+                for (String rfid : rfids) {
+                    CuttingToolBind cuttingToolBind = rfidToMap.get(rfid);
+                    impowerRecorder = new ImpowerRecorder();
+
+                    // ------------ 授权信息 ------------
+                    impowerRecorder.setToolCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 合成刀编码
+                    impowerRecorder.setRfidLasercode(rfid);// rfid标签
+                    impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
+                    impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                    impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_Inside.getKey().toString());//操作key
+
+//                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
+//                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
+//                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
+
+                    impowerRecorderList.add(impowerRecorder);
+                }
             }
-            headsMap.put("impower", mapper.writeValueAsString(impowerRecorder));
+            headsMap.put("impower", mapper.writeValueAsString(impowerRecorderList));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         } catch (IOException e) {
