@@ -22,8 +22,10 @@ import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
+import com.icomp.common.activity.ExceptionProcessCallBack;
 import com.icomp.common.utils.SysApplication;
 
+import java.io.IOException;
 import java.util.*;
 
 import butterknife.BindView;
@@ -448,19 +450,7 @@ public class C01S018_002Activity extends CommonActivity {
                                 CuttingToolBind cuttingToolBind = gson.fromJson(response.body(), CuttingToolBind.class);
 
                                 if (cuttingToolBind != null) {
-                                    rfidToMap.put(rfidString, cuttingToolBind);
-
-                                    SharpenVO sharpenVO = new SharpenVO();
-                                    sharpenVO.setCuttingToolBusinessCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 材料号
-                                    sharpenVO.setCuttingToolBladeCode(cuttingToolBind.getBladeCode());// 刀身码
-                                    sharpenVO.setCuttingToolCode(cuttingToolBind.getCuttingTool().getCode());
-                                    sharpenVO.setCount(1);
-                                    sharpenVOList.add(sharpenVO);
-
-                                    addLayout(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode(), rfidString,"-");
-
-
-                                    searchSharpening(rfidString, cuttingToolBind);
+                                    isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
                                 } else {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -517,6 +507,81 @@ public class C01S018_002Activity extends CommonActivity {
         }
     }
 
+    /**
+     * 是否弹出异常操作框
+     * @param headers http响应头，用于判断是否异常操作
+     * @param rfid
+     * @param cuttingToolBind
+     */
+    public void isShowExceptionBox(String headers, final String rfid, final CuttingToolBind cuttingToolBind) {
+        ObjectMapper mapper = new ObjectMapper();
+
+        Map<String, String> inpowerMap = new HashMap<>();
+        try {
+            inpowerMap = mapper.readValue(headers, Map.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        if ("1".equals(inpowerMap.get("type"))) {
+            // 是否需要授权 true为需要授权；false为不需要授权
+            is_need_authorization = false;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setValue(rfid, cuttingToolBind);
+                }
+            });
+        } else if ("2".equals(inpowerMap.get("type"))) {
+            is_need_authorization = true;
+            exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                @Override
+                public void confirm() {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setValue(rfid, cuttingToolBind);
+                        }
+                    });
+                }
+
+                @Override
+                public void cancel() {
+                    // 不做任何操作
+                }
+            });
+        } else if ("3".equals(inpowerMap.get("type"))) {
+            is_need_authorization = false;
+            stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                @Override
+                public void confirm() {
+                    finish();
+                }
+
+                @Override
+                public void cancel() {
+                    // 实际上没有用
+                    finish();
+                }
+            });
+        }
+    }
+
+    // 设置值
+    public void setValue(String rfid, CuttingToolBind cuttingToolBind) {
+        rfidToMap.put(rfid, cuttingToolBind);
+
+        SharpenVO sharpenVO = new SharpenVO();
+        sharpenVO.setCuttingToolBusinessCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 材料号
+        sharpenVO.setCuttingToolBladeCode(cuttingToolBind.getBladeCode());// 刀身码
+        sharpenVO.setCuttingToolCode(cuttingToolBind.getCuttingTool().getCode());
+        sharpenVO.setCount(1);
+        sharpenVOList.add(sharpenVO);
+
+        addLayout(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode(), rfid,"-");
+
+        searchSharpening(rfid, cuttingToolBind);
+    }
 
 
     // 查询刃磨记录
@@ -546,7 +611,7 @@ public class C01S018_002Activity extends CommonActivity {
                         if (sharpeningRecord > 0) {
 
                         } else {
-                            showDialog2(rfidString, cuttingToolBind);
+                            showDialog2(rfid, cuttingToolBind);
                         }
                     } else {
                         createAlertDialog(C01S018_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
