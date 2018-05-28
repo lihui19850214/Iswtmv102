@@ -104,7 +104,12 @@ public class ImpowerRecorder implements Serializable{
      */
     private Integer isDel;
 
-
+    /**
+     * @fieldName rfidLasercode
+     * @fieldType  String
+     * @Description  RFID 标签
+     */
+    private String rfidLasercode;
 
 
     /* 授权记录标识 */
@@ -215,6 +220,12 @@ public class ImpowerRecorder implements Serializable{
         this.isDel = isDel;
     }
 
+    public String getRfidLasercode() {
+        return rfidLasercode;
+    }
 
+    public void setRfidLasercode(String rfidLasercode) {
+        this.rfidLasercode = rfidLasercode;
+    }
 
 }
