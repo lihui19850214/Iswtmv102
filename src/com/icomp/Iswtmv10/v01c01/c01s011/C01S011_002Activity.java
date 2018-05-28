@@ -3,16 +3,19 @@ package com.icomp.Iswtmv10.v01c01.c01s011;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.InputType;
 import android.view.*;
 import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,15 +26,21 @@ import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
+import com.icomp.Iswtmv10.v01c01.c01s013.C01S013_0021Activity;
+import com.icomp.Iswtmv10.v01c01.c01s013.C01S013_002Activity;
 import com.icomp.Iswtmv10.v01c03.c03s003.C03S003_001Activity;
+import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
+import com.icomp.common.activity.ExceptionProcessCallBack;
 import com.icomp.common.adapter.C01S003_004Adapter;
 import com.icomp.common.utils.SysApplication;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -46,8 +55,8 @@ import java.util.*;
 public class C01S011_002Activity extends CommonActivity {
     @BindView(R.id.tvTitle)
     TextView tvTitle;
-    @BindView(R.id.tv_00)
-    TextView tv00;
+    @BindView(R.id.et_00)
+    EditText et_00;
     @BindView(R.id.tvScan)
     TextView tvScan;
 
@@ -78,8 +87,8 @@ public class C01S011_002Activity extends CommonActivity {
     private scanThread2 scanThread2;
 
     SynthesisCuttingToolBind synthesisCuttingToolBing = new SynthesisCuttingToolBind();
-    String equipmentRfid = "";
-    //设备列表
+    // 合成刀标签
+    String synthesisCuttingToolBingRFID = "";
 
     List<ProductLineEquipment> equipmentEntityList = new ArrayList<>();// 设备列表
     Map<String,List<ProductLineAxle>> axleMap = new HashMap<>();// 设备对应轴号Map
@@ -87,6 +96,9 @@ public class C01S011_002Activity extends CommonActivity {
 
     ProductLineEquipment productLineEquipment = null;//选中的设备列表项
     ProductLineAxle productLineAxle = null;//选中的轴号列表项
+
+    // 合成刀具标签是否可以编辑，当合成刀标签查询为空时可编辑，否则不可编辑：true为可编辑；false为不可编辑；
+    boolean et_00_is_edit = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,6 +110,12 @@ public class C01S011_002Activity extends CommonActivity {
 
         //调用接口
         retrofit = RetrofitSingle.newInstance();
+
+        //将输入的材料号自动转化为大写
+        et_00.setTransformationMethod(new CommonActivity.AllCapTransformationMethod());
+
+        // 改变 EditText 编辑状态
+        editTextChangeEditStatus();
 
 //        showDialogAlert("合成刀具编码：sadfsdf\n安上设备比编号：爱上QZ01-S1");
     }
@@ -113,7 +131,7 @@ public class C01S011_002Activity extends CommonActivity {
                 tvDesc.setText("请扫描要安上的设备标签");
                 break;
             case R.id.btn_scan:
-                if (tv00.getText() != null && !"".equals(tv00.getText().toString())) {
+                if (et_00.getText() != null && !"".equals(et_00.getText().toString().trim())) {
                     scan2();
                 } else {
                     createAlertDialog(C01S011_002Activity.this, "请先扫描合成刀具标签", Toast.LENGTH_LONG);
@@ -128,6 +146,26 @@ public class C01S011_002Activity extends CommonActivity {
                     showPopupWindow2();//轴号
                 break;
             default:
+        }
+    }
+
+    /**
+     * 合成刀具标签是否可以编辑，当合成刀标签查询为空时可编辑，否则不可编辑
+     */
+    private void editTextChangeEditStatus() {
+        if (et_00_is_edit) {
+            // 可编辑
+            et_00.setFocusableInTouchMode(true);
+            et_00.setFocusable(true);
+            //editText.requestFocus();
+            // 开启软键盘
+            et_00.setInputType(InputType.TYPE_CLASS_TEXT);
+        } else {
+            // 不可编辑
+            et_00.setFocusable(false);
+            et_00.setFocusableInTouchMode(false);
+            // 禁止软键盘
+            et_00.setInputType(InputType.TYPE_NULL);
         }
     }
 
@@ -193,18 +231,30 @@ public class C01S011_002Activity extends CommonActivity {
                 String jsonStr = gson.toJson(querySynthesisCuttingToolVO);
                 RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                Call<String> querySynthesisCuttingTool = iRequest.querySynthesisCuttingTool(body);
+                Map<String, String> headsMap = new HashMap<>();
+                headsMap.put("impower", OperationEnum.SynthesisCuttingTool_Install.getKey().toString());
+
+                Call<String> querySynthesisCuttingTool = iRequest.querySynthesisCuttingTool(body, headsMap);
                 querySynthesisCuttingTool.enqueue(new MyCallBack<String>() {
                     @Override
                     public void _onResponse(Response<String> response) {
                         try {
+                            String inpower = response.headers().get("impower");
+
                             if (response.raw().code() == 200) {
                                 ObjectMapper mapper = new ObjectMapper();
                                 synthesisCuttingToolBing = mapper.readValue(response.body(), SynthesisCuttingToolBind.class);
+                                synthesisCuttingToolBingRFID = rfidString;
 
+                                if (synthesisCuttingToolBing == null) {
+                                    et_00_is_edit = true;
+                                } else {
+                                    et_00_is_edit = false;
+                                }
 
-                                //TODO 赋值给 合成刀具标签 TextView，检查是否正确
-                                tv00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
+                                Message message = new Message();
+                                message.obj = inpower;
+                                setTextViewHandler.sendMessage(message);
                             } else {
                                 final String errorStr = response.errorBody().string();
                                 runOnUiThread(new Runnable() {
@@ -244,6 +294,65 @@ public class C01S011_002Activity extends CommonActivity {
             }
         }
     }
+
+    @SuppressLint("HandlerLeak")
+    Handler setTextViewHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+
+            String inpower = msg.obj.toString();
+
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, String> inpowerMap = new HashMap<>();
+            try {
+                inpowerMap = mapper.readValue(inpower, Map.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // 判断是否显示提示框
+            if ("1".equals(inpowerMap.get("type"))) {
+                // 是否需要授权 true为需要授权；false为不需要授权
+                is_need_authorization = false;
+
+                if (!et_00_is_edit) {
+                    et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
+                }
+                editTextChangeEditStatus();
+            } else if ("2".equals(inpowerMap.get("type"))) {
+                is_need_authorization = true;
+                exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                    @Override
+                    public void confirm() {
+                        if (!et_00_is_edit) {
+                            et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
+                        }
+                        editTextChangeEditStatus();
+                    }
+
+                    @Override
+                    public void cancel() {
+                        // 不做任何操作
+                    }
+                });
+            } else if ("3".equals(inpowerMap.get("type"))) {
+                is_need_authorization = false;
+                stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                    @Override
+                    public void confirm() {
+                        finish();
+                    }
+
+                    @Override
+                    public void cancel() {
+                        // 实际上没有用
+                        finish();
+                    }
+                });
+            }
+
+        }
+    };
 
     //扫描方法
     private void scan2() {
@@ -296,16 +405,13 @@ public class C01S011_002Activity extends CommonActivity {
                     }
                 });
 
-
-                equipmentRfid = rfidString;
-
                 // 查询设备和轴号
                 IRequest iRequest = retrofit.create(IRequest.class);
 
 
                 QueryEquipmentByRfidVO queryEquipmentByRfidVO = new QueryEquipmentByRfidVO();
                 queryEquipmentByRfidVO.setSynthesisCuttingToolCode(synthesisCuttingToolBing.getSynthesisCuttingTool().getCode());
-                queryEquipmentByRfidVO.setRfidCode(equipmentRfid);
+                queryEquipmentByRfidVO.setRfidCode(rfidString);
 
 
                 Gson gson = new Gson();
@@ -528,50 +634,15 @@ public class C01S011_002Activity extends CommonActivity {
 
         if (null != tv01 && !"".equals(tv01.getText().toString().trim()) && null != tv02 && !"".equals(tv02.getText().toString().trim())) {
 
-            BindEquipmentVO bindEquipmentVO = new BindEquipmentVO();
-
-            //TODO 提交数据
-            bindEquipmentVO.setAxle(productLineAxle);
-            bindEquipmentVO.setEquipment(productLineEquipment);
-            bindEquipmentVO.setSynthesisCuttingToolBind(synthesisCuttingToolBing);
-
-
-            loading.show();
-            IRequest iRequest = retrofit.create(IRequest.class);
-
-            ObjectMapper mapper = new ObjectMapper();
-
-            String jsonStr = "";
-            try {
-                jsonStr = mapper.writeValueAsString(bindEquipmentVO);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
-            Call<String> bindEquipment = iRequest.bindEquipment(body);
-            bindEquipment.enqueue(new MyCallBack<String>() {
+            authorizationWindow(1, new AuthorizationWindowCallBack() {
                 @Override
-                public void _onResponse(Response<String> response) {
-                    try {
-                        if (response.raw().code() == 200) {
-                            Intent intent = new Intent(C01S011_002Activity.this, C01S011_003Activity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            createAlertDialog(C01S011_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        loading.dismiss();
-                    }
+                public void success(List<AuthCustomer> authorizationList) {
+                    requestData(authorizationList);
                 }
 
                 @Override
-                public void _onFailure(Throwable t) {
-                    loading.dismiss();
-                    createAlertDialog(C01S011_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                public void fail() {
+
                 }
             });
         } else {
@@ -581,7 +652,91 @@ public class C01S011_002Activity extends CommonActivity {
     }
 
 
+    private void requestData(List<AuthCustomer> authorizationList) {
+        loading.show();
 
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> headsMap = new HashMap<>();
+
+        // 授权信息集合
+        List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
+        // 授权信息
+        ImpowerRecorder impowerRecorder = new ImpowerRecorder();
+
+        try {
+            // 需要授权信息
+            if (is_need_authorization && authorizationList != null) {
+                //设定用户访问信息
+                @SuppressLint("WrongConstant")
+                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+                String userInfoJson = sharedPreferences.getString("loginInfo", null);
+
+                AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
+
+                // ------------ 授权信息 ------------
+                impowerRecorder.setToolCode(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
+                impowerRecorder.setRfidLasercode(synthesisCuttingToolBingRFID);// rfid标签
+                impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
+                impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_Install.getKey().toString());//操作key
+
+//                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
+//                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
+//                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
+
+                impowerRecorderList.add(impowerRecorder);
+            }
+            headsMap.put("impower", mapper.writeValueAsString(impowerRecorderList));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        BindEquipmentVO bindEquipmentVO = new BindEquipmentVO();
+
+        //TODO 提交数据
+        bindEquipmentVO.setAxle(productLineAxle);
+        bindEquipmentVO.setEquipment(productLineEquipment);
+        bindEquipmentVO.setSynthesisCuttingToolBind(synthesisCuttingToolBing);
+
+        IRequest iRequest = retrofit.create(IRequest.class);
+
+        String jsonStr = "";
+        try {
+            jsonStr = mapper.writeValueAsString(bindEquipmentVO);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+        Call<String> bindEquipment = iRequest.bindEquipment(body, headsMap);
+        bindEquipment.enqueue(new MyCallBack<String>() {
+            @Override
+            public void _onResponse(Response<String> response) {
+                try {
+                    if (response.raw().code() == 200) {
+                        Intent intent = new Intent(C01S011_002Activity.this, C01S011_003Activity.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        createAlertDialog(C01S011_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    loading.dismiss();
+                }
+            }
+
+            @Override
+            public void _onFailure(Throwable t) {
+                loading.dismiss();
+                createAlertDialog(C01S011_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+            }
+        });
+    }
 
 
     /**
