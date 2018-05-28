@@ -67,6 +67,9 @@ public class C01S013_001Activity extends CommonActivity {
     //调用接口
     private Retrofit retrofit;
 
+    // 合成刀标签
+    String synthesisCuttingToolBindleRecordsRFID = "";
+
     /**
      * Called when the activity is first created.
      */
@@ -82,6 +85,7 @@ public class C01S013_001Activity extends CommonActivity {
         Map<String, Object> paramMap = PARAM_MAP.get(1);
         if (paramMap != null) {
             synthesisCuttingToolBindleRecords = (SynthesisCuttingToolBindleRecords) paramMap.get("synthesisCuttingToolBindleRecords");
+            synthesisCuttingToolBindleRecordsRFID = (String) paramMap.get("synthesisCuttingToolBindleRecordsRFID");
 
             Message message = new Message();
             message.obj = synthesisCuttingToolBindleRecords;
@@ -102,11 +106,11 @@ public class C01S013_001Activity extends CommonActivity {
                 break;
             //返回按钮处理
             case R.id.btn_return:
-                appReturn(view);
+                appReturn();
                 break;
             //确定按钮处理
             case R.id.btn_confirm:
-                btnConfirm(view);
+                btnConfirm();
                 break;
         }
     }
@@ -185,6 +189,8 @@ public class C01S013_001Activity extends CommonActivity {
                             if (response.raw().code() == 200) {
                                 ObjectMapper mapper = new ObjectMapper();
                                 synthesisCuttingToolBindleRecords = mapper.readValue(response.body(), SynthesisCuttingToolBindleRecords.class);
+                                synthesisCuttingToolBindleRecordsRFID = rfidString;
+
                                 if (synthesisCuttingToolBindleRecords != null) {
                                     Message message = new Message();
                                     message.obj = inpower;
@@ -261,17 +267,12 @@ public class C01S013_001Activity extends CommonActivity {
             if ("1".equals(inpowerMap.get("type"))) {
                 // 是否需要授权 true为需要授权；false为不需要授权
                 is_need_authorization = false;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //TODO 需要检查是否正确
-                        tv01.setText(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());
-                        tv02.setText(synthesisCuttingToolBindleRecords.getProductLineEquipment().getName());
-                        tv03.setText(synthesisCuttingToolBindleRecords.getProductLineAxle().getCode());
-                        tv04.setText(synthesisCuttingToolBindleRecords.getProductLineProcess().getName());//对应工序，不知道是哪个字段
-                    }
-                });
 
+                //TODO 需要检查是否正确
+                tv01.setText(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());
+                tv02.setText(synthesisCuttingToolBindleRecords.getProductLineEquipment().getName());
+                tv03.setText(synthesisCuttingToolBindleRecords.getProductLineAxle().getCode());
+                tv04.setText(synthesisCuttingToolBindleRecords.getProductLineProcess().getName());//对应工序，不知道是哪个字段
             } else if ("2".equals(inpowerMap.get("type"))) {
                 is_need_authorization = true;
                 exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
@@ -322,12 +323,12 @@ public class C01S013_001Activity extends CommonActivity {
 //    }
 
     //返回按钮处理
-    public void appReturn(View view) {
+    public void appReturn() {
         finish();
     }
 
     //提交按钮处理
-    public void btnConfirm(View view) {
+    public void btnConfirm() {
         if (tv01.getText().toString() == null || "".equals(tv01.getText().toString())) {
             createAlertDialog(C01S013_001Activity.this, "请扫描标签", Toast.LENGTH_LONG);
             return;
@@ -336,6 +337,7 @@ public class C01S013_001Activity extends CommonActivity {
         // 用于页面之间传值，新方法
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("synthesisCuttingToolBindleRecords", synthesisCuttingToolBindleRecords);
+        paramMap.put("synthesisCuttingToolBindleRecordsRFID", synthesisCuttingToolBindleRecordsRFID);
         PARAM_MAP.put(1, paramMap);
 
         Intent intent = new Intent(C01S013_001Activity.this, C01S013_002Activity.class);

@@ -77,7 +77,6 @@ public class C01S013_002Activity extends CommonActivity {
     Button btnConfirm;
 
 
-    private int remove_reason_posttion, parts_name_posttion;//当前选择的卸下原因，零部件种类在集合中的位置
     private List<UnInstallReasonEnum> removeReasonList = new ArrayList<>();//保存所有卸下原因
     private List<ProductLine> productLineList = new ArrayList<>();//保存所有零部件种类
 
@@ -86,6 +85,8 @@ public class C01S013_002Activity extends CommonActivity {
     ProductLine productLine;
 
     private SynthesisCuttingToolBindleRecords synthesisCuttingToolBindleRecords;
+    // 合成刀标签
+    String synthesisCuttingToolBindleRecordsRFID = "";
 
     //调用接口
     private Retrofit retrofit;
@@ -102,6 +103,7 @@ public class C01S013_002Activity extends CommonActivity {
 
         Map<String, Object> paramMap = PARAM_MAP.get(1);
         synthesisCuttingToolBindleRecords = (SynthesisCuttingToolBindleRecords) paramMap.get("synthesisCuttingToolBindleRecords");
+        synthesisCuttingToolBindleRecordsRFID = (String) paramMap.get("synthesisCuttingToolBindleRecordsRFID");
 
         for (UnInstallReasonEnum unInstallReasonEnum : UnInstallReasonEnum.values()){
             removeReasonList.add(unInstallReasonEnum);
@@ -354,9 +356,15 @@ public class C01S013_002Activity extends CommonActivity {
 
         ObjectMapper mapper = new ObjectMapper();
         Map<String, String> headsMap = new HashMap<>();
-        // 需要授权信息
-        if (is_need_authorization && authorizationList != null) {
-            try {
+
+        // 授权信息集合
+        List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
+        // 授权信息
+        ImpowerRecorder impowerRecorder = new ImpowerRecorder();
+
+        try {
+            // 需要授权信息
+            if (is_need_authorization && authorizationList != null) {
                 //设定用户访问信息
                 @SuppressLint("WrongConstant")
                 SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
@@ -364,21 +372,24 @@ public class C01S013_002Activity extends CommonActivity {
 
                 AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
 
-                // 授权信息
-                ImpowerRecorder impowerRecorder = new ImpowerRecorder();
+                // ------------ 授权信息 ------------
+                impowerRecorder.setToolCode(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
+                impowerRecorder.setRfidLasercode(synthesisCuttingToolBindleRecordsRFID);// rfid标签
                 impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                impowerRecorder.setOperatorUserName(authCustomer.getName());//操作者姓名
                 impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
-                impowerRecorder.setImpowerUserName(authorizationList.get(0).getName());//授权人名称
                 impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_UnInstall.getKey().toString());//操作key
-                impowerRecorder.setOperatorValue(OperationEnum.SynthesisCuttingTool_UnInstall.getName());//操作者code
 
-                headsMap.put("impower", mapper.writeValueAsString(impowerRecorder));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+//                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
+//                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
+//                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
+
+                impowerRecorderList.add(impowerRecorder);
             }
+            headsMap.put("impower", mapper.writeValueAsString(impowerRecorderList));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         IRequest iRequest = retrofit.create(IRequest.class);
