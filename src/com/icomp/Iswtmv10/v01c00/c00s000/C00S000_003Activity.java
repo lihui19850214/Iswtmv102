@@ -220,7 +220,7 @@ public class C00S000_003Activity extends CommonActivity {
         tool_outgoing.setCapabilityID("12");
         tool_outgoing.setCapabilityName("标签置换");
         tool_outgoing.setCapabilityUrl("v01c01.c01s012.C01S012_001Activity");
-        tool_outgoing.setCapabilityImg(getResource("a0c01s001"));//没有找到图标
+        tool_outgoing.setCapabilityImg(getResource("a0c01s014"));//没有找到图标
         menuMap.put("RFID_Change", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
@@ -253,7 +253,7 @@ public class C00S000_003Activity extends CommonActivity {
 
         tool_outgoing = new Vgrantlist();
         tool_outgoing.setCapabilityID("17");
-        tool_outgoing.setCapabilityName("加工设备初始化");
+        tool_outgoing.setCapabilityName("设备初始化");
         tool_outgoing.setCapabilityUrl("v01c03.c03s003.C03S003_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s001"));//没有找到图标
         menuMap.put("Equipment_Init", tool_outgoing);
@@ -378,6 +378,21 @@ public class C00S000_003Activity extends CommonActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
+        // 按照 Vgrantlist 类中 CapabilityID 字段升序
+        Collections.sort(menuList, new Comparator<Vgrantlist>(){
+            public int compare(Vgrantlist o1, Vgrantlist o2) {
+                //按照点击次数降序排列
+                if(Integer.valueOf(o1.getCapabilityID()) > Integer.valueOf(o2.getCapabilityID())){
+                    return 1;
+                }
+                if(Integer.valueOf(o1.getCapabilityID()) == Integer.valueOf(o2.getCapabilityID())){
+                    return 0;
+                }
+                return -1;
+            }
+        });
 
 
         MenuRespons menuRespons = new MenuRespons();
