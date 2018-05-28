@@ -70,8 +70,6 @@ public class C01S019_000Activity extends CommonActivity {
     EditText et04;
 
 
-    private int position = 0;
-
     private Retrofit retrofit;
 
     // 外委厂家列表
@@ -100,13 +98,6 @@ public class C01S019_000Activity extends CommonActivity {
 
         // 外委厂家列表
         getSharpenProvider();
-
-        // 上一个页面传过来的参数
-        Map<String, Object> paramMap = PARAM_MAP.get(1);
-        if (paramMap != null) {
-            outSideVO = (OutSideVO) paramMap.get("outSideVO");
-            setViewData(outSideVO);
-        }
     }
 
     private void setViewData(OutSideVO outSideVO) {
@@ -155,27 +146,62 @@ public class C01S019_000Activity extends CommonActivity {
 
         Call<String> getSharpenProvider = iRequest.getSharpenProvider(body);
 
-        try {
-            Response<String> response = getSharpenProvider.execute();
+        getSharpenProvider.enqueue(new MyCallBack<String>() {
+            @Override
+            public void _onResponse(Response<String> response) {
+                try {
+                    if (response.raw().code() == 200) {
+                        ObjectMapper mapper = new ObjectMapper();
 
-            ObjectMapper mapper = new ObjectMapper();
+                        sharpenProviderList = mapper.readValue(response.body(), getCollectionType(mapper, List.class, DjOwnerAkp.class));
 
-            if (response.raw().code() == 200) {
-                sharpenProviderList = mapper.readValue(response.body(), getCollectionType(mapper, List.class, DjOwnerAkp.class));
-            } else {
-                createAlertDialog(C01S019_000Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            createAlertDialog(C01S019_000Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-        } finally {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    loading.dismiss();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // 上一个页面传过来的参数
+                                Map<String, Object> paramMap = PARAM_MAP.get(1);
+                                if (paramMap != null) {
+                                    outSideVO = (OutSideVO) paramMap.get("outSideVO");
+                                    setViewData(outSideVO);
+                                }
+                            }
+                        });
+                    } else {
+                        final String errorStr = response.errorBody().string();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                createAlertDialog(C01S019_000Activity.this, errorStr, Toast.LENGTH_LONG);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
+                            }
+                        }
+                    });
                 }
-            });
-        }
+            }
+
+            @Override
+            public void _onFailure(Throwable t) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (null != loading && loading.isShowing()) {
+                            loading.dismiss();
+                        }
+                        createAlertDialog(C01S019_000Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    }
+                });
+            }
+        });
     }
 
 
@@ -364,7 +390,6 @@ public class C01S019_000Activity extends CommonActivity {
             View view1 = LayoutInflater.from(C01S019_000Activity.this).inflate(R.layout.item_c03s004_001, null);
             TextView textView = (TextView) view1.findViewById(R.id.tv_01);
             textView.setText(outsideFactoryModeList.get(i).getName());
-            //TODO 初始化轴下拉列表名字
             return view1;
         }
 

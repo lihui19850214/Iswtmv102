@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.apiclient.pojo.CuttingTool;
 import com.apiclient.pojo.CuttingToolBind;
+import com.apiclient.pojo.OperationEnum;
 import com.apiclient.pojo.OutsideFactory;
 import com.apiclient.vo.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,6 +33,7 @@ import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
+import com.icomp.common.activity.ExceptionProcessCallBack;
 import com.icomp.common.utils.SysApplication;
 
 import okhttp3.RequestBody;
@@ -444,7 +446,10 @@ public class C01S019_001Activity extends CommonActivity {
                 String jsonStr = gson.toJson(cuttingToolBindVO);
                 RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                Call<String> getOutCuttingToolBind = iRequest.getOutCuttingToolBind(body);
+                Map<String, String> headsMap = new HashMap<>();
+                headsMap.put("impower", OperationEnum.Cutting_tool_OutSide.getKey().toString());
+
+                Call<String> getOutCuttingToolBind = iRequest.getOutCuttingToolBind(body, headsMap);
                 getOutCuttingToolBind.enqueue(new MyCallBack<String>() {
                     @Override
                     public void _onResponse(Response<String> response) {
@@ -454,17 +459,7 @@ public class C01S019_001Activity extends CommonActivity {
                                 CuttingToolBind cuttingToolBind = gson.fromJson(response.body(), CuttingToolBind.class);
 
                                 if (cuttingToolBind != null) {
-                                    rfidToMap.put(rfidString, cuttingToolBind);
-
-                                    SharpenVO sharpenVO = new SharpenVO();
-                                    sharpenVO.setCuttingToolBusinessCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 材料号
-                                    sharpenVO.setCuttingToolBladeCode(cuttingToolBind.getBladeCode());// 刀身码
-                                    sharpenVO.setCuttingToolCode(cuttingToolBind.getCuttingTool().getCode());
-                                    sharpenVO.setCount(1);
-                                    sharpenVOList.add(sharpenVO);
-
-
-                                    addLayout(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode(), "-");
+                                    isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
                                 } else {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -472,7 +467,6 @@ public class C01S019_001Activity extends CommonActivity {
                                             Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
                                         }
                                     });
-
                                 }
                             } else {
                                 final String errorStr = response.errorBody().string();
@@ -514,6 +508,81 @@ public class C01S019_001Activity extends CommonActivity {
             }
         }
     }
+
+
+    /**
+     * 是否弹出异常操作框
+     * @param headers http响应头，用于判断是否异常操作
+     * @param rfid
+     * @param cuttingToolBind
+     */
+    public void isShowExceptionBox(final String headers, final String rfid, final CuttingToolBind cuttingToolBind) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ObjectMapper mapper = new ObjectMapper();
+                Map<String, String> inpowerMap = new HashMap<>();
+
+                try {
+                    inpowerMap = mapper.readValue(headers, Map.class);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                if ("1".equals(inpowerMap.get("type"))) {
+                    // 是否需要授权 true为需要授权；false为不需要授权
+                    is_need_authorization = false;
+                    setValue(rfid, cuttingToolBind);
+                } else if ("2".equals(inpowerMap.get("type"))) {
+                    is_need_authorization = true;
+                    exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                        @Override
+                        public void confirm() {
+                            setValue(rfid, cuttingToolBind);
+                        }
+
+                        @Override
+                        public void cancel() {
+                            // 不做任何操作
+                        }
+                    });
+                } else if ("3".equals(inpowerMap.get("type"))) {
+                    is_need_authorization = false;
+                    stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                        @Override
+                        public void confirm() {
+                            finish();
+                        }
+
+                        @Override
+                        public void cancel() {
+                            // 实际上没有用
+                            finish();
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+
+    // 设置值
+    public void setValue(String rfid, CuttingToolBind cuttingToolBind) {
+        rfidToMap.put(rfid, cuttingToolBind);
+
+        SharpenVO sharpenVO = new SharpenVO();
+        sharpenVO.setCuttingToolBusinessCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 材料号
+        sharpenVO.setCuttingToolBladeCode(cuttingToolBind.getBladeCode());// 刀身码
+        sharpenVO.setCuttingToolCode(cuttingToolBind.getCuttingTool().getCode());
+        sharpenVO.setCount(1);
+        sharpenVOList.add(sharpenVO);
+
+
+        addLayout(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode(), "-");
+    }
+
 
     @SuppressLint("HandlerLeak")
     Handler scanfmhandler = new Handler() {

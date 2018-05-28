@@ -1,6 +1,8 @@
 package com.icomp.Iswtmv10.v01c01.c01s019;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -151,6 +153,37 @@ public class C01S019_002Activity extends CommonActivity {
     //提交添加场外刃磨
     private void requestData(List<AuthCustomer> authorizationList) {
         loading.show();
+
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> headsMap = new HashMap<>();
+        // 授权信息
+        ImpowerRecorder impowerRecorder = new ImpowerRecorder();
+
+        try {
+            // 需要授权信息
+            if (is_need_authorization && authorizationList != null) {
+                //设定用户访问信息
+                @SuppressLint("WrongConstant")
+                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+                String userInfoJson = sharedPreferences.getString("loginInfo", null);
+
+                AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
+
+                // 授权信息
+                impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
+                impowerRecorder.setOperatorUserName(authCustomer.getName());//操作者姓名
+                impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                impowerRecorder.setImpowerUserName(authorizationList.get(0).getName());//授权人名称
+                impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_OutSide.getKey().toString());//操作key
+                impowerRecorder.setOperatorValue(OperationEnum.Cutting_tool_OutSide.getName());//操作者code
+            }
+            headsMap.put("impower", mapper.writeValueAsString(impowerRecorder));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         IRequest iRequest = retrofit.create(IRequest.class);
 
         Gson gson = new Gson();
@@ -159,7 +192,7 @@ public class C01S019_002Activity extends CommonActivity {
         String jsonStr = gson.toJson(outSideVO);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> addOutsideFactory = iRequest.addOutsideFactory(body);
+        Call<String> addOutsideFactory = iRequest.addOutsideFactory(body, headsMap);
 
         addOutsideFactory.enqueue(new MyCallBack<String>() {
             @Override
