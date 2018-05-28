@@ -265,7 +265,7 @@ public class c01s010_002Activity extends CommonActivity {
             super.run();
             //单扫方法
             rfidString = singleScan();
-            //rfidString ="18000A00000D6440";
+//            rfidString ="18000A00000D6440";
             if ("close".equals(rfidString)) {
                 tvScan.setClickable(true);
                 mBtnReturn.setClickable(true);
@@ -308,17 +308,15 @@ public class c01s010_002Activity extends CommonActivity {
                     String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
                     RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-
-
                     Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
                     getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
                         @Override
                         public void _onResponse(Response<String> response) {
                             try {
                                 if (response.raw().code() == 200) {
-                                    Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new TimestampTypeAdapter()).setDateFormat("yyyy-MM-dd HH:mm:ss").create();
+                                    ObjectMapper mapper = new ObjectMapper();
 
-                                    synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
+                                    synthesisCuttingToolConfig = mapper.readValue(response.body(), SynthesisCuttingToolConfig.class);
 
                                     if (synthesisCuttingToolConfig != null) {
                                         searchDownCutting(rfidString);
@@ -342,14 +340,7 @@ public class c01s010_002Activity extends CommonActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             } finally {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (null != loading && loading.isShowing()) {
-                                            loading.dismiss();
-                                        }
-                                    }
-                                });
+
                             }
                         }
 
@@ -368,7 +359,7 @@ public class c01s010_002Activity extends CommonActivity {
                         }
                     });
                 } else {
-                    //rfidString="18000A00000EBD58";
+//                    rfidString="18000A00000EBD58";
                     if (rfidSet.contains(rfidString)) {
                         runOnUiThread(new Runnable() {
                             @Override
@@ -486,79 +477,112 @@ public class c01s010_002Activity extends CommonActivity {
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
 
+        Map<String, String> headsMap = new HashMap<>();
         try {
-            Map<String, String> headsMap = new HashMap<>();
             headsMap.put("impower", OperationEnum.SynthesisCuttingTool_Exchange.getKey().toString());
-
-            Call<String> getBind = iRequest.getBind(body, headsMap);
-            Response<String> response = getBind.execute();
-            String inpower = response.headers().get("impower");
-
-            if (response.raw().code() == 200) {
-                ObjectMapper mapper = new ObjectMapper();
-                synthesisCuttingToolBind = mapper.readValue(response.body(), SynthesisCuttingToolBind.class);
-
-                List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList = synthesisCuttingToolBind.getSynthesisCuttingToolLocationList();
-
-                for (SynthesisCuttingToolLocation synthesisCuttingToolLocation : synthesisCuttingToolLocationList) {
-                    // 卸下
-                    DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
-                    downCuttingToolVO.setDownCode(synthesisCuttingToolLocation.getCuttingTool().getBusinessCode());
-                    downCuttingToolVO.setDownCount(synthesisCuttingToolLocation.getCount());
-                    // 卸下数量
-                    downCuttingToolVOMap.put(synthesisCuttingToolLocation.getCuttingTool().getBusinessCode(), downCuttingToolVO);
-                }
-
-
-                Map<String, String> inpowerMap = mapper.readValue(inpower, Map.class);
-
-                if ("1".equals(inpowerMap.get("type"))) {
-                    // 是否需要授权 true为需要授权；false为不需要授权
-                    is_need_authorization = false;
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setValue(downCuttingToolVOMap);
-                        }
-                    });
-                } else if ("2".equals(inpowerMap.get("type"))) {
-                    is_need_authorization = true;
-                    exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                        @Override
-                        public void confirm() {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    setValue(downCuttingToolVOMap);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void cancel() {
-                            // 不做任何操作
-                        }
-                    });
-                } else if ("3".equals(inpowerMap.get("type"))) {
-                    is_need_authorization = false;
-                    stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                        @Override
-                        public void confirm() {
-                            finish();
-                        }
-
-                        @Override
-                        public void cancel() {
-                            // 实际上没有用
-                            finish();
-                        }
-                    });
-                }
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        Call<String> getBind = iRequest.getBind(body, headsMap);
+
+        getBind.enqueue(new MyCallBack<String>() {
+            @Override
+            public void _onResponse(Response<String> response) {
+                try {
+                    if (response.raw().code() == 200) {
+                        String inpower = response.headers().get("impower");
+
+                        ObjectMapper mapper = new ObjectMapper();
+                        synthesisCuttingToolBind = mapper.readValue(response.body(), SynthesisCuttingToolBind.class);
+
+                        List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList = synthesisCuttingToolBind.getSynthesisCuttingToolLocationList();
+
+                        for (SynthesisCuttingToolLocation synthesisCuttingToolLocation : synthesisCuttingToolLocationList) {
+                            // 卸下
+                            DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
+                            downCuttingToolVO.setDownCode(synthesisCuttingToolLocation.getCuttingTool().getBusinessCode());
+                            downCuttingToolVO.setDownCount(synthesisCuttingToolLocation.getCount());
+                            // 卸下数量
+                            downCuttingToolVOMap.put(synthesisCuttingToolLocation.getCuttingTool().getBusinessCode(), downCuttingToolVO);
+                        }
+
+                        final Map<String, String> inpowerMap = mapper.readValue(inpower, Map.class);
+                        inpowerMap.put("type","2");inpowerMap.put("message","2dddddd");
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if ("1".equals(inpowerMap.get("type"))) {
+                                    // 是否需要授权 true为需要授权；false为不需要授权
+                                    is_need_authorization = false;
+                                    setValue(downCuttingToolVOMap);
+                                } else if ("2".equals(inpowerMap.get("type"))) {
+                                    is_need_authorization = true;
+                                    exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                                        @Override
+                                        public void confirm() {
+                                            setValue(downCuttingToolVOMap);
+                                        }
+
+                                        @Override
+                                        public void cancel() {
+                                            // 不做任何操作
+                                        }
+                                    });
+                                } else if ("3".equals(inpowerMap.get("type"))) {
+                                    is_need_authorization = false;
+                                    stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                                        @Override
+                                        public void confirm() {
+                                            finish();
+                                        }
+
+                                        // 实际上没有用
+                                        @Override
+                                        public void cancel() {
+                                            finish();
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        final String errorStr = response.errorBody().string();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                createAlertDialog(c01s010_002Activity.this, errorStr, Toast.LENGTH_LONG);
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void _onFailure(Throwable t) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (null != loading && loading.isShowing()) {
+                            loading.dismiss();
+                        }
+                        createAlertDialog(c01s010_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    }
+                });
+
+            }
+        });
     }
 
 
@@ -998,17 +1022,18 @@ public class c01s010_002Activity extends CommonActivity {
 
                 @Override
                 public void afterTextChanged(Editable editable) {
+//                    Log.i("ceshi", et1.getText().toString()+"=="+editable.toString());
+                    String num = et1.getText().toString();
                     //输入文字后的状态
-                    if (et1.getText() != null && !"".equals(et1.getText().toString())) {
+                    if (num == null || "".equals(num)) {
+                        num = "0";
+                    }
 
-                        Log.i("ceshi", et1.getText().toString()+"=="+editable.toString());
-                        // 组装
-                        if (id == 1003) {
-                            addZuzhuangData(cailiao, Integer.parseInt(et1.getText().toString()), outsideRowNumber, insideRowNumber);
-                        } else if (id == 1004) {
-                            addDiudaoData(cailiao, Integer.parseInt(et1.getText().toString()), outsideRowNumber, insideRowNumber);
-                        }
-
+                    // 组装
+                    if (id == 1003) {
+                        addZuzhuangData(cailiao, Integer.parseInt(num), outsideRowNumber, insideRowNumber);
+                    } else if (id == 1004) {
+                        addDiudaoData(cailiao, Integer.parseInt(num), outsideRowNumber, insideRowNumber);
                     }
                 }
             });
