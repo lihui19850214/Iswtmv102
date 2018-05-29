@@ -3,6 +3,7 @@ package com.icomp.Iswtmv10.v01c01.c01s004;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -309,13 +310,26 @@ public class c01s004_003Activity extends CommonActivity {
             outApplyVO.setKezhangRfidCode(authorizationList.get(1).getRfidContainer().getLaserCode());
         }
 
+        ObjectMapper mapper = new ObjectMapper();
+
+        try {
+            //设定用户访问信息
+            @SuppressLint("WrongConstant")
+            SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+            String userInfoJson = sharedPreferences.getString("loginInfo", null);
+
+            AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
+            outApplyVO.setKuguanOperatorCode(authCustomer.getCode());// 操作者code
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         IRequest iRequest = retrofit.create(IRequest.class);
 
         outApplyVO.setDjOutapplyAkp(djOutapplyAkp);
 //        Gson gson = new Gson();
 //        String jsonStr = gson.toJson(outApplyVO);
-        ObjectMapper mapper = new ObjectMapper();
+
 
 
         String jsonStr = "";
