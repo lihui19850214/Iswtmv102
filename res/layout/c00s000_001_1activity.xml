@@ -74,10 +74,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="4"
                 android:background="@color/baseColor"
-                android:maxLength="6"
+                android:maxLength="8"
                 android:maxLines="1"
                 android:textSize="20sp"
-                android:textColor="@color/textColor"/>
+                android:textColor="@color/textColor" android:singleLine="true"/>
 
         </LinearLayout>
 
