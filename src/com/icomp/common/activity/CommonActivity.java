@@ -920,17 +920,17 @@ public abstract class CommonActivity extends Activity {
     AuthorizationWindowCallBack authorizationWindowCallBack = null;
 
     public void authorizationWindow(int authorizedPeopleNumber, AuthorizationWindowCallBack callBack){
+        authorizationList = new ArrayList<>();
+        authorizationWindowCallBack = callBack;
+
         // 需要授权
         if (is_need_authorization) {
             if (authorizedPeopleNumber > 0) {
                 this.authorizedPeopleNumber = authorizedPeopleNumber;
             }
 
-            authorizationList = new ArrayList<>();
-            authorizationWindowCallBack = callBack;
             showAuthorizationWindow();
         } else {
-            authorizationWindowCallBack = callBack;
             // 不需要授权传 null
             authorizationWindowCallBack.success(null);
         }
@@ -1151,13 +1151,18 @@ public abstract class CommonActivity extends Activity {
 
                 Toast.makeText(getApplicationContext(), getString(R.string.authorizationSuccess), Toast.LENGTH_SHORT).show();
 
-                // 判断是否已打到授权人数
+                // 判断是否已达到授权人数
                 if (authorizationList.size() == authorizedPeopleNumber) {
                     // 成功
                     authorizationWindowCallBack.success(authorizationList);
                     if (popupWindowInput != null && popupWindowInput.isShowing()) {
                         //输入授权弹框消失，显示授权弹框
                         popupWindowInput.dismiss();
+                    }
+
+                    // 授权完成后，如果是扫描登陆需要关闭授权框
+                    if (null != popupWindowAuthorization && popupWindowAuthorization.isShowing()) {
+                        popupWindowAuthorization.dismiss();
                     }
                 } else {
                     if (popupWindowInput != null && popupWindowInput.isShowing()) {
@@ -1181,9 +1186,6 @@ public abstract class CommonActivity extends Activity {
             if (null != popupWindow && popupWindow.isShowing()) {
                 popupWindow.dismiss();
             }
-//            if (null != popupWindowAuthorization && popupWindowAuthorization.isShowing()) {
-//                popupWindowAuthorization.dismiss();
-//            }
 
             // 扫描按钮不为空
             if (btnScanAuthorization != null) {
