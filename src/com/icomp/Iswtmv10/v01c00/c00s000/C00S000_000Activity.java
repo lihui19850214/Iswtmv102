@@ -380,11 +380,11 @@ public class C00S000_000Activity extends CommonActivity {
                         /** 绘制结束后解锁显示在屏幕上 **/
                         mSurfaceHolder.unlockCanvasAndPost(mCanvas);
                     }
-//                    try {
-//                        Thread.sleep(200);
-//                    } catch (InterruptedException e) {
-//                        e.printStackTrace();
-//                    }
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             if (openflag) {
