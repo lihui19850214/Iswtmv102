@@ -255,6 +255,15 @@ public interface IRequest {
      */
     @POST("/synthesisCuttingToolBusiness/breakUp")
     Call<String> breakUp(@Body RequestBody info, @HeaderMap Map<String, String> headers);
+
+    /**
+     * 拆分扫描
+     * @param info
+     * @return
+     */
+    @POST("/synthesisCuttingToolBusiness/queryRFIDForUnConfig")
+    Call<String> queryRFIDForUnConfig(@Body RequestBody info);
+
     // --------------刀具拆分结束--------------
 
 
