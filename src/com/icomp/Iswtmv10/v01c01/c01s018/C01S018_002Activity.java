@@ -66,17 +66,20 @@ public class C01S018_002Activity extends CommonActivity {
     private int position = 0;
 
     // 根据 rfid 查询的数据
-    private Map<String, CuttingToolBind> rfidToMap = new HashMap<>();
+    Map<String, CuttingToolBind> rfidToMap = new HashMap<>();
     // 根据物料号查询的数据
-    private Map<String, CuttingTool> materialNumToMap = new HashMap<>();
+    Map<String, CuttingTool> materialNumToMap = new HashMap<>();
+
+    // 需要授权的标签
+    Map<String, Boolean> rfid_authorization_map = new HashMap<>();
 
 
     //当前选择的卸下原因，零部件种类在集合中的位置
-    private int average_processing_volume_posttion;
+    int average_processing_volume_posttion;
     // 平均加工量列表
-    private List<AverageProcessingVolume> averageProcessingVolumeList = new ArrayList<>();
+    List<AverageProcessingVolume> averageProcessingVolumeList = new ArrayList<>();
 
-    private List<SharpenVO> sharpenVOList = new ArrayList<>();
+    List<SharpenVO> sharpenVOList = new ArrayList<>();
 
 
     InsideVO insideVO = new InsideVO();
@@ -107,6 +110,7 @@ public class C01S018_002Activity extends CommonActivity {
             materialNumToMap = (Map<String, CuttingTool>) paramMap.get("materialNumToMap");
             insideVO = (InsideVO) paramMap.get("insideVO");
             sharpenVOList = (List<SharpenVO>) paramMap.get("sharpenVOList");
+            rfid_authorization_map = (Map<String, Boolean>) paramMap.get("rfid_authorization_map");
 
 
             for (SharpenVO sharpenVO:sharpenVOList) {
@@ -142,12 +146,19 @@ public class C01S018_002Activity extends CommonActivity {
                 if (sharpenVOList != null  && sharpenVOList.size() > 0) {
                     insideVO.setSharpenVOS(sharpenVOList);
 
+                    if (rfid_authorization_map != null && rfid_authorization_map.size() > 0) {
+                        is_need_authorization = true;
+                    } else {
+                        is_need_authorization = false;
+                    }
+
                     // 用于页面之间传值，新方法
                     Map<String, Object> paramMap = new HashMap<>();
                     paramMap.put("rfidToMap", rfidToMap);
                     paramMap.put("materialNumToMap", materialNumToMap);
                     paramMap.put("insideVO", insideVO);
                     paramMap.put("sharpenVOList", sharpenVOList);
+                    paramMap.put("rfid_authorization_map", rfid_authorization_map);
                     PARAM_MAP.put(1, paramMap);
 
 
@@ -332,6 +343,7 @@ public class C01S018_002Activity extends CommonActivity {
             public void onClick(View v) {
                 materialNumToMap.remove(cailiao);
                 rfidToMap.remove(rfid);
+                rfid_authorization_map.remove(rfid);
 
                 for (SharpenVO sharpenVO : sharpenVOList) {
                     if (cailiao.equals(sharpenVO.getCuttingToolBusinessCode())) {
@@ -358,7 +370,7 @@ public class C01S018_002Activity extends CommonActivity {
      */
     //扫描方法
     private void scan() {
-//        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
+        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
             isCanScan = false;
             mTvScan.setClickable(false);
             ivAdd.setClickable(false);
@@ -369,9 +381,9 @@ public class C01S018_002Activity extends CommonActivity {
             //扫描线程
             scanThread = new scanThread();
             scanThread.start();
-//        } else {
-//            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
-//        }
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+        }
     }
 
     //扫描线程
@@ -380,8 +392,8 @@ public class C01S018_002Activity extends CommonActivity {
         public void run() {
             super.run();
             //单扫方法
-//            rfidString = singleScan();//TODO 生产环境需要解开
-            rfidString = "18000A00000F045B";
+            rfidString = singleScan();//TODO 生产环境需要解开
+//            rfidString = "18000A00000F045B";
             if ("close".equals(rfidString)) {
                 mTvScan.setClickable(true);
                 ivAdd.setClickable(true);
@@ -567,6 +579,10 @@ public class C01S018_002Activity extends CommonActivity {
 
     // 设置值
     public void setValue(String rfid, CuttingToolBind cuttingToolBind) {
+        if (is_need_authorization) {
+            rfid_authorization_map.put(rfid, is_need_authorization);
+        }
+
         rfidToMap.put(rfid, cuttingToolBind);
 
         SharpenVO sharpenVO = new SharpenVO();

@@ -75,6 +75,9 @@ public class C01S019_001Activity extends CommonActivity {
     // 根据物料号查询的数据
     private Map<String, CuttingTool> materialNumToMap = new HashMap<>();
 
+    // 需要授权的标签
+    Map<String, Boolean> rfid_authorization_map = new HashMap<>();
+
     //调用接口
     private Retrofit retrofit;
 
@@ -100,6 +103,7 @@ public class C01S019_001Activity extends CommonActivity {
             rfidToMap = (Map<String, CuttingToolBind>) paramMap2.get("rfidToMap");
             materialNumToMap = (Map<String, CuttingTool>) paramMap2.get("materialNumToMap");
             sharpenVOList = (List<SharpenVO>) paramMap2.get("sharpenVOList");
+            rfid_authorization_map = (Map<String, Boolean>) paramMap.get("rfid_authorization_map");
 
             for (SharpenVO sharpenVO : sharpenVOList) {
                 addLayout(sharpenVO.getCuttingToolBusinessCode(), sharpenVO.getCuttingToolBladeCode(), sharpenVO.getCount().toString());
@@ -127,12 +131,19 @@ public class C01S019_001Activity extends CommonActivity {
                 if (sharpenVOList != null  && sharpenVOList.size() > 0) {
                     outSideVO.setSharpenVOS(sharpenVOList);
 
+                    if (rfid_authorization_map != null && rfid_authorization_map.size() > 0) {
+                        is_need_authorization = true;
+                    } else {
+                        is_need_authorization = false;
+                    }
+
                     // 用于页面之间传值，新方法
                     Map<String, Object> paramMap = new HashMap<>();
                     paramMap.put("rfidToMap", rfidToMap);
                     paramMap.put("materialNumToMap", materialNumToMap);
                     paramMap.put("outSideVO", outSideVO);
                     paramMap.put("sharpenVOList", sharpenVOList);
+                    paramMap.put("rfid_authorization_map", rfid_authorization_map);
                     PARAM_MAP.put(2, paramMap);
 
 
@@ -334,6 +345,7 @@ public class C01S019_001Activity extends CommonActivity {
                             CuttingToolBind cb = rfidToMap.get(key);
                             if (sharpenVO.getCuttingToolBusinessCode().equals(cb.getCuttingTool().getBusinessCode())) {
                                 rfidToMap.remove(key);
+                                rfid_authorization_map.remove(key);
                                 break;
                             }
                         }
@@ -561,6 +573,10 @@ public class C01S019_001Activity extends CommonActivity {
 
     // 设置值
     public void setValue(String rfid, CuttingToolBind cuttingToolBind) {
+        if (is_need_authorization) {
+            rfid_authorization_map.put(rfid, is_need_authorization);
+        }
+
         rfidToMap.put(rfid, cuttingToolBind);
 
         SharpenVO sharpenVO = new SharpenVO();
