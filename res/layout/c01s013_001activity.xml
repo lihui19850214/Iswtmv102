@@ -14,10 +14,9 @@
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -27,25 +26,20 @@
                     android:gravity="left"
                     android:text="合成刀具编码"/>
 
-            <LinearLayout
+
+            <TextView
+                    android:id="@+id/tv_01"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent">
-                <TextView
-                        android:id="@+id/tv_01"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_content_size"
-                />
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_content_size"/>
         </LinearLayout>
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -55,25 +49,21 @@
                     android:gravity="left"
                     android:text="对应设备名称"/>
 
-            <LinearLayout
+
+            <TextView
+                    android:id="@+id/tv_02"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent">
-                <TextView
-                        android:id="@+id/tv_02"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_content_size"
-                />
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_content_size"/>
+
         </LinearLayout>
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -83,24 +73,20 @@
                     android:gravity="left"
                     android:text="对应轴号"/>
 
-            <LinearLayout
+
+            <TextView
+                    android:id="@+id/tv_03"
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent">
-                <TextView
-                        android:id="@+id/tv_03"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/text_content_size"/>
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_content_size"/>
         </LinearLayout>
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                >
+                android:orientation="horizontal">
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -110,19 +96,15 @@
                     android:gravity="left"
                     android:text="对应工序"/>
 
-            <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
+
                 <TextView
                         android:id="@+id/tv_04"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:textSize="@dimen/text_content_size"/>
-            </LinearLayout>
         </LinearLayout>
 
-        <View style="@style/View_1"/>
 
         <TextView
                 android:id="@+id/btn_scan"
@@ -132,13 +114,10 @@
                 android:text="@string/scan"
                 android:textColor="@color/baseColor"
                 android:gravity="center"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="40dp"
                 android:textSize="@dimen/button_textsize"
                 android:textStyle="bold"
                 android:layout_gravity="center_horizontal"/>
-
-        <View style="@style/View_1"/>
-        <View style="@style/View_1"/>
 
     </LinearLayout>
 
