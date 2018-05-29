@@ -104,7 +104,7 @@ public class C01S009_002Activity extends CommonActivity {
             case R.id.btnNext:
                 // 检查数据是否正确
                 if (!checkData()) {
-                    createAlertDialog(C01S009_002Activity.this, "请确认组装或丢刀数量", Toast.LENGTH_SHORT);
+                    createAlertDialog(C01S009_002Activity.this, "请确认组装数量", Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -859,9 +859,6 @@ public class C01S009_002Activity extends CommonActivity {
         SynthesisCuttingToolBind synthesisCuttingToolBind = new SynthesisCuttingToolBind();
         synthesisCuttingToolBind.setSynthesisCuttingTool(synthesisCuttingTool);
         synthesisCuttingToolBind.setSynthesisCuttingToolCode(synthesisCuttingToolConfig.getSynthesisCuttingToolCode());
-        RfidContainer rfidContainer = new RfidContainer();
-        rfidContainer.setLaserCode(synthesisCuttingToolConfigRFID);
-        synthesisCuttingToolBind.setRfidContainer(rfidContainer);
 
 
         // 循环组装数量
