@@ -97,7 +97,7 @@ public class C01S009_001Activity extends CommonActivity {
      * 开始扫描
      */
     private void scan() {
-        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
+//        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
             isCanScan = false;
             mTvScan.setClickable(false);
             mBtnCancel.setClickable(false);
@@ -106,9 +106,9 @@ public class C01S009_001Activity extends CommonActivity {
             //扫描线程
             scanThread = new scanThread();
             scanThread.start();
-        } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
-        }
+//        } else {
+//            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+//        }
     }
 
     /**
@@ -119,7 +119,8 @@ public class C01S009_001Activity extends CommonActivity {
         public void run() {
             super.run();
             //单扫方法
-            rfidString = singleScan();//TODO 生产环境需要
+//            rfidString = singleScan();//TODO 生产环境需要
+            rfidString = "18000A00000F045B";
             if ("close".equals(rfidString)) {
                 mTvScan.setClickable(true);
                 mBtnCancel.setClickable(true);
@@ -167,9 +168,18 @@ public class C01S009_001Activity extends CommonActivity {
                                 synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
                                 synthesisCuttingToolConfigRFID = rfidString;
 
-                                Message message = new Message();
-                                message.obj = inpower;
-                                scanHandler.sendMessage(message);
+                                if (synthesisCuttingToolConfig != null) {
+                                    Message message = new Message();
+                                    message.obj = inpower;
+                                    scanHandler.sendMessage(message);
+                                } else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
                             } else {
                                 final String errorStr = response.errorBody().string();
                                 runOnUiThread(new Runnable() {
