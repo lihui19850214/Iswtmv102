@@ -128,7 +128,7 @@ public class C01S024_001Activity extends CommonActivity {
 
     //点击扫描按钮的方法
     private void scan() {
-//        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
+        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
             isCanScan = false;
             //点击扫描按钮以后，设置扫描按钮不可用
             btnScan.setClickable(false);
@@ -138,9 +138,9 @@ public class C01S024_001Activity extends CommonActivity {
             //开启扫描线程
             scanThread = new scanThread();
             scanThread.start();
-//        } else {
-//            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
-//        }
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+        }
     }
 
     //扫描线程
@@ -149,8 +149,8 @@ public class C01S024_001Activity extends CommonActivity {
         public void run() {
             super.run();
             //调用单扫方法
-//            rfidString = singleScan();
-rfidString="18000A00000D6440";
+            rfidString = singleScan();
+//            rfidString="18000A00000D6440";
             if ("close".equals(rfidString)) {
                 btnScan.setClickable(true);
                 btnCancel.setClickable(true);
