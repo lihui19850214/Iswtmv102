@@ -6,12 +6,7 @@
 android:background="@color/backgroundcolor">
 
     <LinearLayout style="@style/MiddleLinerLayoutStyle" android:layout_marginTop="20dp">
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="0dp"
-                      android:layout_weight="1"
-                      android:orientation="vertical"
-                      tools:ignore="Suspicious0dp"
-        android:gravity="bottom">
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -26,21 +21,19 @@ android:background="@color/backgroundcolor">
                     android:gravity="left|center"
                     android:text="@string/materialNumber"/>
 
-            <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="wrap_content">
+
                 <EditText
                         android:id="@+id/etmaterialNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_weight="1.5"
+                        android:layout_height="40dp"
                         android:background="@drawable/border"
                         android:maxLength="10"
                         android:digits="@string/allowInput"
                         android:singleLine="true"
                         android:textColor="@color/baseColor"
                         android:textSize="@dimen/daoju_all" />
-            </LinearLayout>
+
         </LinearLayout>
 
 
@@ -59,14 +52,12 @@ android:background="@color/backgroundcolor">
                     android:gravity="left|center"
                     android:text="修磨数量"/>
 
-            <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="wrap_content">
+
                 <EditText
                         android:id="@+id/etgrindingQuantity"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="0dp"
+                        android:layout_weight="1.5"
+                        android:layout_height="40dp"
                         android:background="@drawable/border"
                         android:inputType="number"
                         android:maxLength="6"
@@ -74,12 +65,10 @@ android:background="@color/backgroundcolor">
                         android:singleLine="true"
                         android:textColor="@color/baseColor"
                         android:textSize="@dimen/daoju_all" />
-            </LinearLayout>
-        </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginBottom="20dp"
             style="@style/MiddleTwoButtonLinerLayoutStyle"
             android:gravity="bottom">
 
