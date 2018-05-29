@@ -168,6 +168,7 @@
                         android:layout_height="match_parent"
                         android:background="@drawable/border"
                         android:textColor="@color/baseColor"
+                        android:singleLine="true"
                         android:textSize="@dimen/daoju_all" />
             </LinearLayout>
         </LinearLayout>
