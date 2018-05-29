@@ -514,6 +514,7 @@ public class c01s010_002Activity extends CommonActivity {
                             // 卸下
                             DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
                             downCuttingToolVO.setDownCode(synthesisCuttingToolLocation.getCuttingTool().getBusinessCode());
+                            downCuttingToolVO.setBladeCode(synthesisCuttingToolLocation.getCuttingToolBladeCode());
                             downCuttingToolVO.setDownCount(synthesisCuttingToolLocation.getCount());
                             downCuttingToolVO.setDownLostCount(0);
                             // 卸下数量
@@ -1131,8 +1132,8 @@ public class c01s010_002Activity extends CommonActivity {
                         if (code.equals(downCuttingToolVO.getDownCode())) {
                             insideRowNumber = j;
                             downCuttingToolVO.setDownCount((downCuttingToolVO.getDownCount() + num));
-                            downCuttingToolVO.setDownRfidCode(rfid);
-                            downCuttingToolVO.setBladeCode(bladeCode);
+//                            downCuttingToolVO.setDownRfidCode(rfid);
+//                            downCuttingToolVO.setBladeCode(bladeCode);
 
                             // 外部行
                             TableRow mTableRow = (TableRow) mTlContainer.getChildAt(outsideRowNumber);
