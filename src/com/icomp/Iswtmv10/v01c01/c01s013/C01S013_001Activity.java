@@ -87,9 +87,15 @@ public class C01S013_001Activity extends CommonActivity {
             synthesisCuttingToolBindleRecords = (SynthesisCuttingToolBindleRecords) paramMap.get("synthesisCuttingToolBindleRecords");
             synthesisCuttingToolBindleRecordsRFID = (String) paramMap.get("synthesisCuttingToolBindleRecordsRFID");
 
-            Message message = new Message();
-            message.obj = synthesisCuttingToolBindleRecords;
-            setTextViewHandler.sendMessage(message);
+//            Message message = new Message();
+//            message.obj = synthesisCuttingToolBindleRecords;
+//            setTextViewHandler.sendMessage(message);
+
+            //TODO 需要检查是否正确
+            tv01.setText(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());
+            tv02.setText(synthesisCuttingToolBindleRecords.getProductLineEquipment().getName());
+            tv03.setText(synthesisCuttingToolBindleRecords.getProductLineAxle().getCode());
+            tv04.setText(synthesisCuttingToolBindleRecords.getProductLineProcess().getName());//对应工序，不知道是哪个字段
         }
     }
 
@@ -192,9 +198,10 @@ public class C01S013_001Activity extends CommonActivity {
                                 synthesisCuttingToolBindleRecordsRFID = rfidString;
 
                                 if (synthesisCuttingToolBindleRecords != null) {
-                                    Message message = new Message();
-                                    message.obj = inpower;
-                                    setTextViewHandler.sendMessage(message);
+                                    setTextViewHandler(inpower);
+//                                    Message message = new Message();
+//                                    message.obj = inpower;
+//                                    setTextViewHandler.sendMessage(message);
                                 }else {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -248,13 +255,7 @@ public class C01S013_001Activity extends CommonActivity {
     }
 
 
-    @SuppressLint("HandlerLeak")
-    Handler setTextViewHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-
-            String inpower = msg.obj.toString();
-
+    private void setTextViewHandler(String inpower) {
             ObjectMapper mapper = new ObjectMapper();
             Map<String, String> inpowerMap = new HashMap<>();
             try {
@@ -305,9 +306,68 @@ public class C01S013_001Activity extends CommonActivity {
                     }
                 });
             }
+    }
 
-        }
-    };
+//    @SuppressLint("HandlerLeak")
+//    Handler setTextViewHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//
+//            String inpower = msg.obj.toString();
+//
+//            ObjectMapper mapper = new ObjectMapper();
+//            Map<String, String> inpowerMap = new HashMap<>();
+//            try {
+//                inpowerMap = mapper.readValue(inpower, Map.class);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            // 判断是否显示提示框
+//            if ("1".equals(inpowerMap.get("type"))) {
+//                // 是否需要授权 true为需要授权；false为不需要授权
+//                is_need_authorization = false;
+//
+//                //TODO 需要检查是否正确
+//                tv01.setText(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());
+//                tv02.setText(synthesisCuttingToolBindleRecords.getProductLineEquipment().getName());
+//                tv03.setText(synthesisCuttingToolBindleRecords.getProductLineAxle().getCode());
+//                tv04.setText(synthesisCuttingToolBindleRecords.getProductLineProcess().getName());//对应工序，不知道是哪个字段
+//            } else if ("2".equals(inpowerMap.get("type"))) {
+//                is_need_authorization = true;
+//                exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+//                    @Override
+//                    public void confirm() {
+//                        //TODO 需要检查是否正确
+//                        tv01.setText(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());
+//                        tv02.setText(synthesisCuttingToolBindleRecords.getProductLineEquipment().getName());
+//                        tv03.setText(synthesisCuttingToolBindleRecords.getProductLineAxle().getCode());
+//                        tv04.setText(synthesisCuttingToolBindleRecords.getProductLineProcess().getName());//对应工序，不知道是哪个字段
+//                    }
+//
+//                    @Override
+//                    public void cancel() {
+//                        // 不做任何操作
+//                    }
+//                });
+//            } else if ("3".equals(inpowerMap.get("type"))) {
+//                is_need_authorization = false;
+//                stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+//                    @Override
+//                    public void confirm() {
+//                        finish();
+//                    }
+//
+//                    @Override
+//                    public void cancel() {
+//                        // 实际上没有用
+//                        finish();
+//                    }
+//                });
+//            }
+//
+//        }
+//    };
 
 //    //重写键盘上扫描按键的方法
 //    @Override
