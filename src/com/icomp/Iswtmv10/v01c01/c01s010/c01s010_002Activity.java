@@ -1096,7 +1096,9 @@ public class c01s010_002Activity extends CommonActivity {
                     map = insideListDate.get(j);
 
                     UpCuttingToolVO upCuttingToolVO = (UpCuttingToolVO) map.get("upCuttingToolVO");
+                    DownCuttingToolVO downCuttingToolVO = (DownCuttingToolVO) map.get("downCuttingToolVO");
 
+                    // 换上
                     if (code.equals(upCuttingToolVO.getUpCode())) {
                         insideRowNumber = j;
                         upCuttingToolVO.setUpCount((upCuttingToolVO.getUpCount() + num));
@@ -1119,6 +1121,12 @@ public class c01s010_002Activity extends CommonActivity {
                         int numOld = Integer.parseInt(tvZuzhuangshu.getText().toString());
                         int zong = numOld + num;
                         tvZuzhuangshu.setText(zong+"");
+                    }
+
+                    // 换下
+                    if (code.equals(downCuttingToolVO.getDownCode())) {
+                        downCuttingToolVO.setDownRfidCode(rfid);
+                        downCuttingToolVO.setDownCount(downCuttingToolVO.getDownCount()+num);
                     }
                 }
 
