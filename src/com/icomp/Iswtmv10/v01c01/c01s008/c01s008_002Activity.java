@@ -24,10 +24,12 @@ import com.apiclient.pojo.*;
 import com.apiclient.vo.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
+import com.icomp.Iswtmv10.v01c01.c01s010.c01s010_002Activity;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
 import okhttp3.RequestBody;
@@ -64,7 +66,6 @@ public class c01s008_002Activity extends CommonActivity {
 
     //合成刀具初始化参数类
     SynthesisCuttingToolBind synthesisCuttingToolBind = new SynthesisCuttingToolBind();
-    List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList = new ArrayList<>();
 
     List<DownCuttingToolVO> downCuttingToolVOList = new ArrayList<>();
 
@@ -74,6 +75,8 @@ public class c01s008_002Activity extends CommonActivity {
     Set<String> rfidSet = new HashSet<>();
     // 合成刀标签
     String synthesisCuttingToolBindRFID = "";
+
+    List<Map<String, Object>> outsideListData = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,38 +91,42 @@ public class c01s008_002Activity extends CommonActivity {
 
         synthesisCuttingToolBind = (SynthesisCuttingToolBind) getIntent().getSerializableExtra(PARAM);
 
+        setValue();
+    }
+
+    private void setValue() {
         tv01.setText(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());
 
-        synthesisCuttingToolLocationList = synthesisCuttingToolBind.getSynthesisCuttingToolLocationList();
+        List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList = synthesisCuttingToolBind.getSynthesisCuttingToolLocationList();
 
         for (SynthesisCuttingToolLocation synthesisCuttingToolLocation:synthesisCuttingToolLocationList) {
-            if ("1".equals(synthesisCuttingToolLocation.getCuttingTool().getConsumeType())) {
-                // 组装
-                DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
-                downCuttingToolVO.setBladeCode(synthesisCuttingToolLocation.getCuttingToolBladeCode());
-                downCuttingToolVO.setDownCode(synthesisCuttingToolLocation.getCuttingTool().getBusinessCode());
-                // 钻头的"组装数量"根据扫码来的，每次1个
-                downCuttingToolVO.setDownCount(0);
-                // 换装数量
-                downCuttingToolVOList.add(downCuttingToolVO);
+            Map<String, Object> map = new HashMap<>();
 
-                Integer[] zuzhuangnum = new Integer[]{synthesisCuttingToolLocation.getCount(), 0};
-                zhuantouNumMap.put(synthesisCuttingToolLocation.getCuttingTool().getBusinessCode(), zuzhuangnum);
-            } else {
-                // 组装
-                DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
-                downCuttingToolVO.setBladeCode(synthesisCuttingToolLocation.getCuttingToolBladeCode());
-                downCuttingToolVO.setDownCode(synthesisCuttingToolLocation.getCuttingTool().getBusinessCode());
-                // 钻头的"组装数量"根据扫码来的，每次1个
-                downCuttingToolVO.setDownCount(synthesisCuttingToolLocation.getCount());
-                // 换装数量
-                downCuttingToolVOList.add(downCuttingToolVO);
+
+            map.put("synthesisCuttingToolLocation", synthesisCuttingToolLocation);
+
+            // 拆分
+            DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
+            downCuttingToolVO.setBladeCode(synthesisCuttingToolLocation.getCuttingToolBladeCode());
+            downCuttingToolVO.setDownCode(synthesisCuttingToolLocation.getCuttingTool().getBusinessCode());
+            downCuttingToolVO.setDownCount(synthesisCuttingToolLocation.getCount());
+
+            if (CuttingToolTypeEnum.dj.getKey().equals(synthesisCuttingToolLocation.getCuttingTool().getType())) {
+                // griding_zt("1","可刃磨钻头"),griding_dp("2","可刃磨刀片"),single_use_dp("3","一次性刀片"),other("9","其他");
+                if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(synthesisCuttingToolLocation.getCuttingTool().getConsumeType())) {
+                    map.put("isZuanTou", true);
+                    downCuttingToolVO.setDownCount(0);
+                }
             }
 
-            addLayout(synthesisCuttingToolLocation);
-        }
+            map.put("downCuttingToolVO", downCuttingToolVO);
+            outsideListData.add(map);
 
+
+            addLayout(map);
+        }
     }
+
 
     @OnClick({R.id.btnCancel, R.id.btnNext, R.id.tvScan})
     public void onViewClicked(View view) {
@@ -224,81 +231,131 @@ public class c01s008_002Activity extends CommonActivity {
                         }
                     });
                 } else {
-                    boolean isUnsatisfied = false;
-                    Set<String> keys = zhuantouNumMap.keySet();
-                    for (String key : keys) {
-                        Integer[] zuzhuangNum = zhuantouNumMap.get(key);
-                        if (zuzhuangNum[0] != zuzhuangNum[1]) {
-                            isUnsatisfied = true;
-                            break;
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            loading.show();
                         }
-                    }
+                    });
 
-                    if (isUnsatisfied) {
-                        rfidSet.add(rfidString);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                addData(null,1, rfidString);
+                    //调用接口，查询合成刀具组成信息
+                    IRequest iRequest = retrofit.create(IRequest.class);
+
+                    RfidContainerVO rfidContainerVO = new RfidContainerVO();
+                    rfidContainerVO.setLaserCode(rfidString);
+
+                    CuttingToolBindVO cuttingToolBindVO = new CuttingToolBindVO();
+                    cuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
+
+                    Gson gson = new Gson();
+                    String jsonStr = gson.toJson(cuttingToolBindVO);
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+                    Call<String> searchCuttingToolBind = iRequest.searchCuttingToolBind(body);
+                    searchCuttingToolBind.enqueue(new MyCallBack<String>() {
+                        @Override
+                        public void _onResponse(Response<String> response) {
+                            try {
+                                if (response.raw().code() == 200) {
+                                    Gson gson = new Gson();
+                                    CuttingToolBind cuttingToolBind = gson.fromJson(response.body(), CuttingToolBind.class);
+
+                                    if (cuttingToolBind != null) {
+                                        if (!checkRfidData(cuttingToolBind.getCuttingTool().getBusinessCode())) {
+                                            rfidSet.add(rfidString);
+                                            // 给哪个刀具类型增加组装数量，默认只给转头添加组装数量
+                                            addRfidData(cuttingToolBind.getCuttingTool().getBusinessCode(), 1, rfidString, cuttingToolBind.getBladeCode());
+                                        } else {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    createAlertDialog(c01s008_002Activity.this, "组装数量已满足", Toast.LENGTH_SHORT);
+                                                }
+                                            });
+                                        }
+                                    } else {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    final String errorStr = response.errorBody().string();
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            createAlertDialog(c01s008_002Activity.this, errorStr, Toast.LENGTH_LONG);
+                                        }
+                                    });
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (null != loading && loading.isShowing()) {
+                                            loading.dismiss();
+                                        }
+                                    }
+                                });
                             }
-                        });
+                        }
 
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                createAlertDialog(c01s008_002Activity.this, "拆分数量已满足", Toast.LENGTH_SHORT);
-                            }
-                        });
-                    }
-
+                        @Override
+                        public void _onFailure(Throwable t) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (null != loading && loading.isShowing()) {
+                                        loading.dismiss();
+                                    }
+                                    createAlertDialog(c01s008_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                                }
+                            });
+                        }
+                    });
                 }
-
             }
         }
     }
 
 
+    /**
+     * 检查rfid数据是否已满足
+     * @param code 材料号
+     * @return true为已满足；false为未满足；
+     */
+    private boolean checkRfidData(String code) {
+        int zongNum = 0;
+        int chaifenZongNum = 0;
 
-//    /**
-//     * 添加布局
-//     */
-//    private void addLayout(SynthesisCuttingToolLocationConfig synthesisCuttingToolLocationConfig) {
-//
-//        final View mLinearLayout = LayoutInflater.from(this).inflate(R.layout.item_daojuzuzhuang_1, null);
-//        TextView tvCailiao = (TextView) mLinearLayout.findViewById(R.id.tvCailiao);
-//        TextView tvDaoJuType = (TextView) mLinearLayout.findViewById(R.id.tvDaoJuType);
-//        TextView tvDaoJuNum = (TextView) mLinearLayout.findViewById(R.id.tvDaoJuNum);
-//        TextView etZuzhuangNum = (TextView) mLinearLayout.findViewById(R.id.etZuzhuangNum);
-//
-//        //材料号
-//        tvCailiao.setText(synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode());
-//
-//        //刀具类型
-//        //1钻头、2刀片、3一体刀、4专机、9其他
-//        if ("1".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
-//            zhuantouNum = synthesisCuttingToolLocationConfig.getCount();
-//            tvDaoJuType.setText("钻头");
-//            tvDaoJuType.setTag("1");
-//            etZuzhuangNum.setText("0");
-//        } else if ("2".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
-//            tvDaoJuType.setText("刀片");
-//            etZuzhuangNum.setText(synthesisCuttingToolLocationConfig.getCount().toString());
-//        } else if ("3".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
-//            tvDaoJuType.setText("一体刀");
-//            etZuzhuangNum.setText(synthesisCuttingToolLocationConfig.getCount().toString());
-//        } else if ("4".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
-//            tvDaoJuType.setText("专机");
-//            etZuzhuangNum.setText(synthesisCuttingToolLocationConfig.getCount().toString());
-//        } else if ("9".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
-//            tvDaoJuType.setText("其他");
-//            etZuzhuangNum.setText(synthesisCuttingToolLocationConfig.getCount().toString());
-//        }
-//
-//        //总数量
-//        tvDaoJuNum.setText(synthesisCuttingToolLocationConfig.getCount().toString());
-//        mLlContainer.addView(mLinearLayout);
-//    }
+        for (int i=0; i<outsideListData.size(); i++) {
+            Map<String, Object> map = outsideListData.get(i);
+
+            // 内部第一行数据为主刀，有标记是否为转头
+            if (map.containsKey("isZuanTou")) {
+                SynthesisCuttingToolLocation synthesisCuttingToolLocation = (SynthesisCuttingToolLocation) map.get("synthesisCuttingToolLocation");
+                zongNum = synthesisCuttingToolLocation.getCount();
+
+                DownCuttingToolVO downCuttingToolVO = (DownCuttingToolVO) map.get("downCuttingToolVO");
+                chaifenZongNum = downCuttingToolVO.getDownCount();
+
+                // 找到此材料号标记
+                if (code.equals(downCuttingToolVO.getDownCode())) {
+                    // 如果拆分数等于总数，表示已满足拆分数量，不需要再扫描
+                    if (zongNum == chaifenZongNum) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
 
 
     @android.support.annotation.IdRes
@@ -310,9 +367,10 @@ public class c01s008_002Activity extends CommonActivity {
     /**
      * 添加布局
      */
-    private void addLayout(SynthesisCuttingToolLocation synthesisCuttingToolLocation) {
+    private void addLayout(Map<String, Object> map) {
+        SynthesisCuttingToolLocation synthesisCuttingToolLocation = (SynthesisCuttingToolLocation) map.get("");
 
-        String zuzhuangNum = "0";
+        String zuzhuangNum = synthesisCuttingToolLocation.getCount()+"";
         String daojuType = "";
         boolean isZuanTou = false;
 
@@ -342,23 +400,17 @@ public class c01s008_002Activity extends CommonActivity {
                 isZuanTou = true;
                 daojuType = CuttingToolConsumeTypeEnum.griding_zt.getName();
             } else if (CuttingToolConsumeTypeEnum.griding_dp.getKey().equals(synthesisCuttingToolLocation.getCuttingTool().getConsumeType())) {
-                zuzhuangNum = synthesisCuttingToolLocation.getCount()+"";
                 daojuType = CuttingToolConsumeTypeEnum.griding_dp.getName();
             } else if (CuttingToolConsumeTypeEnum.single_use_dp.getKey().equals(synthesisCuttingToolLocation.getCuttingTool().getConsumeType())) {
-                zuzhuangNum = synthesisCuttingToolLocation.getCount()+"";
                 daojuType = CuttingToolConsumeTypeEnum.single_use_dp.getName();
             } else if (CuttingToolConsumeTypeEnum.other.getKey().equals(synthesisCuttingToolLocation.getCuttingTool().getConsumeType())) {
-                zuzhuangNum = synthesisCuttingToolLocation.getCount()+"";
                 daojuType = CuttingToolConsumeTypeEnum.other.getName();
             }
         } else if (CuttingToolTypeEnum.fj.getKey().equals(synthesisCuttingToolLocation.getCuttingTool().getType())) {
-            zuzhuangNum = synthesisCuttingToolLocation.getCount()+"";
             daojuType = CuttingToolTypeEnum.fj.getName();
         } else if (CuttingToolTypeEnum.pt.getKey().equals(synthesisCuttingToolLocation.getCuttingTool().getType())) {
-            zuzhuangNum = synthesisCuttingToolLocation.getCount()+"";
             daojuType = CuttingToolTypeEnum.pt.getName();
         } else if (CuttingToolTypeEnum.other.getKey().equals(synthesisCuttingToolLocation.getCuttingTool().getType())) {
-            zuzhuangNum = synthesisCuttingToolLocation.getCount()+"";
             daojuType = CuttingToolTypeEnum.other.getName();
         }
 
@@ -479,26 +531,6 @@ public class c01s008_002Activity extends CommonActivity {
         } else {
             et1.setFocusable(false);
             et1.setFocusableInTouchMode(false);
-//            et1.addTextChangedListener(new TextWatcher() {
-//                @Override
-//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                    //输入文本之前的状态
-//                }
-//
-//                @Override
-//                public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                    //输入文字中的状态，count是输入字符数
-//                }
-//
-//                @Override
-//                public void afterTextChanged(Editable s) {
-//                    if (et1.getText() != null && !"".equals(et1.getText().toString())) {
-//                        //输入文字后的状态
-//                        Log.i("ceshi", et1.getText().toString());
-//                        addData(cailiao, Integer.parseInt(et1.getText().toString()), null);
-//                    }
-//                }
-//            });
         }
 
         tableRow.addView(et1);
@@ -520,72 +552,49 @@ public class c01s008_002Activity extends CommonActivity {
     }
 
 
-
-
     /**
-     * 捏合数据
-     *
-     * @param code
-     * @param num
-     * @return
+     * 修改内存中表格
+     * @param code 材料号
+     * @param num 数量
+     * @param rfid 标签
      */
-    private void addData(String code, int num, String rfid) {
-        Set<String> keys = zhuantouNumMap.keySet();
-        for (String key : keys) {
-            Integer[] zuzhuangNum = zhuantouNumMap.get(key);
-            if (zuzhuangNum[0] != zuzhuangNum[1]) {
-                zuzhuangNum[1] = 1;
-                zhuantouNumMap.put(key, zuzhuangNum);
-                code = key;
-                break;
-            }
-        }
+    private void addRfidData(String code, int num, String rfid, String bladeCode) {
+        int outsideRowNumber = -1;
 
-        if (code == null || "".equals(code)) return;
+        for (int i=0; i<outsideListData.size(); i++) {
+            Map<String, Object> map = outsideListData.get(i);
 
-        boolean isExist = false;
-        for (int k = 1; k < mTlContainer.getChildCount(); k++) {
+            if (map.containsKey("isZuanTou")) {
+                outsideRowNumber = i+1;
 
-            TableRow mTableRow = (TableRow) mTlContainer.getChildAt(k);
+                DownCuttingToolVO downCuttingToolVO = (DownCuttingToolVO) map.get("downCuttingToolVO");
 
-            TableLayout mTableLayout = (TableLayout) mTableRow.getChildAt(0);// 材料号
-            TableLayout mTableLayout2 = (TableLayout) mTableRow.getChildAt(2);// 刀具类型
-            TextView mTextView = (TextView) mTableRow.getChildAt(4);// 总数量
-            TableLayout mTableLayout3 = (TableLayout) mTableRow.getChildAt(6);// 组装数量
+                if (code.equals(downCuttingToolVO.getDownCode())) {
+                    downCuttingToolVO.setDownCount(num);
+                    downCuttingToolVO.setDownRfidCode(rfid);
+//                    downCuttingToolVO.setBladeCode(bladeCode);//刀身码是location中的，还是rfid扫描的
 
-            for (int i = 0; i < mTableLayout.getChildCount(); i++) {
-                TextView tvCailiaohao = (TextView) ((TableRow) mTableLayout.getChildAt(i)).getVirtualChildAt(0);
-                TextView tvZuzhuangshu = (TextView) ((TableRow) mTableLayout3.getChildAt(i)).getVirtualChildAt(0);
+                    // 外部行
+                    TableRow mTableRow = (TableRow) mTlContainer.getChildAt(outsideRowNumber);
 
-                if (tvCailiaohao.getText().toString().equals(code) ) {
+                    // 内部行
+                    TableLayout mTableLayout = (TableLayout) mTableRow.getChildAt(0);// 材料号
+                    TableLayout mTableLayout2 = (TableLayout) mTableRow.getChildAt(2);// 刀具类型
+                    TextView mTextView = (TextView) mTableRow.getChildAt(4);// 总数量
+                    TableLayout mTableLayout3 = (TableLayout) mTableRow.getChildAt(6);// 拆分数量
 
-                    int zong = num;
-                    // rfid不为空是扫描进来的
-                    if (rfid != null) {
-                        tvZuzhuangshu.setText("1");
+                    //
+                    TextView tvChaifenshu = (TextView) ((TableRow) mTableLayout3.getChildAt(0)).getVirtualChildAt(0);
 
-                        // 处理组装
-                        for (int j = 0; j < downCuttingToolVOList.size(); j++) {
-                            if (downCuttingToolVOList.get(j).getDownCode().equals(code)) {
-                                downCuttingToolVOList.get(j).setDownCount(1);
-                                downCuttingToolVOList.get(j).setDownRfidCode(rfid);
+                    int numOld = Integer.parseInt(tvChaifenshu.getText().toString());
+                    int zong = numOld + num;
+                    tvChaifenshu.setText(zong+"");
 
-                                isExist = true;
-                                break;
-                            }
-                        }
-                        break;
-                    }
+                    return;
                 }
             }
-
-            if (isExist) {
-                break;
-            }
-
         }
     }
-
 
 
     private void requestData(List<AuthCustomer> authorizationList) {
@@ -643,14 +652,20 @@ public class c01s008_002Activity extends CommonActivity {
         rfidContainer.setLaserCode(synthesisCuttingToolBindRFID);
         synthesisCuttingToolBind.setRfidContainer(rfidContainer);
 
-        // 删除 UpCount 为 0 的数据
-        for (int i=0; i<downCuttingToolVOList.size();i++) {
-            DownCuttingToolVO downCuttingToolVO = downCuttingToolVOList.get(i);
-            if (downCuttingToolVO.getDownCount() == 0) {
-                downCuttingToolVOList.remove(i);
-                i--;
+
+        // 循环拆分数量
+        for (int i=0; i<outsideListData.size(); i++) {
+            Map<String, Object> map = outsideListData.get(i);
+
+            DownCuttingToolVO downCuttingToolVO = (DownCuttingToolVO) map.get("downCuttingToolVO");
+            // UpCount 为 0 的数据不要
+            if (downCuttingToolVO.getDownCount() > 0) {
+                downCuttingToolVOList.add(downCuttingToolVO);
             }
+
         }
+
+
         BreakUpVO packageUpVO = new BreakUpVO();
         packageUpVO.setDownCuttingToolVOS(downCuttingToolVOList);
         packageUpVO.setSynthesisCuttingToolBind(synthesisCuttingToolBind);

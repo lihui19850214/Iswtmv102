@@ -98,7 +98,7 @@ public class C01S008_001Activity extends CommonActivity {
      * 开始扫描
      */
     private void scan() {
-        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
+//        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
             isCanScan = false;
             mTvScan.setClickable(false);
             mBtnCancel.setClickable(false);
@@ -107,9 +107,9 @@ public class C01S008_001Activity extends CommonActivity {
             //扫描线程
             scanThread = new scanThread();
             scanThread.start();
-        } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
-        }
+//        } else {
+//            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+//        }
     }
 
     /**
@@ -120,8 +120,8 @@ public class C01S008_001Activity extends CommonActivity {
         public void run() {
             super.run();
             //单扫方法
-            rfidString = singleScan();//TODO 生产环境需要
-//            rfidString = "18000A00000EA015";// TODO 生产环境需要删除
+//            rfidString = singleScan();//TODO 生产环境需要
+            rfidString = "18000A00000EA015";// TODO 生产环境需要删除
             if ("close".equals(rfidString)) {
                 mTvScan.setClickable(true);
                 mBtnCancel.setClickable(true);
@@ -170,9 +170,18 @@ public class C01S008_001Activity extends CommonActivity {
                                 synthesisCuttingToolBindRFID = rfidString;
 //                                search(synthesisCuttingToolConfig);
 
-                                Message message = new Message();
-                                message.obj = inpower;
-                                scanHandler.sendMessage(message);
+                                if (synthesisCuttingToolBind != null) {
+                                    Message message = new Message();
+                                    message.obj = inpower;
+                                    scanHandler.sendMessage(message);
+                                } else {
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
                             } else {
                                 final String errorStr = response.errorBody().string();
                                 runOnUiThread(new Runnable() {
