@@ -384,6 +384,7 @@ public class C01S019_001Activity extends CommonActivity {
             super.run();
             //单扫方法
             rfidString = singleScan();//TODO 生产环境需要解开
+//            rfidString="18000A00000D434A";
             if ("close".equals(rfidString)) {
                 mTvScan.setClickable(true);
                 ivAdd.setClickable(true);
