@@ -205,7 +205,6 @@ public class C01S019_002Activity extends CommonActivity {
         IRequest iRequest = retrofit.create(IRequest.class);
 
         Gson gson = new Gson();
-        outSideVO.setAuthCustomer(authorizationList.get(0));
 
         String jsonStr = gson.toJson(outSideVO);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
