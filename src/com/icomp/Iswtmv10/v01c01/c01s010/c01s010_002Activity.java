@@ -1126,7 +1126,6 @@ public class c01s010_002Activity extends CommonActivity {
                     // 换下
                     if (code.equals(downCuttingToolVO.getDownCode())) {
                         downCuttingToolVO.setDownRfidCode(rfid);
-                        downCuttingToolVO.setDownCount(downCuttingToolVO.getDownCount()+num);
                     }
                 }
 
@@ -1139,7 +1138,7 @@ public class c01s010_002Activity extends CommonActivity {
 
                         if (code.equals(downCuttingToolVO.getDownCode())) {
                             insideRowNumber = j;
-                            downCuttingToolVO.setDownCount((downCuttingToolVO.getDownCount() + num));
+                            downCuttingToolVO.setDownLostCount((downCuttingToolVO.getDownLostCount() + num));
 //                            downCuttingToolVO.setDownRfidCode(rfid);
 //                            downCuttingToolVO.setBladeCode(bladeCode);
 
