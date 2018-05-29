@@ -3,10 +3,8 @@ package com.icomp.Iswtmv10.v01c01.c01s008;
  * 刀具拆分
  */
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
@@ -121,7 +119,7 @@ public class C01S008_001Activity extends CommonActivity {
             super.run();
             //单扫方法
             rfidString = singleScan();//TODO 生产环境需要
-//            rfidString = "18000A00000EA015";// TODO 生产环境需要删除
+//            rfidString = "18000A00000D3F3C";// TODO 生产环境需要删除
             if ("close".equals(rfidString)) {
                 mTvScan.setClickable(true);
                 mBtnCancel.setClickable(true);
@@ -171,9 +169,10 @@ public class C01S008_001Activity extends CommonActivity {
 //                                search(synthesisCuttingToolConfig);
 
                                 if (synthesisCuttingToolBind != null) {
-                                    Message message = new Message();
-                                    message.obj = inpower;
-                                    scanHandler.sendMessage(message);
+                                    setTextViewHandler(inpower);
+//                                    Message message = new Message();
+//                                    message.obj = inpower;
+//                                    scanHandler.sendMessage(message);
                                 } else {
                                     runOnUiThread(new Runnable() {
                                         @Override
@@ -223,73 +222,146 @@ public class C01S008_001Activity extends CommonActivity {
     }
 
 
-    //扫描Handler
-    @SuppressLint("HandlerLeak")
-    Handler scanHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            String inpower = msg.obj.toString();
 
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, String> inpowerMap = new HashMap<>();
-            try {
-                inpowerMap = mapper.readValue(inpower, Map.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public void setTextViewHandler(String inpower) {
 
-            // 判断是否显示提示框
-            if ("1".equals(inpowerMap.get("type"))) {
-                // 是否需要授权 true为需要授权；false为不需要授权
-                is_need_authorization = false;
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //跳转到库存盘点刀具信息详细页面
-                        Intent intent = new Intent(C01S008_001Activity.this, c01s008_002Activity.class);
-                        intent.putExtra(PARAM, synthesisCuttingToolBind);
-                        intent.putExtra("synthesisCuttingToolBindRFID", synthesisCuttingToolBindRFID);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-
-            } else if ("2".equals(inpowerMap.get("type"))) {
-                is_need_authorization = true;
-                exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                    @Override
-                    public void confirm() {
-                        //跳转到库存盘点刀具信息详细页面
-                        Intent intent = new Intent(C01S008_001Activity.this, c01s008_002Activity.class);
-                        intent.putExtra(PARAM, synthesisCuttingToolBind);
-                        intent.putExtra("synthesisCuttingToolBindRFID", synthesisCuttingToolBindRFID);
-                        startActivity(intent);
-                        finish();
-                    }
-
-                    @Override
-                    public void cancel() {
-                        // 不做任何操作
-                    }
-                });
-            } else if ("3".equals(inpowerMap.get("type"))) {
-                is_need_authorization = false;
-                stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                    @Override
-                    public void confirm() {
-                        finish();
-                    }
-
-                    @Override
-                    public void cancel() {
-                        // 实际上没有用
-                        finish();
-                    }
-                });
-            }
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> inpowerMap = new HashMap<>();
+        try {
+            inpowerMap = mapper.readValue(inpower, Map.class);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    };
+
+        // 判断是否显示提示框
+        if ("1".equals(inpowerMap.get("type"))) {
+            // 是否需要授权 true为需要授权；false为不需要授权
+            is_need_authorization = false;
+
+            // 用于页面之间传值，新方法
+            Map<String, Object> paramMap = new HashMap<>();
+            paramMap.put("synthesisCuttingToolBind", synthesisCuttingToolBind);
+            paramMap.put("synthesisCuttingToolBindRFID", synthesisCuttingToolBindRFID);
+            PARAM_MAP.put(1, paramMap);
+
+
+            //跳转到库存盘点刀具信息详细页面
+            Intent intent = new Intent(C01S008_001Activity.this, c01s008_002Activity.class);
+            // 不清空页面之间传递的值
+            intent.putExtra("isClearParamMap", false);
+            startActivity(intent);
+            finish();
+        } else if ("2".equals(inpowerMap.get("type"))) {
+            is_need_authorization = true;
+            exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                @Override
+                public void confirm() {
+                    // 用于页面之间传值，新方法
+                    Map<String, Object> paramMap = new HashMap<>();
+                    paramMap.put("synthesisCuttingToolBind", synthesisCuttingToolBind);
+                    paramMap.put("synthesisCuttingToolBindRFID", synthesisCuttingToolBindRFID);
+                    PARAM_MAP.put(1, paramMap);
+
+
+                    //跳转到库存盘点刀具信息详细页面
+                    Intent intent = new Intent(C01S008_001Activity.this, c01s008_002Activity.class);
+                    // 不清空页面之间传递的值
+                    intent.putExtra("isClearParamMap", false);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void cancel() {
+                    // 不做任何操作
+                }
+            });
+        } else if ("3".equals(inpowerMap.get("type"))) {
+            is_need_authorization = false;
+            stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                @Override
+                public void confirm() {
+                    finish();
+                }
+
+                @Override
+                public void cancel() {
+                    // 实际上没有用
+                    finish();
+                }
+            });
+        }
+    }
+
+
+
+//    //扫描Handler
+//    @SuppressLint("HandlerLeak")
+//    Handler scanHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            String inpower = msg.obj.toString();
+//
+//            ObjectMapper mapper = new ObjectMapper();
+//            Map<String, String> inpowerMap = new HashMap<>();
+//            try {
+//                inpowerMap = mapper.readValue(inpower, Map.class);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            // 判断是否显示提示框
+//            if ("1".equals(inpowerMap.get("type"))) {
+//                // 是否需要授权 true为需要授权；false为不需要授权
+//                is_need_authorization = false;
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        //跳转到库存盘点刀具信息详细页面
+//                        Intent intent = new Intent(C01S008_001Activity.this, c01s008_002Activity.class);
+//                        intent.putExtra(PARAM, synthesisCuttingToolBind);
+//                        intent.putExtra("synthesisCuttingToolBindRFID", synthesisCuttingToolBindRFID);
+//                        startActivity(intent);
+//                        finish();
+//                    }
+//                });
+//
+//            } else if ("2".equals(inpowerMap.get("type"))) {
+//                is_need_authorization = true;
+//                exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+//                    @Override
+//                    public void confirm() {
+//                        //跳转到库存盘点刀具信息详细页面
+//                        Intent intent = new Intent(C01S008_001Activity.this, c01s008_002Activity.class);
+//                        intent.putExtra(PARAM, synthesisCuttingToolBind);
+//                        intent.putExtra("synthesisCuttingToolBindRFID", synthesisCuttingToolBindRFID);
+//                        startActivity(intent);
+//                        finish();
+//                    }
+//
+//                    @Override
+//                    public void cancel() {
+//                        // 不做任何操作
+//                    }
+//                });
+//            } else if ("3".equals(inpowerMap.get("type"))) {
+//                is_need_authorization = false;
+//                stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+//                    @Override
+//                    public void confirm() {
+//                        finish();
+//                    }
+//
+//                    @Override
+//                    public void cancel() {
+//                        // 实际上没有用
+//                        finish();
+//                    }
+//                });
+//            }
+//        }
+//    };
 
 
 
