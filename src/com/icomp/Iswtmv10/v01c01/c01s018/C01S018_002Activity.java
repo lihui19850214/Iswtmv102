@@ -154,6 +154,7 @@ public class C01S018_002Activity extends CommonActivity {
                     Intent intent2 = new Intent(C01S018_002Activity.this, C01S018_003Activity.class);
                     // 不清空页面之间传递的值
                     intent2.putExtra("isClearParamMap", false);
+                    startActivity(intent2);
                     finish();
                 } else {
                     createAlertDialog(C01S018_002Activity.this, "请添加材料", Toast.LENGTH_LONG);
@@ -357,7 +358,7 @@ public class C01S018_002Activity extends CommonActivity {
      */
     //扫描方法
     private void scan() {
-        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
+//        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
             isCanScan = false;
             mTvScan.setClickable(false);
             ivAdd.setClickable(false);
@@ -368,9 +369,9 @@ public class C01S018_002Activity extends CommonActivity {
             //扫描线程
             scanThread = new scanThread();
             scanThread.start();
-        } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
-        }
+//        } else {
+//            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+//        }
     }
 
     //扫描线程
@@ -379,8 +380,8 @@ public class C01S018_002Activity extends CommonActivity {
         public void run() {
             super.run();
             //单扫方法
-            rfidString = singleScan();//TODO 生产环境需要解开
-//            rfidString = "18000A00000EA015";
+//            rfidString = singleScan();//TODO 生产环境需要解开
+            rfidString = "18000A00000F045B";
             if ("close".equals(rfidString)) {
                 mTvScan.setClickable(true);
                 ivAdd.setClickable(true);
