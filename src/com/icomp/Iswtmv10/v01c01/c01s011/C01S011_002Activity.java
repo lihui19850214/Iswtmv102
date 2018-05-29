@@ -195,6 +195,7 @@ public class C01S011_002Activity extends CommonActivity {
             super.run();
             //单扫方法
             rfidString = singleScan();//TODO 生产环境需要
+//            rfidString = "18000A00000D6440";
             if ("close".equals(rfidString)) {
                 tvScan.setClickable(true);
                 btnScan.setClickable(true);
@@ -252,9 +253,11 @@ public class C01S011_002Activity extends CommonActivity {
                                     et_00_is_edit = false;
                                 }
 
-                                Message message = new Message();
-                                message.obj = inpower;
-                                setTextViewHandler.sendMessage(message);
+                                setTextViewHandler(inpower);
+
+//                                Message message = new Message();
+//                                message.obj = inpower;
+//                                setTextViewHandler.sendMessage(message);
                             } else {
                                 final String errorStr = response.errorBody().string();
                                 runOnUiThread(new Runnable() {
@@ -295,64 +298,117 @@ public class C01S011_002Activity extends CommonActivity {
         }
     }
 
-    @SuppressLint("HandlerLeak")
-    Handler setTextViewHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
 
-            String inpower = msg.obj.toString();
-
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, String> inpowerMap = new HashMap<>();
-            try {
-                inpowerMap = mapper.readValue(inpower, Map.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            // 判断是否显示提示框
-            if ("1".equals(inpowerMap.get("type"))) {
-                // 是否需要授权 true为需要授权；false为不需要授权
-                is_need_authorization = false;
-
-                if (!et_00_is_edit) {
-                    et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
-                }
-                editTextChangeEditStatus();
-            } else if ("2".equals(inpowerMap.get("type"))) {
-                is_need_authorization = true;
-                exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                    @Override
-                    public void confirm() {
-                        if (!et_00_is_edit) {
-                            et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
-                        }
-                        editTextChangeEditStatus();
-                    }
-
-                    @Override
-                    public void cancel() {
-                        // 不做任何操作
-                    }
-                });
-            } else if ("3".equals(inpowerMap.get("type"))) {
-                is_need_authorization = false;
-                stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                    @Override
-                    public void confirm() {
-                        finish();
-                    }
-
-                    @Override
-                    public void cancel() {
-                        // 实际上没有用
-                        finish();
-                    }
-                });
-            }
-
+    private void setTextViewHandler(String inpower) {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> inpowerMap = new HashMap<>();
+        try {
+            inpowerMap = mapper.readValue(inpower, Map.class);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    };
+
+        // 判断是否显示提示框
+        if ("1".equals(inpowerMap.get("type"))) {
+            // 是否需要授权 true为需要授权；false为不需要授权
+            is_need_authorization = false;
+
+            if (!et_00_is_edit) {
+                et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
+            }
+            editTextChangeEditStatus();
+        } else if ("2".equals(inpowerMap.get("type"))) {
+            is_need_authorization = true;
+            exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                @Override
+                public void confirm() {
+                    if (!et_00_is_edit) {
+                        et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
+                    }
+                    editTextChangeEditStatus();
+                }
+
+                @Override
+                public void cancel() {
+                    // 不做任何操作
+                }
+            });
+        } else if ("3".equals(inpowerMap.get("type"))) {
+            is_need_authorization = false;
+            stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                @Override
+                public void confirm() {
+                    finish();
+                }
+
+                @Override
+                public void cancel() {
+                    // 实际上没有用
+                    finish();
+                }
+            });
+        }
+
+    }
+
+//    @SuppressLint("HandlerLeak")
+//    Handler setTextViewHandler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//
+//            String inpower = msg.obj.toString();
+//
+//            ObjectMapper mapper = new ObjectMapper();
+//            Map<String, String> inpowerMap = new HashMap<>();
+//            try {
+//                inpowerMap = mapper.readValue(inpower, Map.class);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//            // 判断是否显示提示框
+//            if ("1".equals(inpowerMap.get("type"))) {
+//                // 是否需要授权 true为需要授权；false为不需要授权
+//                is_need_authorization = false;
+//
+//                if (!et_00_is_edit) {
+//                    et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
+//                }
+//                editTextChangeEditStatus();
+//            } else if ("2".equals(inpowerMap.get("type"))) {
+//                is_need_authorization = true;
+//                exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+//                    @Override
+//                    public void confirm() {
+//                        if (!et_00_is_edit) {
+//                            et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
+//                        }
+//                        editTextChangeEditStatus();
+//                    }
+//
+//                    @Override
+//                    public void cancel() {
+//                        // 不做任何操作
+//                    }
+//                });
+//            } else if ("3".equals(inpowerMap.get("type"))) {
+//                is_need_authorization = false;
+//                stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+//                    @Override
+//                    public void confirm() {
+//                        finish();
+//                    }
+//
+//                    @Override
+//                    public void cancel() {
+//                        // 实际上没有用
+//                        finish();
+//                    }
+//                });
+//            }
+//
+//        }
+//    };
 
     //扫描方法
     private void scan2() {
@@ -427,17 +483,25 @@ public class C01S011_002Activity extends CommonActivity {
                                 Gson gson = new Gson();
 
                                 QueryEquipmentByRfidVO queryEquipmentByRfidVO = gson.fromJson(response.body(), QueryEquipmentByRfidVO.class);
+                                Set<String> equipmentCodeSet = new HashSet<>();
 
                                 for (ProductLine productLine : queryEquipmentByRfidVO.getProductLines()) {
-                                    equipmentEntityList.add(productLine.getProductLineEquipment());
+                                    if (!equipmentCodeSet.contains(productLine.getEquipmentCode())) {
+                                        equipmentCodeSet.add(productLine.getEquipmentCode());
+                                        equipmentEntityList.add(productLine.getProductLineEquipment());
+                                    }
                                 }
 
                                 for (ProductLineEquipment lineEquipment : equipmentEntityList) {
                                     List<ProductLineAxle> axleItemList = new ArrayList<>();
 
+                                    Set<String> codeSet = new HashSet<>();
                                     for (ProductLine productLine : queryEquipmentByRfidVO.getProductLines()) {
                                         if (lineEquipment.getCode().equals(productLine.getEquipmentCode())){
-                                            axleItemList.add(productLine.getProductLineAxle());
+                                            if (!codeSet.contains(productLine.getProductLineAxle().getCode())) {
+                                                codeSet.add(productLine.getProductLineAxle().getCode());
+                                                axleItemList.add(productLine.getProductLineAxle());
+                                            }
                                         }
 
                                     }
