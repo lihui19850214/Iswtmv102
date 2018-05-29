@@ -186,7 +186,7 @@ public class C01S018_003Activity extends CommonActivity {
             super.run();
             //单扫方法
             rfidString = singleScan();//TODO 生产环境需要解开
-//            rfidString = "18000A00000D434A";
+//            rfidString = "18000A00000FB125";
             if ("close".equals(rfidString)) {
                 tvScan.setClickable(true);
                 btnCancel.setClickable(true);
@@ -365,7 +365,6 @@ public class C01S018_003Activity extends CommonActivity {
         IRequest iRequest = retrofit.create(IRequest.class);
 
         insideVO.setEquipmentCode(equipmentCode);
-        insideVO.setAuthCustomer(authorizationList.get(0));
 
         String jsonStr = "";
         try {
