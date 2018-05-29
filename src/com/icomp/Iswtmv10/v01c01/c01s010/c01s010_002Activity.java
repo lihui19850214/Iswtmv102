@@ -271,7 +271,7 @@ public class c01s010_002Activity extends CommonActivity {
             super.run();
             //单扫方法
             rfidString = singleScan();
-//            rfidString ="18000A00000D6440";
+//            rfidString ="18000A00000E3626";
             if ("close".equals(rfidString)) {
                 tvScan.setClickable(true);
                 mBtnReturn.setClickable(true);
@@ -371,7 +371,7 @@ public class c01s010_002Activity extends CommonActivity {
                         }
                     });
                 } else {
-//                    rfidString="18000A00000EBD58";
+                    rfidString="18000A00000D434A";
                     if (rfidSet.contains(rfidString)) {
                         runOnUiThread(new Runnable() {
                             @Override
