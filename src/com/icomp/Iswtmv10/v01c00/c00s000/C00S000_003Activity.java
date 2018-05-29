@@ -394,7 +394,6 @@ public class C00S000_003Activity extends CommonActivity {
             }
         });
 
-
         MenuRespons menuRespons = new MenuRespons();
         menuRespons.setVgrantlist(menuList);
         menuRespons.setStateMsg(null);
@@ -431,6 +430,7 @@ public class C00S000_003Activity extends CommonActivity {
             MenuRespons respons = (MenuRespons) msg.obj;
             if (respons.getVgrantlist() == null || respons.getVgrantlist().size() == 0) {
                 createAlertDialog(C00S000_003Activity.this, "没有权限访问", Toast.LENGTH_LONG);
+                return;
             }
             if (null != respons.getMessageText()) {
                 createAlertDialog(C00S000_003Activity.this, respons.getMessageText(), Toast.LENGTH_LONG);
