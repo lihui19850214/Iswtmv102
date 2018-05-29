@@ -56,7 +56,7 @@ public class C01S011_002Activity extends CommonActivity {
     @BindView(R.id.tvTitle)
     TextView tvTitle;
     @BindView(R.id.et_00)
-    EditText et_00;
+    TextView et_00;
     @BindView(R.id.tvScan)
     TextView tvScan;
 
@@ -97,9 +97,6 @@ public class C01S011_002Activity extends CommonActivity {
     ProductLineEquipment productLineEquipment = null;//选中的设备列表项
     ProductLineAxle productLineAxle = null;//选中的轴号列表项
 
-    // 合成刀具标签是否可以编辑，当合成刀标签查询为空时可编辑，否则不可编辑：true为可编辑；false为不可编辑；
-    boolean et_00_is_edit = false;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -110,12 +107,6 @@ public class C01S011_002Activity extends CommonActivity {
 
         //调用接口
         retrofit = RetrofitSingle.newInstance();
-
-        //将输入的材料号自动转化为大写
-        et_00.setTransformationMethod(new CommonActivity.AllCapTransformationMethod());
-
-        // 改变 EditText 编辑状态
-        editTextChangeEditStatus();
 
 //        showDialogAlert("合成刀具编码：sadfsdf\n安上设备比编号：爱上QZ01-S1");
     }
@@ -128,7 +119,6 @@ public class C01S011_002Activity extends CommonActivity {
         switch (view.getId()) {
             case R.id.tvScan:
                 scan();
-                tvDesc.setText("请扫描要安上的设备标签");
                 break;
             case R.id.btn_scan:
                 if (et_00.getText() != null && !"".equals(et_00.getText().toString().trim())) {
@@ -146,26 +136,6 @@ public class C01S011_002Activity extends CommonActivity {
                     showPopupWindow2();//轴号
                 break;
             default:
-        }
-    }
-
-    /**
-     * 合成刀具标签是否可以编辑，当合成刀标签查询为空时可编辑，否则不可编辑
-     */
-    private void editTextChangeEditStatus() {
-        if (et_00_is_edit) {
-            // 可编辑
-            et_00.setFocusableInTouchMode(true);
-            et_00.setFocusable(true);
-            //editText.requestFocus();
-            // 开启软键盘
-            et_00.setInputType(InputType.TYPE_CLASS_TEXT);
-        } else {
-            // 不可编辑
-            et_00.setFocusable(false);
-            et_00.setFocusableInTouchMode(false);
-            // 禁止软键盘
-            et_00.setInputType(InputType.TYPE_NULL);
         }
     }
 
@@ -247,14 +217,18 @@ public class C01S011_002Activity extends CommonActivity {
                                 synthesisCuttingToolBing = mapper.readValue(response.body(), SynthesisCuttingToolBind.class);
                                 synthesisCuttingToolBingRFID = rfidString;
 
-                                if (synthesisCuttingToolBing == null) {
-                                    et_00_is_edit = true;
+                                tvDesc.setText("请扫描要安上的设备标签");
+
+                                if (synthesisCuttingToolBing != null) {
+                                    setTextViewHandler(inpower);
                                 } else {
-                                    et_00_is_edit = false;
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                                 }
-
-                                setTextViewHandler(inpower);
-
 //                                Message message = new Message();
 //                                message.obj = inpower;
 //                                setTextViewHandler.sendMessage(message);
@@ -313,19 +287,13 @@ public class C01S011_002Activity extends CommonActivity {
             // 是否需要授权 true为需要授权；false为不需要授权
             is_need_authorization = false;
 
-            if (!et_00_is_edit) {
-                et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
-            }
-            editTextChangeEditStatus();
+            et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
         } else if ("2".equals(inpowerMap.get("type"))) {
             is_need_authorization = true;
             exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
                 @Override
                 public void confirm() {
-                    if (!et_00_is_edit) {
-                        et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
-                    }
-                    editTextChangeEditStatus();
+                    et_00.setText(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());
                 }
 
                 @Override
@@ -435,6 +403,7 @@ public class C01S011_002Activity extends CommonActivity {
             super.run();
             //单扫方法
             rfidString = singleScan();//TODO 生产环境需要
+//            rfidString = "18000A00000FB125";
             if ("close".equals(rfidString)) {
                 tvScan.setClickable(true);
                 btnScan.setClickable(true);
@@ -503,9 +472,27 @@ public class C01S011_002Activity extends CommonActivity {
                                                 axleItemList.add(productLine.getProductLineAxle());
                                             }
                                         }
-
                                     }
                                     axleMap.put(lineEquipment.getCode(), axleItemList);
+                                }
+
+                                // 默认选中第一个
+                                if (equipmentEntityList != null && equipmentEntityList.size() > 0) {
+                                    tv01.setText(equipmentEntityList.get(0).getName());
+                                    productLineEquipment = equipmentEntityList.get(0);
+
+                                    //设置设备下拉列表第一条为空
+                                    tv02.setText("");
+                                    //清空流水线对应的设备列表
+                                    axisList.clear();
+                                    productLineAxle = null;
+
+                                    axisList = axleMap.get(equipmentEntityList.get(0).getCode());
+
+                                    if (axisList != null && axisList.size() > 0) {
+                                        tv02.setText(axisList.get(0).getName());
+                                        productLineAxle = axisList.get(0);
+                                    }
                                 }
                             } else {
                                 final String errorStr = response.errorBody().string();
@@ -587,7 +574,7 @@ public class C01S011_002Activity extends CommonActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 tv01.setText(equipmentEntityList.get(i).getName());
                 productLineEquipment = equipmentEntityList.get(i);
-                popupWindow.dismiss();
+
                 //设置设备下拉列表第一条为空
                 tv02.setText("");
                 //清空流水线对应的设备列表
@@ -595,6 +582,7 @@ public class C01S011_002Activity extends CommonActivity {
                 productLineAxle = null;
 
                 axisList = axleMap.get(equipmentEntityList.get(i).getCode());
+                popupWindow.dismiss();
             }
         });
         popupWindow.showAsDropDown(ll01);
