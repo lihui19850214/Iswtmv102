@@ -1283,63 +1283,58 @@ public abstract class CommonActivity extends Activity {
         }
     }
 
-
     /**
-     * 异常显示数据提示dialog
+     * 异常显示数据提示dialog，确定、取消按钮
      */
     public void exceptionProcessShowDialogAlert(String content, final ExceptionProcessCallBack callback) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialog2);
-        final AlertDialog dialog = builder.create();
-        View view = View.inflate(this, R.layout.dialog_alert, null);
-        Button btnConfirm = (Button) view.findViewById(R.id.btn_confirm);
-        Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
-        TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
-        tvContent.setText(content);
+        // 创建一个AlertDialog的构建者对象
+        AlertDialog.Builder builder = new AlertDialog.Builder(CommonActivity.this);
+        builder.setTitle(R.string.infoMsg);// 设置标题
 
-        btnConfirm.setOnClickListener(new View.OnClickListener() {
+        builder.setMessage(content);// 提示信息
+        builder.setCancelable(false);// 设置对话框不能被取消
+
+        // 添加确定按钮
+        builder.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(DialogInterface dialog, int which) {
                 callback.confirm();
-                dialog.cancel();
             }
         });
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
+        //添加取消按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
             @Override
-            public void onClick(View v) {
+            public void onClick(DialogInterface arg0, int arg1) {
                 callback.cancel();
-                dialog.cancel();
             }
         });
 
-        dialog.show();
-        dialog.setContentView(view);
-        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
+        builder.show();  // 显示对话框
     }
 
 
     /**
-     * 异常显示数据提示dialog
+     * 异常显示数据提示dialog，确定按钮
      */
     public void stopProcessShowDialogAlert(String content, final ExceptionProcessCallBack callback) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialog2);
-        final AlertDialog dialog = builder.create();
-        View view = View.inflate(this, R.layout.dialog_alert2, null);
-        Button btnConfirm = (Button) view.findViewById(R.id.btn_confirm);
-        TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
-        tvContent.setText(content);
+        // 创建一个AlertDialog的构建者对象
+        AlertDialog.Builder builder = new AlertDialog.Builder(CommonActivity.this);
+        builder.setTitle(R.string.infoMsg);// 设置标题
 
-        btnConfirm.setOnClickListener(new View.OnClickListener() {
+        builder.setMessage(content);// 提示信息
+        builder.setCancelable(false);// 设置对话框不能被取消
+
+        // 添加确定按钮
+        builder.setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(DialogInterface dialog, int which) {
                 callback.confirm();
-                dialog.cancel();
             }
         });
 
-        dialog.show();
-        dialog.setContentView(view);
-        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
+        builder.show();  // 显示对话框
     }
 
 
