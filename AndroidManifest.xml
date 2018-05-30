@@ -314,10 +314,6 @@
                 android:name=".v01c01.c01s024.C01S024_001Activity"
                 android:screenOrientation="portrait"
                 android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
-        <activity
-                android:name=".v01c01.c01s024.C01S024_002Activity"
-                android:screenOrientation="portrait"
-                android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
 
         <!-- 清空 RFID 标签 -->
         <activity
