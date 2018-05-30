@@ -65,6 +65,8 @@
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
             android:screenOrientation="portrait"
             android:exported="true">
+
+            <!-- app 入口 -->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -72,6 +74,7 @@
             </intent-filter>
         </activity>
 
+        <!-- 系统启动广播 -->
         <receiver android:name=".v01c00.c00s000.BootBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
@@ -83,11 +86,6 @@
         <meta-data
             android:name="UMENG_APPKEY"
             android:value="57a297c5e0f55aeb24004c81"/>
-
-        <activity
-            android:name=".v01c01.c01s001.c01s001_002Activity"
-            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
-        </activity>
 
 
         <!-- 调节屏幕亮度 -->
