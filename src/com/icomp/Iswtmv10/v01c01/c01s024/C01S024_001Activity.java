@@ -26,6 +26,7 @@ import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.Iswtmv10.v01c01.c01s018.C01S018_002Activity;
 import com.icomp.common.activity.CommonActivity;
+import com.icomp.common.utils.GetItemHeight;
 import com.icomp.common.utils.SysApplication;
 import com.icomp.entity.base.Equipment;
 import com.icomp.wsdl.v01c01.c01s024.C01S024Wsdl;
@@ -112,6 +113,9 @@ public class C01S024_001Activity extends CommonActivity {
 
         //调用接口
         retrofit = RetrofitSingle.newInstance();
+
+//        GetItemHeight.getScreenHeight(context);
+//        GetItemHeight.getScreenWidth(context);
     }
 
     //取消按钮处理--跳转到系统菜单页面
