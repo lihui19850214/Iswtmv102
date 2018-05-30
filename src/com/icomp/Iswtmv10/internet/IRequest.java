@@ -12,27 +12,6 @@ import java.util.Map;
  */
 public interface IRequest {
 
-
-    /**
-     * 新刀入库-提交入库数量信息
-     * @param customerId
-     * @param materialNum
-     * @param toolsOrdeNO
-     * @param storageNum
-     * @param toolID
-     * @return
-     */
-    @FormUrlEncoded
-    @POST("/dazhong/saveToolInputInfo")
-    Call<String> saveToolInputInfo(@Field("customerID") String customerId,
-                                   @Field("materialNum") String materialNum,
-                                   @Field("toolsOrdeNO") String toolsOrdeNO,
-                                   @Field("storageNum") String storageNum,
-                                   @Field("toolID") String toolID,
-                                   @Field("valType") String valType,
-                                   @Field("poItem") String poItem);
-
-
     //C01S018厂内修磨--根据材料号查询一体刀信息
     @FormUrlEncoded
     @POST("/dazhong/getOneKnifeInfo")
