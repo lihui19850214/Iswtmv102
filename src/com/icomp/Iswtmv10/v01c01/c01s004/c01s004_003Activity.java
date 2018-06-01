@@ -8,7 +8,6 @@ import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import butterknife.BindView;
@@ -19,21 +18,15 @@ import com.apiclient.constants.CuttingToolTypeEnum;
 import com.apiclient.constants.GrindingEnum;
 import com.apiclient.pojo.AuthCustomer;
 import com.apiclient.pojo.DjOutapplyAkp;
-import com.apiclient.vo.AuthCustomerVO;
 import com.apiclient.vo.OutApplyVO;
-import com.apiclient.vo.RfidContainerVO;
 import com.apiclient.vo.SearchOutLiberaryVO;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
-import com.icomp.common.utils.SysApplication;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -41,7 +34,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -122,6 +114,10 @@ public class c01s004_003Activity extends CommonActivity {
                     ObjectMapper mapper = new ObjectMapper();
                     if (response.raw().code() == 200) {
                         searchOutLiberaryVOList = mapper.readValue(response.body(), getCollectionType(mapper, List.class, SearchOutLiberaryVO.class));
+                        if (searchOutLiberaryVOList == null) {
+                            searchOutLiberaryVOList = new ArrayList<>();
+                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                        }
                     } else {
                         createAlertDialog(c01s004_003Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
                     }
@@ -156,8 +152,6 @@ public class c01s004_003Activity extends CommonActivity {
                 }
 
 //                showDialogAlert("出库订单：" + orderText);
-
-                outApplyVO = new OutApplyVO();
 
                 // 需要授权
                 is_need_authorization = true;
@@ -301,71 +295,68 @@ public class c01s004_003Activity extends CommonActivity {
      * 将出库单号数据提交
      */
     private void requestData(List<AuthCustomer> authorizationList) {
-        loading.show();
-
-        if (authorizationList != null) {
-            // 领料
-            outApplyVO.setLinglOperatorRfidCode(authorizationList.get(0).getRfidContainer().getLaserCode());
-            // 科长
-            outApplyVO.setKezhangRfidCode(authorizationList.get(1).getRfidContainer().getLaserCode());
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
-
         try {
-            //设定用户访问信息
-            @SuppressLint("WrongConstant")
-            SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
-            String userInfoJson = sharedPreferences.getString("loginInfo", null);
+            loading.show();
 
-            AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
-            outApplyVO.setKuguanOperatorCode(authCustomer.getCode());// 操作者code
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            if (authorizationList != null) {
+                // 领料
+                outApplyVO.setLinglOperatorRfidCode(authorizationList.get(0).getRfidContainer().getLaserCode());
+                // 科长
+                outApplyVO.setKezhangRfidCode(authorizationList.get(1).getRfidContainer().getLaserCode());
+            }
 
-        IRequest iRequest = retrofit.create(IRequest.class);
+            ObjectMapper mapper = new ObjectMapper();
 
-        outApplyVO.setDjOutapplyAkp(djOutapplyAkp);
-//        Gson gson = new Gson();
-//        String jsonStr = gson.toJson(outApplyVO);
+            try {
+                //设定用户访问信息
+                @SuppressLint("WrongConstant")
+                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+                String userInfoJson = sharedPreferences.getString("loginInfo", null);
+
+                AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
+                outApplyVO.setKuguanOperatorCode(authCustomer.getCode());// 操作者code
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            IRequest iRequest = retrofit.create(IRequest.class);
+
+            outApplyVO.setDjOutapplyAkp(djOutapplyAkp);
+
+            String jsonStr = mapper.writeValueAsString(outApplyVO);
 
 
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        String jsonStr = "";
-        try {
-            jsonStr = mapper.writeValueAsString(outApplyVO);
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
-        Call<String> outApply = iRequest.outApply(body);
-        outApply.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        Intent intent = new Intent(c01s004_003Activity.this, c01s004_004Activity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        createAlertDialog(c01s004_003Activity.this, response.errorBody().string(), Toast.LENGTH_SHORT);
+            Call<String> outApply = iRequest.outApply(body);
+            outApply.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            Intent intent = new Intent(c01s004_003Activity.this, c01s004_004Activity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            createAlertDialog(c01s004_003Activity.this, response.errorBody().string(), Toast.LENGTH_SHORT);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        loading.dismiss();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    loading.dismiss();
                 }
-            }
 
-            @Override
-            public void _onFailure(Throwable t) {
-                loading.dismiss();
-                createAlertDialog(c01s004_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-            }
-        });
+                @Override
+                public void _onFailure(Throwable t) {
+                    loading.dismiss();
+                    createAlertDialog(c01s004_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            createAlertDialog(c01s004_003Activity.this, getString(R.string.dataError), Toast.LENGTH_SHORT);
+        }
     }
 
 
@@ -384,8 +375,7 @@ public class c01s004_003Activity extends CommonActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                outApplyVO = new OutApplyVO();
-
+                is_need_authorization = true;
                 authorizationWindow(2, new AuthorizationWindowCallBack() {
                     @Override
                     public void success(List<AuthCustomer> authorizationList) {
