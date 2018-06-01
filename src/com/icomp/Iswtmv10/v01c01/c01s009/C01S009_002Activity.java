@@ -75,6 +75,9 @@ public class C01S009_002Activity extends CommonActivity {
     // 合成刀标签
     String synthesisCuttingToolConfigRFID = "";
 
+    // 合成刀具编码
+    String synthesisCode = "";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,9 +86,10 @@ public class C01S009_002Activity extends CommonActivity {
 
         retrofit = RetrofitSingle.newInstance();
 
-        synthesisCuttingToolConfigRFID = getIntent().getStringExtra("synthesisCuttingToolConfigRFID");
-
-        synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) getIntent().getSerializableExtra(PARAM);
+        Map<String, Object> paramMap = PARAM_MAP.get(1);
+        synthesisCuttingToolConfigRFID = (String) paramMap.get("synthesisCuttingToolConfigRFID");
+        synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap.get("synthesisCuttingToolConfig");
+        synthesisCode = (String) paramMap.get("synthesisCode");
 
         setValue();
     }
@@ -98,6 +102,8 @@ public class C01S009_002Activity extends CommonActivity {
                 break;
             case R.id.btnCancel:
                 Intent intent2 = new Intent(C01S009_002Activity.this, C01S009_001Activity.class);
+                // 不清空页面之间传递的值
+                intent2.putExtra("isClearParamMap", false);
                 startActivity(intent2);
                 finish();
                 break;
