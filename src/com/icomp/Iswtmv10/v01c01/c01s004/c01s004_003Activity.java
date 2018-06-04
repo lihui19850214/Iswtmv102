@@ -169,9 +169,7 @@ public class c01s004_003Activity extends CommonActivity {
                 });
                 break;
             case R.id.ll_02:
-
                 showPopupWindow();
-
                 break;
             default:
         }
@@ -250,44 +248,47 @@ public class c01s004_003Activity extends CommonActivity {
         public void handleMessage(Message msg) {
             SearchOutLiberaryVO searchOutLiberaryVO = (SearchOutLiberaryVO) msg.obj;
 
-            wuliaohao.setText(searchOutLiberaryVO.getMtlno());
-            cailiaohao.setText(searchOutLiberaryVO.getCuttingtollBusinessCode());
-            xinghaoguige.setText(searchOutLiberaryVO.getSpecifications());
-            wuliaomingcheng.setText(searchOutLiberaryVO.getName());
-            shengchanxian.setText(searchOutLiberaryVO.getProductline());
-            gongwei.setText(searchOutLiberaryVO.getLocation());
-            yaohuoshuliang.setText(searchOutLiberaryVO.getUnitqty());
+            // 不等于 null 再赋值
+            if (searchOutLiberaryVO != null) {
+                wuliaohao.setText(searchOutLiberaryVO.getMtlno());
+                cailiaohao.setText(searchOutLiberaryVO.getCuttingtollBusinessCode());
+                xinghaoguige.setText(searchOutLiberaryVO.getSpecifications());
+                wuliaomingcheng.setText(searchOutLiberaryVO.getName());
+                shengchanxian.setText(searchOutLiberaryVO.getProductline());
+                gongwei.setText(searchOutLiberaryVO.getLocation());
+                yaohuoshuliang.setText(searchOutLiberaryVO.getUnitqty());
 
-            String type = "";
-            // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
-            if (CuttingToolTypeEnum.dj.getKey().equals(searchOutLiberaryVO.getCuttingToolType())) {
-                if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(searchOutLiberaryVO.getCuttingToolConsumeType())) {
-                    type = CuttingToolConsumeTypeEnum.griding_zt.getName();
-                } else if (CuttingToolConsumeTypeEnum.griding_dp.getKey().equals(searchOutLiberaryVO.getCuttingToolConsumeType())) {
-                    type = CuttingToolConsumeTypeEnum.griding_dp.getName();
-                } else if (CuttingToolConsumeTypeEnum.single_use_dp.getKey().equals(searchOutLiberaryVO.getCuttingToolConsumeType())) {
-                    type = CuttingToolConsumeTypeEnum.single_use_dp.getName();
-                } else if (CuttingToolConsumeTypeEnum.other.getKey().equals(searchOutLiberaryVO.getCuttingToolConsumeType())) {
-                    type = CuttingToolConsumeTypeEnum.other.getName();
+                String type = "";
+                // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
+                if (CuttingToolTypeEnum.dj.getKey().equals(searchOutLiberaryVO.getCuttingToolType())) {
+                    if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(searchOutLiberaryVO.getCuttingToolConsumeType())) {
+                        type = CuttingToolConsumeTypeEnum.griding_zt.getName();
+                    } else if (CuttingToolConsumeTypeEnum.griding_dp.getKey().equals(searchOutLiberaryVO.getCuttingToolConsumeType())) {
+                        type = CuttingToolConsumeTypeEnum.griding_dp.getName();
+                    } else if (CuttingToolConsumeTypeEnum.single_use_dp.getKey().equals(searchOutLiberaryVO.getCuttingToolConsumeType())) {
+                        type = CuttingToolConsumeTypeEnum.single_use_dp.getName();
+                    } else if (CuttingToolConsumeTypeEnum.other.getKey().equals(searchOutLiberaryVO.getCuttingToolConsumeType())) {
+                        type = CuttingToolConsumeTypeEnum.other.getName();
+                    }
+                } else if (CuttingToolTypeEnum.fj.getKey().equals(searchOutLiberaryVO.getCuttingToolType())) {
+                    type = CuttingToolTypeEnum.fj.getName();
+                } else if (CuttingToolTypeEnum.pt.getKey().equals(searchOutLiberaryVO.getCuttingToolType())) {
+                    type = CuttingToolTypeEnum.pt.getName();
+                } else if (CuttingToolTypeEnum.other.getKey().equals(searchOutLiberaryVO.getCuttingToolType())) {
+                    type = CuttingToolTypeEnum.other.getName();
                 }
-            } else if (CuttingToolTypeEnum.fj.getKey().equals(searchOutLiberaryVO.getCuttingToolType())) {
-                type = CuttingToolTypeEnum.fj.getName();
-            } else if (CuttingToolTypeEnum.pt.getKey().equals(searchOutLiberaryVO.getCuttingToolType())) {
-                type = CuttingToolTypeEnum.pt.getName();
-            } else if (CuttingToolTypeEnum.other.getKey().equals(searchOutLiberaryVO.getCuttingToolType())) {
-                type = CuttingToolTypeEnum.other.getName();
-            }
-            daojuleixing.setText(type);
+                daojuleixing.setText(type);
 
-            String grinding = "";
-            if (GrindingEnum.inside.getKey().equals(searchOutLiberaryVO.getGrinding())) {
-                grinding = GrindingEnum.inside.getName();
-            } else if (GrindingEnum.outside.getKey().equals(searchOutLiberaryVO.getGrinding())) {
-                grinding = GrindingEnum.outside.getName();
-            } else if (GrindingEnum.outside_tuceng.getKey().equals(searchOutLiberaryVO.getGrinding())) {
-                grinding = GrindingEnum.outside_tuceng.getName();
+                String grinding = "";
+                if (GrindingEnum.inside.getKey().equals(searchOutLiberaryVO.getGrinding())) {
+                    grinding = GrindingEnum.inside.getName();
+                } else if (GrindingEnum.outside.getKey().equals(searchOutLiberaryVO.getGrinding())) {
+                    grinding = GrindingEnum.outside.getName();
+                } else if (GrindingEnum.outside_tuceng.getKey().equals(searchOutLiberaryVO.getGrinding())) {
+                    grinding = GrindingEnum.outside_tuceng.getName();
+                }
+                xiumofangshi.setText(grinding);
             }
-            xiumofangshi.setText(grinding);
         }
     };
 
@@ -298,11 +299,14 @@ public class c01s004_003Activity extends CommonActivity {
         try {
             loading.show();
 
-            if (authorizationList != null) {
+            if (authorizationList != null && authorizationList.size() > 1) {
                 // 领料
                 outApplyVO.setLinglOperatorRfidCode(authorizationList.get(0).getRfidContainer().getLaserCode());
                 // 科长
                 outApplyVO.setKezhangRfidCode(authorizationList.get(1).getRfidContainer().getLaserCode());
+            } else {
+                createAlertDialog(c01s004_003Activity.this, getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
+                return;
             }
 
             ObjectMapper mapper = new ObjectMapper();
@@ -317,6 +321,8 @@ public class c01s004_003Activity extends CommonActivity {
                 outApplyVO.setKuguanOperatorCode(authCustomer.getCode());// 操作者code
             } catch (IOException e) {
                 e.printStackTrace();
+                createAlertDialog(c01s004_003Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                return;
             }
 
             IRequest iRequest = retrofit.create(IRequest.class);
@@ -324,7 +330,6 @@ public class c01s004_003Activity extends CommonActivity {
             outApplyVO.setDjOutapplyAkp(djOutapplyAkp);
 
             String jsonStr = mapper.writeValueAsString(outApplyVO);
-
 
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
