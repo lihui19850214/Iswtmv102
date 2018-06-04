@@ -713,6 +713,7 @@ public class c01s008_002Activity extends CommonActivity {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                     } finally {
                         if (null != loading && loading.isShowing()) {
                             loading.dismiss();
