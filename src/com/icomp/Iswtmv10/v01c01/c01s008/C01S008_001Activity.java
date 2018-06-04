@@ -64,6 +64,7 @@ public class C01S008_001Activity extends CommonActivity {
 
         //调用接口
         retrofit = RetrofitSingle.newInstance();
+
     }
 
     @OnClick({R.id.tvScan, R.id.btnCancel})
@@ -142,81 +143,96 @@ public class C01S008_001Activity extends CommonActivity {
                     }
                 });
 
-                //调用接口，查询合成刀具组成信息
-                IRequest iRequest = retrofit.create(IRequest.class);
+                try {
+                    //调用接口，查询合成刀具组成信息
+                    IRequest iRequest = retrofit.create(IRequest.class);
 
-                SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
-                synthesisCuttingToolInitVO.setRfidCode(rfidString);
+                    SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
+                    synthesisCuttingToolInitVO.setRfidCode(rfidString);
 
-                Gson gson = new Gson();
-                String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                    Gson gson = new Gson();
+                    String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                Map<String, String> headsMap = new HashMap<>();
-                headsMap.put("impower", OperationEnum.SynthesisCuttingTool_UnConfig.getKey().toString());
+                    Map<String, String> headsMap = new HashMap<>();
+                    headsMap.put("impower", OperationEnum.SynthesisCuttingTool_UnConfig.getKey().toString());
 
-                Call<String> getBind = iRequest.getBind(body, headsMap);
-                getBind.enqueue(new MyCallBack<String>() {
-                    @Override
-                    public void _onResponse(Response<String> response) {
-                        try {
-                            String inpower = response.headers().get("impower");
+                    Call<String> getBind = iRequest.getBind(body, headsMap);
+                    getBind.enqueue(new MyCallBack<String>() {
+                        @Override
+                        public void _onResponse(Response<String> response) {
+                            try {
+                                String inpower = response.headers().get("impower");
 
-                            if (response.raw().code() == 200) {
-                                ObjectMapper mapper = new ObjectMapper();
-                                synthesisCuttingToolBind = mapper.readValue(response.body(), SynthesisCuttingToolBind.class);
-                                synthesisCuttingToolBindRFID = rfidString;
-//                                search(synthesisCuttingToolConfig);
+                                if (response.raw().code() == 200) {
+                                    ObjectMapper mapper = new ObjectMapper();
+                                    synthesisCuttingToolBind = mapper.readValue(response.body(), SynthesisCuttingToolBind.class);
+                                    synthesisCuttingToolBindRFID = rfidString;
 
-                                if (synthesisCuttingToolBind != null) {
-                                    setTextViewHandler(inpower);
+                                    if (synthesisCuttingToolBind != null) {
+                                        setTextViewHandler(inpower);
 //                                    Message message = new Message();
 //                                    message.obj = inpower;
 //                                    scanHandler.sendMessage(message);
+                                    } else {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
                                 } else {
+                                    final String errorStr = response.errorBody().string();
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                            createAlertDialog(C01S008_001Activity.this, errorStr, Toast.LENGTH_LONG);
                                         }
                                     });
                                 }
-                            } else {
-                                final String errorStr = response.errorBody().string();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        createAlertDialog(C01S008_001Activity.this, errorStr, Toast.LENGTH_LONG);
+                                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } finally {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (null != loading && loading.isShowing()) {
+                                            loading.dismiss();
+                                        }
                                     }
                                 });
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
+                        }
+
+                        @Override
+                        public void _onFailure(Throwable t) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (null != loading && loading.isShowing()) {
                                         loading.dismiss();
                                     }
+                                    createAlertDialog(C01S008_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                                 }
                             });
                         }
-                    }
-
-                    @Override
-                    public void _onFailure(Throwable t) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (null != loading && loading.isShowing()) {
-                                    loading.dismiss();
-                                }
-                                createAlertDialog(C01S008_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                            }
-                        });
-                    }
-                });
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         }
     }
@@ -224,70 +240,79 @@ public class C01S008_001Activity extends CommonActivity {
 
 
     public void setTextViewHandler(String inpower) {
-
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> inpowerMap = new HashMap<>();
         try {
-            inpowerMap = mapper.readValue(inpower, Map.class);
-        } catch (IOException e) {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, String> inpowerMap = new HashMap<>();
+            try {
+                inpowerMap = mapper.readValue(inpower, Map.class);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // 判断是否显示提示框
+            if ("1".equals(inpowerMap.get("type"))) {
+                // 是否需要授权 true为需要授权；false为不需要授权
+                is_need_authorization = false;
+
+                // 用于页面之间传值，新方法
+                Map<String, Object> paramMap = new HashMap<>();
+                paramMap.put("synthesisCuttingToolBind", synthesisCuttingToolBind);
+                paramMap.put("synthesisCuttingToolBindRFID", synthesisCuttingToolBindRFID);
+                PARAM_MAP.put(1, paramMap);
+
+
+                //跳转到库存盘点刀具信息详细页面
+                Intent intent = new Intent(C01S008_001Activity.this, c01s008_002Activity.class);
+                // 不清空页面之间传递的值
+                intent.putExtra("isClearParamMap", false);
+                startActivity(intent);
+                finish();
+            } else if ("2".equals(inpowerMap.get("type"))) {
+                is_need_authorization = true;
+                exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                    @Override
+                    public void confirm() {
+                        // 用于页面之间传值，新方法
+                        Map<String, Object> paramMap = new HashMap<>();
+                        paramMap.put("synthesisCuttingToolBind", synthesisCuttingToolBind);
+                        paramMap.put("synthesisCuttingToolBindRFID", synthesisCuttingToolBindRFID);
+                        PARAM_MAP.put(1, paramMap);
+
+
+                        //跳转到库存盘点刀具信息详细页面
+                        Intent intent = new Intent(C01S008_001Activity.this, c01s008_002Activity.class);
+                        // 不清空页面之间传递的值
+                        intent.putExtra("isClearParamMap", false);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void cancel() {
+                        // 不做任何操作
+                    }
+                });
+            } else if ("3".equals(inpowerMap.get("type"))) {
+                is_need_authorization = false;
+                stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                    @Override
+                    public void confirm() {
+                        finish();
+                    }
+
+                    @Override
+                    public void cancel() {
+                        // 实际上没有用
+                        finish();
+                    }
+                });
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-        }
-
-        // 判断是否显示提示框
-        if ("1".equals(inpowerMap.get("type"))) {
-            // 是否需要授权 true为需要授权；false为不需要授权
-            is_need_authorization = false;
-
-            // 用于页面之间传值，新方法
-            Map<String, Object> paramMap = new HashMap<>();
-            paramMap.put("synthesisCuttingToolBind", synthesisCuttingToolBind);
-            paramMap.put("synthesisCuttingToolBindRFID", synthesisCuttingToolBindRFID);
-            PARAM_MAP.put(1, paramMap);
-
-
-            //跳转到库存盘点刀具信息详细页面
-            Intent intent = new Intent(C01S008_001Activity.this, c01s008_002Activity.class);
-            // 不清空页面之间传递的值
-            intent.putExtra("isClearParamMap", false);
-            startActivity(intent);
-            finish();
-        } else if ("2".equals(inpowerMap.get("type"))) {
-            is_need_authorization = true;
-            exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+            runOnUiThread(new Runnable() {
                 @Override
-                public void confirm() {
-                    // 用于页面之间传值，新方法
-                    Map<String, Object> paramMap = new HashMap<>();
-                    paramMap.put("synthesisCuttingToolBind", synthesisCuttingToolBind);
-                    paramMap.put("synthesisCuttingToolBindRFID", synthesisCuttingToolBindRFID);
-                    PARAM_MAP.put(1, paramMap);
-
-
-                    //跳转到库存盘点刀具信息详细页面
-                    Intent intent = new Intent(C01S008_001Activity.this, c01s008_002Activity.class);
-                    // 不清空页面之间传递的值
-                    intent.putExtra("isClearParamMap", false);
-                    startActivity(intent);
-                    finish();
-                }
-
-                @Override
-                public void cancel() {
-                    // 不做任何操作
-                }
-            });
-        } else if ("3".equals(inpowerMap.get("type"))) {
-            is_need_authorization = false;
-            stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                @Override
-                public void confirm() {
-                    finish();
-                }
-
-                @Override
-                public void cancel() {
-                    // 实际上没有用
-                    finish();
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                 }
             });
         }
