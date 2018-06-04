@@ -4,14 +4,10 @@ package com.icomp.Iswtmv10.v01c01.c01s009;
  * 刀具组装
  */
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
@@ -129,67 +125,76 @@ public class C01S009_001Activity extends CommonActivity {
 //    }
 
     private void search() {
-        loading.show();
+        try {
+            loading.show();
 
-        //调用接口，查询合成刀具组成信息
-        IRequest iRequest = retrofit.create(IRequest.class);
+            //调用接口，查询合成刀具组成信息
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
-        synthesisCuttingToolInitVO.setSynthesisCode(synthesisCode);
+            SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
+            synthesisCuttingToolInitVO.setSynthesisCode(synthesisCode);
 
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            Gson gson = new Gson();
+            String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
-        getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
+            Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
+            getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
 
-                    if (response.raw().code() == 200) {
-                        Gson gson = new Gson();
-                        synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
+                        if (response.raw().code() == 200) {
+                            Gson gson = new Gson();
+                            synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
 
-                        if (synthesisCuttingToolConfig != null) {
-                            // TODO 业务处理，需要确定
-                            // 用于页面之间传值，新方法
-                            Map<String, Object> paramMap = new HashMap<>();
-                            paramMap.put("synthesisCuttingToolConfig", synthesisCuttingToolConfig);
-                            paramMap.put("synthesisCode", synthesisCode);
-                            PARAM_MAP.put(1, paramMap);
+                            if (synthesisCuttingToolConfig != null) {
+                                // TODO 业务处理，需要确定
+                                // 用于页面之间传值，新方法
+                                Map<String, Object> paramMap = new HashMap<>();
+                                paramMap.put("synthesisCuttingToolConfig", synthesisCuttingToolConfig);
+                                paramMap.put("synthesisCode", synthesisCode);
+                                PARAM_MAP.put(1, paramMap);
 
 
-                            //跳转到组装信息详细页面
-                            Intent intent = new Intent(C01S009_001Activity.this, C01S009_002Activity.class);
-                            // 不清空页面之间传递的值
-                            intent.putExtra("isClearParamMap", false);
-                            startActivity(intent);
-                            finish();
+                                //跳转到组装信息详细页面
+                                Intent intent = new Intent(C01S009_001Activity.this, C01S009_002Activity.class);
+                                // 不清空页面之间传递的值
+                                intent.putExtra("isClearParamMap", false);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                            final String errorStr = response.errorBody().string();
+                            createAlertDialog(C01S009_001Activity.this, errorStr, Toast.LENGTH_LONG);
                         }
-                    } else {
-                        final String errorStr = response.errorBody().string();
-                        createAlertDialog(C01S009_001Activity.this, errorStr, Toast.LENGTH_LONG);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    } finally {
+                        if (null != loading && loading.isShowing()) {
+                            loading.dismiss();
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
                     if (null != loading && loading.isShowing()) {
                         loading.dismiss();
                     }
+                    createAlertDialog(C01S009_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                 }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
+                loading.dismiss();
             }
-
-            @Override
-            public void _onFailure(Throwable t) {
-                if (null != loading && loading.isShowing()) {
-                    loading.dismiss();
-                }
-                createAlertDialog(C01S009_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-            }
-        });
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -245,80 +250,99 @@ public class C01S009_001Activity extends CommonActivity {
                     }
                 });
 
-                //调用接口，查询合成刀具组成信息
-                IRequest iRequest = retrofit.create(IRequest.class);
+                try {
+                    //调用接口，查询合成刀具组成信息
+                    IRequest iRequest = retrofit.create(IRequest.class);
 
-                SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
-                synthesisCuttingToolInitVO.setRfidCode(rfidString);
+                    SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
+                    synthesisCuttingToolInitVO.setRfidCode(rfidString);
 
-                Gson gson = new Gson();
-                String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
-                RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                    Gson gson = new Gson();
+                    String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
+                    RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                Map<String, String> headsMap = new HashMap<>();
-                headsMap.put("impower", OperationEnum.SynthesisCuttingTool_Config.getKey().toString());
+                    Map<String, String> headsMap = new HashMap<>();
+                    headsMap.put("impower", OperationEnum.SynthesisCuttingTool_Config.getKey().toString());
 
-                Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, headsMap);
-                getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
-                    @Override
-                    public void _onResponse(Response<String> response) {
-                        try {
-                            String inpower = response.headers().get("impower");
+                    Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, headsMap);
+                    getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
+                        @Override
+                        public void _onResponse(Response<String> response) {
+                            try {
+                                String inpower = response.headers().get("impower");
 
-                            if (response.raw().code() == 200) {
-                                Gson gson = new Gson();
-                                synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
-                                synthesisCuttingToolConfigRFID = rfidString;
+                                if (response.raw().code() == 200) {
+                                    Gson gson = new Gson();
+                                    synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
+                                    synthesisCuttingToolConfigRFID = rfidString;
 
-                                if (synthesisCuttingToolConfig != null) {
-                                    handleMessage(inpower);
+                                    if (synthesisCuttingToolConfig != null) {
+                                        handleMessage(inpower);
 //                                    Message message = new Message();
 //                                    message.obj = inpower;
 //                                    scanHandler.sendMessage(message);
+                                    } else {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
                                 } else {
+                                    final String errorStr = response.errorBody().string();
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                            createAlertDialog(C01S009_001Activity.this, errorStr, Toast.LENGTH_LONG);
                                         }
                                     });
                                 }
-                            } else {
-                                final String errorStr = response.errorBody().string();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        createAlertDialog(C01S009_001Activity.this, errorStr, Toast.LENGTH_LONG);
+                                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } finally {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (null != loading && loading.isShowing()) {
+                                            loading.dismiss();
+                                        }
                                     }
                                 });
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
+                        }
+
+                        @Override
+                        public void _onFailure(Throwable t) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (null != loading && loading.isShowing()) {
                                         loading.dismiss();
                                     }
+                                    createAlertDialog(C01S009_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                                 }
                             });
                         }
-                    }
-
-                    @Override
-                    public void _onFailure(Throwable t) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (null != loading && loading.isShowing()) {
-                                    loading.dismiss();
-                                }
-                                createAlertDialog(C01S009_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
                             }
-                        });
-                    }
-                });
+                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         }
     }
