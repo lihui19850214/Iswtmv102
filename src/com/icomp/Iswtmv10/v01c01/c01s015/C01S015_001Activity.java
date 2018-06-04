@@ -159,6 +159,14 @@ public class C01S015_001Activity extends CommonActivity {
                     createAlertDialog(C01S015_001Activity.this, "请输入材料号,再查询", Toast.LENGTH_LONG);
                 } else {
                     tvTitle.setText(R.string.c01s015_001_002_title);
+
+                    // 重置下拉列表，默认选中第一个
+                    tv01.setText("");
+                    //刀具
+                    cuttingToolBind = new CuttingToolBind();
+                    // 下拉列表置空
+                    cuttingToolBindList = new ArrayList<>();
+
                     search();
                 }
                 break;
@@ -229,48 +237,57 @@ public class C01S015_001Activity extends CommonActivity {
 
     //查询线程
     private void search() {
-        loading.show();
+        try {
+            loading.show();
 
-        IRequest iRequest = retrofit.create(IRequest.class);
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        Gson gson = new Gson();
+            Gson gson = new Gson();
 
-        String jsonStr = gson.toJson(params);
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            String jsonStr = gson.toJson(params);
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> getUnbind = iRequest.getUnbind(body);
+            Call<String> getUnbind = iRequest.getUnbind(body);
 
-        getUnbind.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        Gson gson = new Gson();
-                        Type type = new TypeToken<List<CuttingToolBind>>() {
-                        }.getType();
-                        cuttingToolBindList = gson.fromJson(response.body(), type);
+            getUnbind.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            Gson gson = new Gson();
+                            Type type = new TypeToken<List<CuttingToolBind>>() {
+                            }.getType();
+                            cuttingToolBindList = gson.fromJson(response.body(), type);
 
-                        // 重置下拉列表，默认选中第一个
-                        tv01.setText(cuttingToolBindList.get(0).getBladeCode());
-                        //刀具
-                        cuttingToolBind = cuttingToolBindList.get(0);
-                    } else {
-                        createAlertDialog(C01S015_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            if (cuttingToolBindList == null || cuttingToolBindList.size() == 0) {
+                                cuttingToolBindList = new ArrayList<>();
+                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                            } else {
+                                // 重置下拉列表，默认选中第一个
+                                tv01.setText(cuttingToolBindList.get(0).getBladeCode());
+                                //刀具
+                                cuttingToolBind = cuttingToolBindList.get(0);
+                            }
+                        } else {
+                            createAlertDialog(C01S015_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        loading.dismiss();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    loading.dismiss();
                 }
-            }
 
-            @Override
-            public void _onFailure(Throwable t) {
-                loading.dismiss();
-                createAlertDialog(C01S015_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-            }
-        });
-
+                @Override
+                public void _onFailure(Throwable t) {
+                    loading.dismiss();
+                    createAlertDialog(C01S015_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            createAlertDialog(C01S015_001Activity.this, getString(R.string.dataError), Toast.LENGTH_SHORT);
+        }
     }
 
 //    //重写键盘上扫描按键的方法
