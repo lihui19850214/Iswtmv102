@@ -285,5 +285,8 @@
 
     <string name="initFail">初始化读头失败</string>
     <string name="queryNoMessage">没有查询到信息</string>
+    <string name="dataError">请检查数据</string>
+    <string name="authorizedNumberError">授权人数不对</string>
+    <string name="loginInfoError">登陆信息错误，请重新登陆</string>
 
 </resources>
