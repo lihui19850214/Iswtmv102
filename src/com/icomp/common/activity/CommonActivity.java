@@ -1337,6 +1337,30 @@ public abstract class CommonActivity extends Activity {
         builder.show();  // 显示对话框
     }
 
+    /**
+     * 判断当前线程是否为主线程1
+     * @return true为主线程；false为子线程；
+     */
+    public boolean isMainThread_looper() {
+        return Looper.getMainLooper() == Looper.myLooper();
+    }
+
+    /**
+     * 判断当前线程是否为主线程1
+     * @return true为主线程；false为子线程；
+     */
+    public boolean isMainThread_looper_thread() {
+        return Looper.getMainLooper().getThread() == Thread.currentThread();
+    }
+
+    /**
+     * 判断当前线程是否为主线程1
+     * @return true为主线程；false为子线程；
+     */
+    public boolean isMainThread_looper_thread_id() {
+        return Looper.getMainLooper().getThread().getId() == Thread.currentThread().getId();
+    }
+
 
     @Override
     protected void onDestroy() {
