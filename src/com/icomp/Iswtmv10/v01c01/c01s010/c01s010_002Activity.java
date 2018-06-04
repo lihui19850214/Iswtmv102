@@ -608,19 +608,19 @@ public class c01s010_002Activity extends CommonActivity {
                                     }
                                 });
                             } else {
-                                final String errorStr = response.errorBody().string();
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        createAlertDialog(c01s010_002Activity.this, errorStr, Toast.LENGTH_LONG);
+                                        Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
                         } else {
+                            final String errorStr = response.errorBody().string();
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                    createAlertDialog(c01s010_002Activity.this, errorStr, Toast.LENGTH_LONG);
                                 }
                             });
                         }
