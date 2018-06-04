@@ -114,7 +114,7 @@ public class c01s004_003Activity extends CommonActivity {
                     ObjectMapper mapper = new ObjectMapper();
                     if (response.raw().code() == 200) {
                         searchOutLiberaryVOList = mapper.readValue(response.body(), getCollectionType(mapper, List.class, SearchOutLiberaryVO.class));
-                        if (searchOutLiberaryVOList == null) {
+                        if (searchOutLiberaryVOList == null || searchOutLiberaryVOList.size() == 0) {
                             searchOutLiberaryVOList = new ArrayList<>();
                             Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
                         }
