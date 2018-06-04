@@ -126,6 +126,7 @@ public class C01S007_001Activity extends CommonActivity {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                     } finally {
                         loading.dismiss();
                     }
@@ -139,7 +140,7 @@ public class C01S007_001Activity extends CommonActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
-            createAlertDialog(C01S007_001Activity.this, getString(R.string.dataError), Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -201,6 +202,7 @@ public class C01S007_001Activity extends CommonActivity {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                     } finally {
                         loading.dismiss();
                     }
@@ -214,7 +216,7 @@ public class C01S007_001Activity extends CommonActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
-            createAlertDialog(C01S007_001Activity.this, getString(R.string.dataError), Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
     }
 
