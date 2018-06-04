@@ -347,6 +347,7 @@ public class c01s004_003Activity extends CommonActivity {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                     } finally {
                         loading.dismiss();
                     }
@@ -360,7 +361,7 @@ public class c01s004_003Activity extends CommonActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
-            createAlertDialog(c01s004_003Activity.this, getString(R.string.dataError), Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
     }
 
