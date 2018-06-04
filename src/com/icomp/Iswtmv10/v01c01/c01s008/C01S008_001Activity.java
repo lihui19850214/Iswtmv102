@@ -229,6 +229,9 @@ public class C01S008_001Activity extends CommonActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
+                            }
                             Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                         }
                     });
