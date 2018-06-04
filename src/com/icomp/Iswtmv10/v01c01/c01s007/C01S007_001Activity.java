@@ -69,9 +69,7 @@ public class C01S007_001Activity extends CommonActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ll_01:
-
                 showPopupWindow();
-
                 break;
             default:
         }
@@ -90,48 +88,59 @@ public class C01S007_001Activity extends CommonActivity {
             return;
         }
 
-        loading.show();
+        try {
+            loading.show();
 
-        IRequest iRequest = retrofit.create(IRequest.class);
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        QimingRecordsVO qimingRecordsVO = new QimingRecordsVO();
-        qimingRecordsVO.setApplyNo(djOutapplyAkp.getApplyno());
+            QimingRecordsVO qimingRecordsVO = new QimingRecordsVO();
+            qimingRecordsVO.setApplyNo(djOutapplyAkp.getApplyno());
 
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(qimingRecordsVO);
+            Gson gson = new Gson();
+            String jsonStr = gson.toJson(qimingRecordsVO);
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> queryBladeCodes = iRequest.queryBladeCodes(body);
-        queryBladeCodes.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        Gson gson = new Gson();
-                        Type type = new TypeToken<List<QimingRecords>>() {}.getType();
-                        qimingRecordsList = gson.fromJson(response.body(), type);
+            Call<String> queryBladeCodes = iRequest.queryBladeCodes(body);
+            queryBladeCodes.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            Gson gson = new Gson();
+                            Type type = new TypeToken<List<QimingRecords>>() {
+                            }.getType();
+                            qimingRecordsList = gson.fromJson(response.body(), type);
 
-                        listview.setVisibility(View.VISIBLE);
+                            if (qimingRecordsList == null || qimingRecordsList.size() == 0) {
+                                qimingRecordsList = new ArrayList<>();
+                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                            } else {
+                                listview.setVisibility(View.VISIBLE);
 
-                        //将数据显示在列表上
-                        listview.setAdapter(new QimingRecordsAdapter());
-                    } else {
-                        createAlertDialog(C01S007_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                //将数据显示在列表上
+                                listview.setAdapter(new QimingRecordsAdapter());
+                            }
+                        } else {
+                            createAlertDialog(C01S007_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        loading.dismiss();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    loading.dismiss();
                 }
-            }
 
-            @Override
-            public void _onFailure(Throwable t) {
-                loading.dismiss();
-                createAlertDialog(C01S007_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-            }
-        });
+                @Override
+                public void _onFailure(Throwable t) {
+                    loading.dismiss();
+                    createAlertDialog(C01S007_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            createAlertDialog(C01S007_001Activity.this, getString(R.string.dataError), Toast.LENGTH_SHORT);
+        }
     }
 
     class QimingRecordsAdapter extends BaseAdapter {
@@ -166,38 +175,47 @@ public class C01S007_001Activity extends CommonActivity {
 
     //根据材料号查询合成刀具组成信息
     private void searchOutOrder() {
-        loading.show();
-        IRequest iRequest = retrofit.create(IRequest.class);
+        try {
+            loading.show();
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        String jsonStr = "{}";
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            String jsonStr = "{}";
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> queryOutOrder = iRequest.queryOutOrder(body);
+            Call<String> queryOutOrder = iRequest.queryOutOrder(body);
 
-        queryOutOrder.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        ObjectMapper mapper = new ObjectMapper();
-                        DjOutapplyAkpList = mapper.readValue(response.body(), getCollectionType(mapper, List.class, DjOutapplyAkp.class));
+            queryOutOrder.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            ObjectMapper mapper = new ObjectMapper();
+                            DjOutapplyAkpList = mapper.readValue(response.body(), getCollectionType(mapper, List.class, DjOutapplyAkp.class));
 
-                    } else {
-                        createAlertDialog(C01S007_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            if (DjOutapplyAkpList == null || DjOutapplyAkpList.size() == 0) {
+                                DjOutapplyAkpList = new ArrayList<>();
+                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            createAlertDialog(C01S007_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        loading.dismiss();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
+                    createAlertDialog(C01S007_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                     loading.dismiss();
                 }
-            }
-
-            @Override
-            public void _onFailure(Throwable t) {
-                createAlertDialog(C01S007_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                loading.dismiss();
-            }
-        });
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            createAlertDialog(C01S007_001Activity.this, getString(R.string.dataError), Toast.LENGTH_SHORT);
+        }
     }
 
     //显示流水线列表
@@ -228,6 +246,12 @@ public class C01S007_001Activity extends CommonActivity {
 
                 //刀具
                 djOutapplyAkp = DjOutapplyAkpList.get(i);
+
+
+                // 情况查询列表
+                qimingRecordsList = new ArrayList<>();
+                //将数据显示在列表上
+                listview.setAdapter(new QimingRecordsAdapter());
             }
         });
         popupWindow.showAsDropDown(ll01);
