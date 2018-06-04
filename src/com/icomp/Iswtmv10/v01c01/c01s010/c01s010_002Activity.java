@@ -655,7 +655,6 @@ public class c01s010_002Activity extends CommonActivity {
                             createAlertDialog(c01s010_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                         }
                     });
-
                 }
             });
         } catch (Exception e) {
@@ -1199,9 +1198,9 @@ public class c01s010_002Activity extends CommonActivity {
                         }
 
                         // 换下
-                        if (code.equals(downCuttingToolVO.getDownCode())) {
-                            downCuttingToolVO.setDownRfidCode(rfid);
-                        }
+//                        if (code.equals(downCuttingToolVO.getDownCode())) {
+                        downCuttingToolVO.setDownRfidCode(rfid);
+//                        }
                     }
 
                     // 是否选择丢刀
