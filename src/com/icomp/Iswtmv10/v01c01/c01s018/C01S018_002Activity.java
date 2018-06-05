@@ -1,12 +1,10 @@
 package com.icomp.Iswtmv10.v01c01.c01s018;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.view.*;
 import android.view.inputmethod.InputMethodManager;
@@ -15,16 +13,12 @@ import android.widget.*;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.activity.ExceptionProcessCallBack;
-import com.icomp.common.utils.SysApplication;
 
 import java.io.IOException;
 import java.util.*;
@@ -33,8 +27,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.RequestBody;
-import org.json.JSONException;
-import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -106,27 +98,31 @@ public class C01S018_002Activity extends CommonActivity {
 
         Map<String, Object> paramMap = PARAM_MAP.get(1);
         if (paramMap != null) {
-            rfidToMap = (Map<String, CuttingToolBind>) paramMap.get("rfidToMap");
-            materialNumToMap = (Map<String, CuttingTool>) paramMap.get("materialNumToMap");
-            insideVO = (InsideVO) paramMap.get("insideVO");
-            sharpenVOList = (List<SharpenVO>) paramMap.get("sharpenVOList");
-            rfid_authorization_map = (Map<String, Boolean>) paramMap.get("rfid_authorization_map");
+            try {
+                rfidToMap = (Map<String, CuttingToolBind>) paramMap.get("rfidToMap");
+                materialNumToMap = (Map<String, CuttingTool>) paramMap.get("materialNumToMap");
+                insideVO = (InsideVO) paramMap.get("insideVO");
+                sharpenVOList = (List<SharpenVO>) paramMap.get("sharpenVOList");
+                rfid_authorization_map = (Map<String, Boolean>) paramMap.get("rfid_authorization_map");
 
 
-            for (SharpenVO sharpenVO:sharpenVOList) {
-                if (sharpenVO.getCuttingToolBladeCode() == null || "".equals(sharpenVO.getCuttingToolBladeCode())) {
-                    addLayout(sharpenVO.getCuttingToolBusinessCode(), "-", "", sharpenVO.getCount()+"");
-                } else {
-                    // rfid为key
-                    Set<String> keys = rfidToMap.keySet();
-                    for (String key : keys) {
-                        CuttingToolBind cuttingToolBind = rfidToMap.get(key);
-                        if (sharpenVO.getCuttingToolBusinessCode().equals(cuttingToolBind.getCuttingTool().getBusinessCode())) {
-                            addLayout(sharpenVO.getCuttingToolBusinessCode(), sharpenVO.getCuttingToolBladeCode(), key, "-");
-                            break;
+                for (SharpenVO sharpenVO : sharpenVOList) {
+                    if (sharpenVO.getCuttingToolBladeCode() == null || "".equals(sharpenVO.getCuttingToolBladeCode())) {
+                        addLayout(sharpenVO.getCuttingToolBusinessCode(), "-", "", sharpenVO.getCount() + "");
+                    } else {
+                        // rfid为key
+                        Set<String> keys = rfidToMap.keySet();
+                        for (String key : keys) {
+                            CuttingToolBind cuttingToolBind = rfidToMap.get(key);
+                            if (sharpenVO.getCuttingToolBusinessCode().equals(cuttingToolBind.getCuttingTool().getBusinessCode())) {
+                                addLayout(sharpenVO.getCuttingToolBusinessCode(), sharpenVO.getCuttingToolBladeCode(), key, "-");
+                                break;
+                            }
                         }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -267,55 +263,60 @@ public class C01S018_002Activity extends CommonActivity {
 
     //根据材料号查询合成刀具组成信息
     private void search(final String cailiao, final String num) {
-        loading.show();
-        IRequest iRequest = retrofit.create(IRequest.class);
+        try {
+            loading.show();
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        CuttingToolVO cuttingToolVO = new CuttingToolVO();
-        cuttingToolVO.setBusinessCode(cailiao);
+            CuttingToolVO cuttingToolVO = new CuttingToolVO();
+            cuttingToolVO.setBusinessCode(cailiao);
 
-        Gson gson = new Gson();
+            String jsonStr = objectToJson(cuttingToolVO);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        String jsonStr = gson.toJson(cuttingToolVO);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            Call<String> getInCuttingTool = iRequest.getInCuttingTool(body);
+            getInCuttingTool.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            CuttingTool cuttingTool = jsonToObject(response.body(), CuttingTool.class);
 
-        Call<String> getInCuttingTool = iRequest.getInCuttingTool(body);
-        getInCuttingTool.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        Gson gson = new Gson();
-                        CuttingTool cuttingTool = gson.fromJson(response.body(), CuttingTool.class);
+                            if (cuttingTool != null) {
+                                materialNumToMap.put(cailiao, cuttingTool);
 
-                        if (cuttingTool != null) {
-                            materialNumToMap.put(cailiao, cuttingTool);
+                                SharpenVO sharpenVO = new SharpenVO();
+                                sharpenVO.setCuttingToolBusinessCode(cailiao);// 材料号
+                                sharpenVO.setCuttingToolCode(cuttingTool.getCode());
+                                sharpenVO.setCount(Integer.parseInt(num));
+                                sharpenVOList.add(sharpenVO);
 
-                            SharpenVO sharpenVO = new SharpenVO();
-                            sharpenVO.setCuttingToolBusinessCode(cailiao);// 材料号
-                            sharpenVO.setCuttingToolCode(cuttingTool.getCode());
-                            sharpenVO.setCount(Integer.parseInt(num));
-                            sharpenVOList.add(sharpenVO);
-
-                            addLayout(cailiao, "-", "", num);
+                                addLayout(cailiao, "-", "", num);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
+                            createAlertDialog(C01S018_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
                         }
-                    } else {
-                        createAlertDialog(C01S018_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        loading.dismiss();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
+                    createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                     loading.dismiss();
                 }
-            }
-
-            @Override
-            public void _onFailure(Throwable t) {
-                createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-        });
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -428,91 +429,103 @@ public class C01S018_002Activity extends CommonActivity {
                     return;
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        loading.show();
-                    }
-                });
+                try {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            loading.show();
+                        }
+                    });
 
-                //调用接口，查询合成刀具组成信息
-                IRequest iRequest = retrofit.create(IRequest.class);
+                    //调用接口，查询合成刀具组成信息
+                    IRequest iRequest = retrofit.create(IRequest.class);
 
-                RfidContainerVO rfidContainerVO = new RfidContainerVO();
-                rfidContainerVO.setLaserCode(rfidString);
-                CuttingToolBindVO cuttingToolBindVO = new CuttingToolBindVO();
-                cuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
+                    RfidContainerVO rfidContainerVO = new RfidContainerVO();
+                    rfidContainerVO.setLaserCode(rfidString);
+                    CuttingToolBindVO cuttingToolBindVO = new CuttingToolBindVO();
+                    cuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
 
-                Gson gson = new Gson();
-                String jsonStr = gson.toJson(cuttingToolBindVO);
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                    String jsonStr = objectToJson(cuttingToolBindVO);
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                Map<String, String> headsMap = new HashMap<>();
-                headsMap.put("impower", OperationEnum.Cutting_tool_Inside.getKey().toString());
+                    Map<String, String> headsMap = new HashMap<>();
+                    headsMap.put("impower", OperationEnum.Cutting_tool_Inside.getKey().toString());
 
-                Call<String> getInCuttingToolBind = iRequest.getInCuttingToolBind(body, headsMap);
-                getInCuttingToolBind.enqueue(new MyCallBack<String>() {
-                    @Override
-                    public void _onResponse(Response<String> response) {
-                        try {
-                            if (response.raw().code() == 200) {
-                                Gson gson = new Gson();
-                                CuttingToolBind cuttingToolBind = gson.fromJson(response.body(), CuttingToolBind.class);
+                    Call<String> getInCuttingToolBind = iRequest.getInCuttingToolBind(body, headsMap);
+                    getInCuttingToolBind.enqueue(new MyCallBack<String>() {
+                        @Override
+                        public void _onResponse(Response<String> response) {
+                            try {
+                                if (response.raw().code() == 200) {
+                                    CuttingToolBind cuttingToolBind = jsonToObject(response.body(), CuttingToolBind.class);
 
-                                if (cuttingToolBind != null) {
-                                    isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
+                                    if (cuttingToolBind != null) {
+                                        isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
+                                    } else {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (null != loading && loading.isShowing()) {
+                                                    loading.dismiss();
+                                                }
+                                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
                                 } else {
+                                    final String errorStr = response.errorBody().string();
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             if (null != loading && loading.isShowing()) {
                                                 loading.dismiss();
                                             }
-                                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                            createAlertDialog(C01S018_002Activity.this, errorStr, Toast.LENGTH_LONG);
                                         }
                                     });
+
                                 }
-                            } else {
-                                final String errorStr = response.errorBody().string();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         if (null != loading && loading.isShowing()) {
                                             loading.dismiss();
                                         }
-                                        createAlertDialog(C01S018_002Activity.this, errorStr, Toast.LENGTH_LONG);
+                                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                                     }
                                 });
+                            } finally {
 
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        }
+
+                        @Override
+                        public void _onFailure(Throwable t) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (null != loading && loading.isShowing()) {
                                         loading.dismiss();
                                     }
+                                    createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                                 }
                             });
-                        } finally {
-
                         }
-                    }
-
-                    @Override
-                    public void _onFailure(Throwable t) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (null != loading && loading.isShowing()) {
-                                    loading.dismiss();
-                                }
-                                createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
                             }
-                        });
-                    }
-                });
+                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         }
     }
@@ -523,15 +536,8 @@ public class C01S018_002Activity extends CommonActivity {
      * @param rfid
      * @param cuttingToolBind
      */
-    public void isShowExceptionBox(String headers, final String rfid, final CuttingToolBind cuttingToolBind) {
-        ObjectMapper mapper = new ObjectMapper();
-
-        Map<String, String> inpowerMap = new HashMap<>();
-        try {
-            inpowerMap = mapper.readValue(headers, Map.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void isShowExceptionBox(String headers, final String rfid, final CuttingToolBind cuttingToolBind) throws IOException {
+        Map<String, String> inpowerMap = jsonToObject(headers, Map.class);
 
         if ("1".equals(inpowerMap.get("type"))) {
             // 是否需要授权 true为需要授权；false为不需要授权
@@ -600,39 +606,57 @@ public class C01S018_002Activity extends CommonActivity {
 
     // 查询刃磨记录
     public void searchSharpening(final String rfid, final CuttingToolBind cuttingToolBind) {
-        CuttingToolVO cuttingToolVO = new CuttingToolVO();
-        cuttingToolVO.setBusinessCode(cuttingToolBind.getBladeCode());
+        try {
+            CuttingToolVO cuttingToolVO = new CuttingToolVO();
+            cuttingToolVO.setBusinessCode(cuttingToolBind.getBladeCode());
 
-        InsideFactoryVO insideFactoryVO = new InsideFactoryVO();
-        insideFactoryVO.setCuttingToolVO(cuttingToolVO);
+            InsideFactoryVO insideFactoryVO = new InsideFactoryVO();
+            insideFactoryVO.setCuttingToolVO(cuttingToolVO);
 
-        //调用接口，查询合成刀具组成信息
-        IRequest iRequest = retrofit.create(IRequest.class);
+            //调用接口，查询合成刀具组成信息
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(insideFactoryVO);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            String jsonStr = objectToJson(insideFactoryVO);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> countInsideFactory = iRequest.countInsideFactory(body);
-        countInsideFactory.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        Gson gson = new Gson();
-                        Integer sharpeningRecord = gson.fromJson(response.body(), Integer.class);
-                        // 不是首次刃磨
-                        if (sharpeningRecord > 0) {
+            Call<String> countInsideFactory = iRequest.countInsideFactory(body);
+            countInsideFactory.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            Integer sharpeningRecord = jsonToObject(response.body(), Integer.class);
+                            // 不是首次刃磨
+                            if (sharpeningRecord > 0) {
 
+                            } else {
+                                showDialog2(rfid, cuttingToolBind);
+                            }
                         } else {
-                            showDialog2(rfid, cuttingToolBind);
+                            createAlertDialog(C01S018_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
                         }
-                    } else {
-                        createAlertDialog(C01S018_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } finally {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
+                                }
+                            }
+                        });
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -641,23 +665,21 @@ public class C01S018_002Activity extends CommonActivity {
                             }
                         }
                     });
+                    createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                 }
-            }
-
-            @Override
-            public void _onFailure(Throwable t) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (null != loading && loading.isShowing()) {
-                            loading.dismiss();
-                        }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (null != loading && loading.isShowing()) {
+                        loading.dismiss();
                     }
-                });
-                createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-            }
-        });
-
+                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
 //    // 弹窗显示时弹窗外事件不相应
@@ -756,79 +778,94 @@ public class C01S018_002Activity extends CommonActivity {
                 } else if (null == tv01.getText().toString().trim() || "".equals(tv01.getText().toString().trim())) {
                     createAlertDialog(C01S018_002Activity.this, "请选择平均加工量", Toast.LENGTH_LONG);
                 } else {
+                    try {
+                        HistoryVO historyVO = new HistoryVO();
+                        historyVO.setAvgProcessCount(Integer.parseInt(averageProcessingVolumeList.get(average_processing_volume_posttion).getKey()));
+                        historyVO.setCount(Integer.parseInt(etgrindingQuantity.getText().toString().trim()));
+                        historyVO.setCuttingToolBind(cuttingToolBind);
 
-                    HistoryVO historyVO = new HistoryVO();
-                    historyVO.setAvgProcessCount(Integer.parseInt(averageProcessingVolumeList.get(average_processing_volume_posttion).getKey()));
-                    historyVO.setCount(Integer.parseInt(etgrindingQuantity.getText().toString().trim()));
-                    historyVO.setCuttingToolBind(cuttingToolBind);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                loading.show();
+                            }
+                        });
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            loading.show();
-                        }
-                    });
+                        //调用接口，查询合成刀具组成信息
+                        IRequest iRequest = retrofit.create(IRequest.class);
 
-                    //调用接口，查询合成刀具组成信息
-                    IRequest iRequest = retrofit.create(IRequest.class);
+                        String jsonStr = objectToJson(historyVO);
+                        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                    Gson gson = new Gson();
-                    String jsonStr = gson.toJson(historyVO);
-                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                        Call<String> addInsideFactoryHistory = iRequest.addInsideFactoryHistory(body);
+                        addInsideFactoryHistory.enqueue(new MyCallBack<String>() {
+                            @Override
+                            public void _onResponse(Response<String> response) {
+                                try {
+                                    if (response.raw().code() == 200) {
+                                        // 保存刃磨记录成功
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                dialog.dismiss();
+                                                Toast.makeText(getApplicationContext(), "保存成功", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
 
-                    Call<String> addInsideFactoryHistory = iRequest.addInsideFactoryHistory(body);
-                    addInsideFactoryHistory.enqueue(new MyCallBack<String>() {
-                        @Override
-                        public void _onResponse(Response<String> response) {
-                            try {
-                                if (response.raw().code() == 200) {
-                                    // 保存刃磨记录成功
+                                    } else {
+                                        final String errorStr = response.errorBody().string();
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                createAlertDialog(C01S018_002Activity.this, errorStr, Toast.LENGTH_LONG);
+                                            }
+                                        });
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            dialog.dismiss();
-                                            Toast.makeText(getApplicationContext(), "保存成功", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                                         }
                                     });
-
-                                } else {
-                                    final String errorStr = response.errorBody().string();
+                                } finally {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            createAlertDialog(C01S018_002Activity.this, errorStr, Toast.LENGTH_LONG);
+                                            if (null != loading && loading.isShowing()) {
+                                                loading.dismiss();
+                                            }
                                         }
                                     });
-
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            } finally {
+                            }
+
+                            @Override
+                            public void _onFailure(Throwable t) {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         if (null != loading && loading.isShowing()) {
                                             loading.dismiss();
                                         }
+                                        createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                                     }
                                 });
                             }
-                        }
-
-                        @Override
-                        public void _onFailure(Throwable t) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (null != loading && loading.isShowing()) {
-                                        loading.dismiss();
-                                    }
-                                    createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
                                 }
-                            });
-                        }
-                    });
-
+                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -926,87 +963,103 @@ public class C01S018_002Activity extends CommonActivity {
                     } else if (null == tv01.getText().toString().trim() || "".equals(tv01.getText().toString().trim())) {
                         createAlertDialog(C01S018_002Activity.this, "请选择平均加工量", Toast.LENGTH_LONG);
                     } else {
+                        try {
+                            HistoryVO historyVO = new HistoryVO();
+                            historyVO.setAvgProcessCount(Integer.parseInt(averageProcessingVolumeList.get(average_processing_volume_posttion).getKey()));
+                            historyVO.setCount(Integer.parseInt(etgrindingQuantity.getText().toString().trim()));
+                            historyVO.setCuttingToolBind(cuttingToolBind);
 
-                        HistoryVO historyVO = new HistoryVO();
-                        historyVO.setAvgProcessCount(Integer.parseInt(averageProcessingVolumeList.get(average_processing_volume_posttion).getKey()));
-                        historyVO.setCount(Integer.parseInt(etgrindingQuantity.getText().toString().trim()));
-                        historyVO.setCuttingToolBind(cuttingToolBind);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loading.show();
+                                }
+                            });
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                loading.show();
-                            }
-                        });
+                            //调用接口，查询合成刀具组成信息
+                            IRequest iRequest = retrofit.create(IRequest.class);
 
-                        //调用接口，查询合成刀具组成信息
-                        IRequest iRequest = retrofit.create(IRequest.class);
+                            String jsonStr = objectToJson(historyVO);
+                            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                        Gson gson = new Gson();
-                        String jsonStr = gson.toJson(historyVO);
-                        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                            Call<String> addInsideFactoryHistory = iRequest.addInsideFactoryHistory(body);
+                            addInsideFactoryHistory.enqueue(new MyCallBack<String>() {
+                                @Override
+                                public void _onResponse(Response<String> response) {
+                                    try {
+                                        if (response.raw().code() == 200) {
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    rfidToMap.put(rfidString, cuttingToolBind);
 
-                        Call<String> addInsideFactoryHistory = iRequest.addInsideFactoryHistory(body);
-                        addInsideFactoryHistory.enqueue(new MyCallBack<String>() {
-                            @Override
-                            public void _onResponse(Response<String> response) {
-                                try {
-                                    if (response.raw().code() == 200) {
+                                                    SharpenVO sharpenVO = new SharpenVO();
+                                                    sharpenVO.setCuttingToolBusinessCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 材料号
+                                                    sharpenVO.setCuttingToolBladeCode(cuttingToolBind.getBladeCode());// 刀身码
+                                                    sharpenVO.setCuttingToolCode(cuttingToolBind.getCuttingTool().getCode());
+                                                    sharpenVO.setCount(1);
+                                                    sharpenVOList.add(sharpenVO);
+
+                                                    //addLayout(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode(), rfid,"-");
+
+                                                    addPopupWindow.dismiss();
+                                                }
+                                            });
+                                        } else {
+                                            final String errorStr = response.errorBody().string();
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    createAlertDialog(C01S018_002Activity.this, errorStr, Toast.LENGTH_LONG);
+                                                }
+                                            });
+
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                rfidToMap.put(rfidString, cuttingToolBind);
-
-                                                SharpenVO sharpenVO = new SharpenVO();
-                                                sharpenVO.setCuttingToolBusinessCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 材料号
-                                                sharpenVO.setCuttingToolBladeCode(cuttingToolBind.getBladeCode());// 刀身码
-                                                sharpenVO.setCuttingToolCode(cuttingToolBind.getCuttingTool().getCode());
-                                                sharpenVO.setCount(1);
-                                                sharpenVOList.add(sharpenVO);
-
-                                                //addLayout(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode(), rfid,"-");
-
-                                                addPopupWindow.dismiss();
+                                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                                             }
                                         });
-                                    } else {
-                                        final String errorStr = response.errorBody().string();
+                                    } finally {
                                         runOnUiThread(new Runnable() {
                                             @Override
                                             public void run() {
-                                                createAlertDialog(C01S018_002Activity.this, errorStr, Toast.LENGTH_LONG);
+                                                if (null != loading && loading.isShowing()) {
+                                                    loading.dismiss();
+                                                }
                                             }
                                         });
-
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                } finally {
+                                }
+
+                                @Override
+                                public void _onFailure(Throwable t) {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             if (null != loading && loading.isShowing()) {
                                                 loading.dismiss();
                                             }
+                                            createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                                         }
                                     });
                                 }
-                            }
-
-                            @Override
-                            public void _onFailure(Throwable t) {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (null != loading && loading.isShowing()) {
-                                            loading.dismiss();
-                                        }
-                                        createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (null != loading && loading.isShowing()) {
+                                        loading.dismiss();
                                     }
-                                });
-                            }
-                        });
-
+                                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     }
                 }
             });
@@ -1039,24 +1092,6 @@ public class C01S018_002Activity extends CommonActivity {
             return view1;
         }
     }
-
-
-
-    @SuppressLint("HandlerLeak")
-    Handler scanfmhandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Object obj = msg.obj;
-            //TODO 代码乱写，具体根据实际业务来
-            if (obj == null) {
-                createAlertDialog(C01S018_002Activity.this, "已存在", 1);
-            } else {
-                addLayout("材料号", "刀身码", "rfid", "数量");
-                //showDialog(jsonObject1.getString("synthesisParametersCode"), jsonObject1.getString("rfidContainerID"), jsonObject1.getString("laserCode"));
-            }
-
-        }
-    };
 
 
     /**
