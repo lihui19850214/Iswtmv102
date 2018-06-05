@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apiclient.pojo.*;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -36,7 +35,6 @@ import retrofit2.Retrofit;
 /**
  * 合成刀具初始化页面3
  */
-
 public class C03S001_003Activity extends CommonActivity {
 
     @BindView(R.id.tv_01)
@@ -84,7 +82,6 @@ public class C03S001_003Activity extends CommonActivity {
 
     //提交按钮处理--调用接口，提交初始化合成刀具RFIDCodeList
     public void btnSubmit(View view) {
-
         if (!isCanScan) {
             stop_scan();
         }
@@ -223,72 +220,78 @@ public class C03S001_003Activity extends CommonActivity {
 
     //点击提交按钮处理方法
     private void next() {
-        loading.show();
+        try {
+            loading.show();
 
-        //调用接口，提交初始化合成刀具RFIDCodeList
-        IRequest iRequest = retrofit.create(IRequest.class);
+            //调用接口，提交初始化合成刀具RFIDCodeList
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        List<SynthesisCuttingToolBind> list = new ArrayList<>();
-        for (int i = 0; i < rfidList.size(); i++) {
-            String rfid = rfidList.get(i);
+            List<SynthesisCuttingToolBind> list = new ArrayList<>();
+            for (int i = 0; i < rfidList.size(); i++) {
+                String rfid = rfidList.get(i);
 
-            RfidContainer rfidContainer = new RfidContainer();
-            rfidContainer.setLaserCode(rfid);
+                RfidContainer rfidContainer = new RfidContainer();
+                rfidContainer.setLaserCode(rfid);
 
-            List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList = new ArrayList<>();
+                List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList = new ArrayList<>();
 
-            for (SynthesisCuttingToolLocationConfig stlc : params.getSynthesisCuttingToolLocationConfigList()) {
-                SynthesisCuttingToolLocation synthesisCuttingToolLocation = new SynthesisCuttingToolLocation();
-                synthesisCuttingToolLocation.setSynthesisCuttingToolCode(stlc.getSynthesisCuttingToolConfig().getSynthesisCuttingToolCode());
-                synthesisCuttingToolLocation.setLocation(stlc.getSynthesisCuttingToolConfig().getLocation());
-                synthesisCuttingToolLocation.setCount(stlc.getSynthesisCuttingToolConfig().getCount());
-                synthesisCuttingToolLocation.setCuttingToolCode(stlc.getCuttingToolCode());
-                synthesisCuttingToolLocation.setCount(stlc.getCount());
+                for (SynthesisCuttingToolLocationConfig stlc : params.getSynthesisCuttingToolLocationConfigList()) {
+                    SynthesisCuttingToolLocation synthesisCuttingToolLocation = new SynthesisCuttingToolLocation();
+                    synthesisCuttingToolLocation.setSynthesisCuttingToolCode(stlc.getSynthesisCuttingToolConfig().getSynthesisCuttingToolCode());
+                    synthesisCuttingToolLocation.setLocation(stlc.getSynthesisCuttingToolConfig().getLocation());
+                    synthesisCuttingToolLocation.setCount(stlc.getSynthesisCuttingToolConfig().getCount());
+                    synthesisCuttingToolLocation.setCuttingToolCode(stlc.getCuttingToolCode());
+                    synthesisCuttingToolLocation.setCount(stlc.getCount());
 
-                synthesisCuttingToolLocationList.add(synthesisCuttingToolLocation);
-            }
-
-
-            SynthesisCuttingToolBind synthesisCuttingToolBind = new SynthesisCuttingToolBind();
-            synthesisCuttingToolBind.setSynthesisCuttingToolCode(params.getSynthesisCuttingToolCode());
-            synthesisCuttingToolBind.setRfidContainer(rfidContainer);
-            synthesisCuttingToolBind.setSynthesisCode(params.getSynthesisCuttingTool().getSynthesisCode());
-            synthesisCuttingToolBind.setSynthesisCuttingToolLocationList(synthesisCuttingToolLocationList);
-
-            list.add(synthesisCuttingToolBind);
-        }
-
-
-        Gson gson = new Gson();
-
-        String jsonStr = gson.toJson(list);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
-        Call<String> submitFInitSynthesis = iRequest.synthesisCuttingInit(body);
-        submitFInitSynthesis.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        Intent intent = new Intent(C03S001_003Activity.this, C03S001_004Activity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        createAlertDialog(C03S001_003Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    loading.dismiss();
+                    synthesisCuttingToolLocationList.add(synthesisCuttingToolLocation);
                 }
+
+
+                SynthesisCuttingToolBind synthesisCuttingToolBind = new SynthesisCuttingToolBind();
+                synthesisCuttingToolBind.setSynthesisCuttingToolCode(params.getSynthesisCuttingToolCode());
+                synthesisCuttingToolBind.setRfidContainer(rfidContainer);
+                synthesisCuttingToolBind.setSynthesisCode(params.getSynthesisCuttingTool().getSynthesisCode());
+                synthesisCuttingToolBind.setSynthesisCuttingToolLocationList(synthesisCuttingToolLocationList);
+
+                list.add(synthesisCuttingToolBind);
             }
 
-            @Override
-            public void _onFailure(Throwable t) {
+            String jsonStr = objectToJson(list);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+            Call<String> submitFInitSynthesis = iRequest.synthesisCuttingInit(body);
+            submitFInitSynthesis.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            Intent intent = new Intent(C03S001_003Activity.this, C03S001_004Activity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            createAlertDialog(C03S001_003Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    } finally {
+                        loading.dismiss();
+                    }
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
+                    loading.dismiss();
+                    createAlertDialog(C03S001_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
                 loading.dismiss();
-                createAlertDialog(C03S001_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
             }
-        });
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
 //    //重写键盘上扫描按键的方法

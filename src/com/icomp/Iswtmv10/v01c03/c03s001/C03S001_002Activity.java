@@ -30,7 +30,6 @@ import butterknife.ButterKnife;
 /**
  * 合成刀具初始化页面2
  */
-
 public class C03S001_002Activity extends CommonActivity {
 
     @BindView(R.id.tv_01)

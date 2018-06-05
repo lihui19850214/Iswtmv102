@@ -12,7 +12,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.apiclient.pojo.SynthesisCuttingToolConfig;
 import com.apiclient.vo.SynthesisCuttingToolInitVO;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -29,7 +28,6 @@ import java.util.HashMap;
 /**
  * 合成刀具初始化页面1
  */
-
 public class C03S001_001Activity extends CommonActivity {
 
     @BindView(R.id.et_01)
@@ -144,107 +142,144 @@ public class C03S001_001Activity extends CommonActivity {
                     }
                 });
 
-                //调用接口，查询合成刀具组成信息
-                IRequest iRequest = retrofit.create(IRequest.class);
-                params = new SynthesisCuttingToolInitVO();
-                params.setRfidCode(rfidString);
-                Gson gson = new Gson();
-                String jsonStr = gson.toJson(params);
-                RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                try {
+                    //调用接口，查询合成刀具组成信息
+                    IRequest iRequest = retrofit.create(IRequest.class);
+                    params = new SynthesisCuttingToolInitVO();
+                    params.setRfidCode(rfidString);
 
-                Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
-                getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
-                    @Override
-                    public void _onResponse(Response<String> response) {
-                        try {
-                            if (response.raw().code() == 200) {
-                                Gson gson = new Gson();
-                                SynthesisCuttingToolConfig synthesisCuttingTool = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
-                                //跳转到库存盘点刀具信息详细页面
-                                Intent intent = new Intent(C03S001_001Activity.this, C03S001_002Activity.class);
-                                intent.putExtra(PARAM, synthesisCuttingTool);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                final String errorStr = response.errorBody().string();
+                    String jsonStr = objectToJson(params);
+                    RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+                    Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
+                    getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
+                        @Override
+                        public void _onResponse(Response<String> response) {
+                            try {
+                                if (response.raw().code() == 200) {
+                                    SynthesisCuttingToolConfig synthesisCuttingTool = jsonToObject(response.body(), SynthesisCuttingToolConfig.class);
+                                    if (synthesisCuttingTool != null) {
+                                        //跳转到库存盘点刀具信息详细页面
+                                        Intent intent = new Intent(C03S001_001Activity.this, C03S001_002Activity.class);
+                                        intent.putExtra(PARAM, synthesisCuttingTool);
+                                        startActivity(intent);
+                                        finish();
+                                    } else {
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    final String errorStr = response.errorBody().string();
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            createAlertDialog(C03S001_001Activity.this, errorStr, Toast.LENGTH_LONG);
+                                        }
+                                    });
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        createAlertDialog(C03S001_001Activity.this, errorStr, Toast.LENGTH_LONG);
+                                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } finally {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (null != loading && loading.isShowing()) {
+                                            loading.dismiss();
+                                        }
                                     }
                                 });
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
+                        }
+
+                        @Override
+                        public void _onFailure(Throwable t) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (null != loading && loading.isShowing()) {
                                         loading.dismiss();
                                     }
+                                    createAlertDialog(C03S001_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                                 }
                             });
                         }
-                    }
-
-                    @Override
-                    public void _onFailure(Throwable t) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (null != loading && loading.isShowing()) {
-                                    loading.dismiss();
-                                }
-                                createAlertDialog(C03S001_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
                             }
-                        });
-                    }
-                });
+                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         }
     }
 
     //根据材料号查询合成刀具组成信息
     private void search() {
-        loading.show();
-        IRequest iRequest = retrofit.create(IRequest.class);
+        try {
+            loading.show();
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        Gson gson = new Gson();
+            String jsonStr = objectToJson(params);
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        String jsonStr = gson.toJson(params);
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
 
-        Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
-
-        getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        Gson gson = new Gson();
-                        SynthesisCuttingToolConfig synthesisCuttingTool = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
-                        //跳转到库存盘点刀具信息详细页面
-                        Intent intent = new Intent(C03S001_001Activity.this, C03S001_002Activity.class);
-                        intent.putExtra(PARAM, synthesisCuttingTool);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        createAlertDialog(C03S001_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+            getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            SynthesisCuttingToolConfig synthesisCuttingTool = jsonToObject(response.body(), SynthesisCuttingToolConfig.class);
+                            if (synthesisCuttingTool != null) {
+                                //跳转到库存盘点刀具信息详细页面
+                                Intent intent = new Intent(C03S001_001Activity.this, C03S001_002Activity.class);
+                                intent.putExtra(PARAM, synthesisCuttingTool);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            createAlertDialog(C03S001_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    } finally {
+                        loading.dismiss();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
+                    createAlertDialog(C03S001_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                     loading.dismiss();
                 }
-            }
-
-            @Override
-            public void _onFailure(Throwable t) {
-                createAlertDialog(C03S001_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-        });
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
 //    //重写键盘上扫描按键的方法
