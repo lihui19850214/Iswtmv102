@@ -784,12 +784,7 @@ public class C01S011_002Activity extends CommonActivity {
 
             IRequest iRequest = retrofit.create(IRequest.class);
 
-            String jsonStr = "";
-            try {
-                jsonStr = objectToJson(bindEquipmentVO);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+            String jsonStr = objectToJson(bindEquipmentVO);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             Call<String> bindEquipment = iRequest.bindEquipment(body, headsMap);
