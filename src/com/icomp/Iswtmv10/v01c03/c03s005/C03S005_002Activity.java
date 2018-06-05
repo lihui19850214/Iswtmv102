@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import com.apiclient.pojo.AuthCustomer;
 import com.apiclient.pojo.RfidContainer;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -29,7 +28,6 @@ import retrofit2.Retrofit;
 /**
  * 员工卡初始化页面2
  */
-
 public class C03S005_002Activity extends CommonActivity {
 
     @BindView(R.id.tv_01)
@@ -59,14 +57,20 @@ public class C03S005_002Activity extends CommonActivity {
         SysApplication.getInstance().addActivity(this);
         //调用接口
         retrofit = RetrofitSingle.newInstance();
-        //接受上一个页面传递的数值
-        params = (AuthCustomer) getIntent().getSerializableExtra(PARAM);
-        //员工号
-        tv01.setText(params.getEmployeeCode());
-        //真实姓名
-        tv02.setText(params.getName());
-        //部门
-        tv03.setText(params.getAuthDepartment().getName());
+
+        try {
+            //接受上一个页面传递的数值
+            params = (AuthCustomer) getIntent().getSerializableExtra(PARAM);
+            //员工号
+            tv01.setText(params.getEmployeeCode());
+            //真实姓名
+            tv02.setText(params.getName());
+            //部门
+            tv03.setText(params.getAuthDepartment().getName());
+        }  catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
     //取消按钮处理--跳转到系统菜单页面
@@ -132,62 +136,81 @@ public class C03S005_002Activity extends CommonActivity {
                     }
                 });
 
-                //调用接口，查询员工信息
-                IRequest iRequest = retrofit.create(IRequest.class);
-                RfidContainer rfidContainer = new RfidContainer();
-                rfidContainer.setLaserCode(rfidString);
+                try {
+                    //调用接口，查询员工信息
+                    IRequest iRequest = retrofit.create(IRequest.class);
+                    RfidContainer rfidContainer = new RfidContainer();
+                    rfidContainer.setLaserCode(rfidString);
 
-                params.setRfidContainer(rfidContainer);
-                Gson gson = new Gson();
-                String jsonStr = gson.toJson(params);
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                    params.setRfidContainer(rfidContainer);
 
-                Call<String> initEmployee = iRequest.initEmployee(body);
-                initEmployee.enqueue(new MyCallBack<String>() {
-                    @Override
-                    public void _onResponse(Response<String> response) {
-                        try {
-                            if (response.raw().code() == 200) {
-                                //跳转到员工初始化成功页
-                                Intent intent = new Intent(C03S005_002Activity.this, C03S005_003Activity.class);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                final String errorStr = response.errorBody().string();
+                    String jsonStr = objectToJson(params);
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+                    Call<String> initEmployee = iRequest.initEmployee(body);
+                    initEmployee.enqueue(new MyCallBack<String>() {
+                        @Override
+                        public void _onResponse(Response<String> response) {
+                            try {
+                                if (response.raw().code() == 200) {
+                                    //跳转到员工初始化成功页
+                                    Intent intent = new Intent(C03S005_002Activity.this, C03S005_003Activity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    final String errorStr = response.errorBody().string();
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            createAlertDialog(C03S005_002Activity.this, errorStr, Toast.LENGTH_LONG);
+                                        }
+                                    });
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        createAlertDialog(C03S005_002Activity.this, errorStr, Toast.LENGTH_LONG);
+                                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } finally {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (null != loading && loading.isShowing()) {
+                                            loading.dismiss();
+                                        }
                                     }
                                 });
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
+                        }
+
+                        @Override
+                        public void _onFailure(Throwable t) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (null != loading && loading.isShowing()) {
                                         loading.dismiss();
                                     }
+                                    createAlertDialog(C03S005_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                                 }
                             });
                         }
-                    }
-
-                    @Override
-                    public void _onFailure(Throwable t) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (null != loading && loading.isShowing()) {
-                                    loading.dismiss();
-                                }
-                                createAlertDialog(C03S005_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
                             }
-                        });
-                    }
-                });
+                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         }
     }

@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import com.apiclient.pojo.AuthCustomer;
 import com.apiclient.vo.AuthCustomerVO;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -28,7 +27,6 @@ import retrofit2.Retrofit;
 /**
  * 员工卡初始化页面1
  */
-
 public class C03S005_001Activity extends CommonActivity {
 
     @BindView(R.id.et_01)
@@ -84,46 +82,56 @@ public class C03S005_001Activity extends CommonActivity {
 
     //根据材料号查询合成刀具组成信息
     private void search() {
-        loading.show();
-        IRequest iRequest = retrofit.create(IRequest.class);
+        try {
+            loading.show();
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        Gson gson = new Gson();
+            String jsonStr = objectToJson(params);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        String jsonStr = gson.toJson(params);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            Call<String> queryEmployee = iRequest.queryEmployee(body);
 
-        Call<String> queryEmployee = iRequest.queryEmployee(body);
-
-        queryEmployee.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        Gson gson = new Gson();
-                        AuthCustomer authCustomer = gson.fromJson(response.body(), AuthCustomer.class);
-                        //跳转到员工初始化页面2
-                        Intent intent = new Intent(C03S005_001Activity.this, C03S005_002Activity.class);
-                        intent.putExtra(PARAM, authCustomer);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        createAlertDialog(C03S005_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+            queryEmployee.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            AuthCustomer authCustomer = jsonToObject(response.body(), AuthCustomer.class);
+                            if (authCustomer != null) {
+                                //跳转到员工初始化页面2
+                                Intent intent = new Intent(C03S005_001Activity.this, C03S005_002Activity.class);
+                                intent.putExtra(PARAM, authCustomer);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            createAlertDialog(C03S005_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    } finally {
+                        loading.dismiss();
+                        btnSearch.setClickable(true);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
                     loading.dismiss();
                     btnSearch.setClickable(true);
+                    createAlertDialog(C03S005_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                 }
-            }
-
-            @Override
-            public void _onFailure(Throwable t) {
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
                 loading.dismiss();
-                btnSearch.setClickable(true);
-                createAlertDialog(C03S005_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
             }
-        });
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
