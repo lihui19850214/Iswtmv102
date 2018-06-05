@@ -131,6 +131,9 @@ public class C01S013_002Activity extends CommonActivity {
                     try {
                         if (response.raw().code() == 200) {
                             productLineList = jsonToObject(response.body(), List.class, ProductLine.class);//丢刀
+                            if (productLineList == null || productLineList.size() == 0) {
+                                productLineList = new ArrayList<>();
+                            }
                         } else {
                             createAlertDialog(C01S013_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
                         }
