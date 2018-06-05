@@ -11,28 +11,19 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.apiclient.pojo.CuttingToolBind;
 import com.apiclient.pojo.DjOwnerAkp;
 import com.apiclient.pojo.OutsideFactoryMode;
-import com.apiclient.pojo.SharpenProvider;
 import com.apiclient.vo.OutSideVO;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
-import com.icomp.common.utils.SysApplication;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -138,70 +129,81 @@ public class C01S019_000Activity extends CommonActivity {
      * 查询外委厂家
      */
     private void getSharpenProvider() {
-        loading.show();
-        IRequest iRequest = retrofit.create(IRequest.class);
+        try {
+            loading.show();
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        String jsonStr = "{}";
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            String jsonStr = "{}";
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> getSharpenProvider = iRequest.getSharpenProvider(body);
+            Call<String> getSharpenProvider = iRequest.getSharpenProvider(body);
 
-        getSharpenProvider.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        ObjectMapper mapper = new ObjectMapper();
+            getSharpenProvider.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            sharpenProviderList = jsonToObject(response.body(), List.class, DjOwnerAkp.class);
 
-                        sharpenProviderList = mapper.readValue(response.body(), getCollectionType(mapper, List.class, DjOwnerAkp.class));
+                            if (sharpenProviderList == null && sharpenProviderList.size() == 0) {
+                                sharpenProviderList = new ArrayList<>();
+                            }
 
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // 上一个页面传过来的参数
+                                    Map<String, Object> paramMap = PARAM_MAP.get(1);
+                                    if (paramMap != null) {
+                                        outSideVO = (OutSideVO) paramMap.get("outSideVO");
+                                        setViewData(outSideVO);
+                                    }
+                                }
+                            });
+                        } else {
+                            final String errorStr = response.errorBody().string();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    createAlertDialog(C01S019_000Activity.this, errorStr, Toast.LENGTH_LONG);
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    } finally {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                // 上一个页面传过来的参数
-                                Map<String, Object> paramMap = PARAM_MAP.get(1);
-                                if (paramMap != null) {
-                                    outSideVO = (OutSideVO) paramMap.get("outSideVO");
-                                    setViewData(outSideVO);
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
                                 }
                             }
                         });
-                    } else {
-                        final String errorStr = response.errorBody().string();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                createAlertDialog(C01S019_000Activity.this, errorStr, Toast.LENGTH_LONG);
-                            }
-                        });
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (null != loading && loading.isShowing()) {
                                 loading.dismiss();
                             }
+                            createAlertDialog(C01S019_000Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                         }
                     });
                 }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
+                loading.dismiss();
             }
-
-            @Override
-            public void _onFailure(Throwable t) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (null != loading && loading.isShowing()) {
-                            loading.dismiss();
-                        }
-                        createAlertDialog(C01S019_000Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                    }
-                });
-            }
-        });
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
 

@@ -13,10 +13,6 @@ import com.apiclient.pojo.*;
 import com.apiclient.vo.OutSideVO;
 import com.apiclient.vo.SharpenVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.MapType;
-import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -68,17 +64,20 @@ public class C01S019_002Activity extends CommonActivity {
         //调用接口
         retrofit = RetrofitSingle.newInstance();
 
+        try {
+            Map<String, Object> paramMap2 = PARAM_MAP.get(2);
+            if (paramMap2 != null) {
+                outSideVO = (OutSideVO) paramMap2.get("outSideVO");
+                rfidToMap = (Map<String, CuttingToolBind>) paramMap2.get("rfidToMap");
 
-        Map<String, Object> paramMap2 = PARAM_MAP.get(2);
-        if (paramMap2 != null) {
-            outSideVO = (OutSideVO) paramMap2.get("outSideVO");
-            rfidToMap = (Map<String, CuttingToolBind>) paramMap2.get("rfidToMap");
-
-            for (SharpenVO sharpenVO : outSideVO.getSharpenVOS()) {
-                addLayout(sharpenVO.getCuttingToolBusinessCode(), sharpenVO.getCuttingToolBladeCode(), sharpenVO.getCount().toString());
+                for (SharpenVO sharpenVO : outSideVO.getSharpenVOS()) {
+                    addLayout(sharpenVO.getCuttingToolBusinessCode(), sharpenVO.getCuttingToolBladeCode(), sharpenVO.getCount().toString());
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @OnClick({R.id.btnCancel, R.id.btnNext})
@@ -156,87 +155,97 @@ public class C01S019_002Activity extends CommonActivity {
 
     //提交添加场外刃磨
     private void requestData(List<AuthCustomer> authorizationList) {
-        loading.show();
-
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> headsMap = new HashMap<>();
-
-        // 授权信息集合
-        List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
-        // 授权信息
-        ImpowerRecorder impowerRecorder = new ImpowerRecorder();
-
         try {
-            // 需要授权信息
-            if (is_need_authorization && authorizationList != null) {
-                //设定用户访问信息
-                @SuppressLint("WrongConstant")
-                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
-                String userInfoJson = sharedPreferences.getString("loginInfo", null);
+            loading.show();
 
-                AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
+            Map<String, String> headsMap = new HashMap<>();
 
-                Set<String> rfids = rfidToMap.keySet();
-                for (String rfid : rfids) {
-                    CuttingToolBind cuttingToolBind = rfidToMap.get(rfid);
-                    impowerRecorder = new ImpowerRecorder();
+            // 授权信息集合
+            List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
+            // 授权信息
+            ImpowerRecorder impowerRecorder = new ImpowerRecorder();
 
-                    // ------------ 授权信息 ------------
-                    impowerRecorder.setToolCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 合成刀编码
-                    impowerRecorder.setRfidLasercode(rfid);// rfid标签
-                    impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                    impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
-                    impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_OutSide.getKey().toString());//操作key
+            try {
+                // 需要授权信息
+                if (is_need_authorization && authorizationList != null) {
+                    //设定用户访问信息
+                    @SuppressLint("WrongConstant")
+                    SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+                    String userInfoJson = sharedPreferences.getString("loginInfo", null);
+
+                    AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
+
+                    Set<String> rfids = rfidToMap.keySet();
+                    for (String rfid : rfids) {
+                        CuttingToolBind cuttingToolBind = rfidToMap.get(rfid);
+                        impowerRecorder = new ImpowerRecorder();
+
+                        // ------------ 授权信息 ------------
+                        impowerRecorder.setToolCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 合成刀编码
+                        impowerRecorder.setRfidLasercode(rfid);// rfid标签
+                        impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
+                        impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                        impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_OutSide.getKey().toString());//操作key
 
 //                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
 //                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
 //                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
 
-                    impowerRecorderList.add(impowerRecorder);
-                }
-            }
-            headsMap.put("impower", mapper.writeValueAsString(impowerRecorderList));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        IRequest iRequest = retrofit.create(IRequest.class);
-
-        Gson gson = new Gson();
-
-        String jsonStr = gson.toJson(outSideVO);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
-        Call<String> addOutsideFactory = iRequest.addOutsideFactory(body, headsMap);
-
-        addOutsideFactory.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-
-                        //跳转到成功详细页面
-                        Intent intent = new Intent(C01S019_002Activity.this, C01S019_003Activity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        createAlertDialog(C01S019_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        impowerRecorderList.add(impowerRecorder);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
+                }
+                headsMap.put("impower", objectToJson(impowerRecorderList));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                createAlertDialog(C01S019_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            }
+
+            IRequest iRequest = retrofit.create(IRequest.class);
+
+            String jsonStr = objectToJson(outSideVO);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+            Call<String> addOutsideFactory = iRequest.addOutsideFactory(body, headsMap);
+
+            addOutsideFactory.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            //跳转到成功详细页面
+                            Intent intent = new Intent(C01S019_002Activity.this, C01S019_003Activity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            createAlertDialog(C01S019_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    } finally {
+                        loading.dismiss();
+                    }
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
+                    createAlertDialog(C01S019_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                     loading.dismiss();
                 }
-            }
-
-            @Override
-            public void _onFailure(Throwable t) {
-                createAlertDialog(C01S019_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-        });
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
