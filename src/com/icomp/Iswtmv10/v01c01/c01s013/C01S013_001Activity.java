@@ -269,13 +269,8 @@ public class C01S013_001Activity extends CommonActivity {
     }
 
 
-    private void setTextViewHandler(String inpower) {
-        Map<String, String> inpowerMap = new HashMap<>();
-        try {
-            inpowerMap = jsonToObject(inpower, Map.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void setTextViewHandler(String inpower) throws IOException {
+        Map<String, String> inpowerMap = jsonToObject(inpower, Map.class);
 
         // 判断是否显示提示框
         if ("1".equals(inpowerMap.get("type"))) {
