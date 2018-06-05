@@ -21,15 +21,12 @@ import com.apiclient.pojo.ProductLineAssemblyline;
 import com.apiclient.pojo.ProductLineEquipment;
 import com.apiclient.pojo.RfidContainer;
 import com.apiclient.vo.ProductLineVO;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +41,6 @@ import retrofit2.Retrofit;
 /**
  * 设备初始化页面1
  */
-
 public class C03S003_001Activity extends CommonActivity {
 
     @BindView(R.id.tv_01)
@@ -113,40 +109,50 @@ public class C03S003_001Activity extends CommonActivity {
 
     //获取所有流水线和设备的线程
     private void findAssemblyLine() {
-        loading.show();
+        try {
+            loading.show();
 
-        IRequest iRequest = retrofit.create(IRequest.class);
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        String jsonStr = "{}";
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            String jsonStr = "{}";
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> getAssemblylines = iRequest.getAssemblylines(body);
+            Call<String> getAssemblylines = iRequest.getAssemblylines(body);
 
-        getAssemblylines.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        Gson gson = new Gson();
-                        Type type = new TypeToken<List<ProductLineAssemblyline>>() {}.getType();
-                        lineList = gson.fromJson(response.body(), type);
-                    } else {
-                        createAlertDialog(C03S003_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+            getAssemblylines.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            lineList = jsonToObject(response.body(), List.class, ProductLineAssemblyline.class);
+                            if (lineList == null || lineList.size() == 0) {
+                                lineList = new ArrayList<>();
+                                createAlertDialog(C03S003_001Activity.this, "无流水线信息", Toast.LENGTH_LONG);
+                            }
+                        } else {
+                            createAlertDialog(C03S003_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    } finally {
+                        loading.dismiss();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    loading.dismiss();
                 }
-            }
 
-            @Override
-            public void _onFailure(Throwable t) {
+                @Override
+                public void _onFailure(Throwable t) {
+                    loading.dismiss();
+                    createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
                 loading.dismiss();
-                createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
             }
-        });
-
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
     //显示流水线列表
@@ -182,46 +188,54 @@ public class C03S003_001Activity extends CommonActivity {
                 //根据流水线ID取出该流水线上的设备
                 String assemblyLineCode = lineList.get(i).getCode();
 
-                loading.show();
+                try {
+                    loading.show();
 
-                IRequest iRequest = retrofit.create(IRequest.class);
+                    IRequest iRequest = retrofit.create(IRequest.class);
 
-                Gson gson = new Gson();
-                ProductLineVO plVO = new ProductLineVO();
-                plVO.setAssemblylineCode(assemblyLineCode);
-                String jsonStr = gson.toJson(plVO);;
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                    ProductLineVO plVO = new ProductLineVO();
+                    plVO.setAssemblylineCode(assemblyLineCode);
 
-                Call<String> getEquipmentByAssemblyline = iRequest.getEquipmentByAssemblyline(body);
+                    String jsonStr = objectToJson(plVO);
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                getEquipmentByAssemblyline.enqueue(new MyCallBack<String>() {
-                    @Override
-                    public void _onResponse(Response<String> response) {
-                        try {
-                            if (response.raw().code() == 200) {
-                                Gson gson = new Gson();
-                                Type type = new TypeToken<List<ProductLineEquipment>>(){}.getType();
-                                equipmentEntityList = gson.fromJson(response.body(), type);
-                                // 未查询到设备信息
-                                if (equipmentEntityList.size() == 0) {
-                                    createAlertDialog(C03S003_001Activity.this, "无设备信息", Toast.LENGTH_LONG);
+                    Call<String> getEquipmentByAssemblyline = iRequest.getEquipmentByAssemblyline(body);
+
+                    getEquipmentByAssemblyline.enqueue(new MyCallBack<String>() {
+                        @Override
+                        public void _onResponse(Response<String> response) {
+                            try {
+                                if (response.raw().code() == 200) {
+                                    equipmentEntityList = jsonToObject(response.body(), List.class, ProductLineEquipment.class);
+                                    // 未查询到设备信息
+                                    if (equipmentEntityList == null || equipmentEntityList.size() == 0) {
+                                        equipmentEntityList = new ArrayList<>();
+                                        createAlertDialog(C03S003_001Activity.this, "无设备信息", Toast.LENGTH_LONG);
+                                    }
+                                } else {
+                                    createAlertDialog(C03S003_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
                                 }
-                            } else {
-                                createAlertDialog(C03S003_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                            } finally {
+                                loading.dismiss();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            loading.dismiss();
                         }
-                    }
 
-                    @Override
-                    public void _onFailure(Throwable t) {
+                        @Override
+                        public void _onFailure(Throwable t) {
+                            loading.dismiss();
+                            createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (null != loading && loading.isShowing()) {
                         loading.dismiss();
-                        createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                     }
-                });
+                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                }
             }
         });
         popupWindow.showAsDropDown(ll01);
@@ -369,62 +383,80 @@ public class C03S003_001Activity extends CommonActivity {
                     }
                 });
 
-                RfidContainer rfidContainer = new RfidContainer();
-                rfidContainer.setLaserCode(rfidString);
+                try {
+                    RfidContainer rfidContainer = new RfidContainer();
+                    rfidContainer.setLaserCode(rfidString);
 
-                productLineEquipment.setRfidContainer(rfidContainer);
+                    productLineEquipment.setRfidContainer(rfidContainer);
 
-                Gson gson = new Gson();
-                String jsonStr = gson.toJson(productLineEquipment);
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                    String jsonStr = objectToJson(productLineEquipment);
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                IRequest iRequest = retrofit.create(IRequest.class);
-                Call<String> initEquipment = iRequest.initEquipment(body);
-                initEquipment.enqueue(new MyCallBack<String>() {
-                    @Override
-                    public void _onResponse(Response<String> response) {
-                        try {
-                            if (response.raw().code() == 200) {
-                                //跳转加工设备初始化成功页面2
-                                Intent intent = new Intent(C03S003_001Activity.this, C03S003_002Activity.class);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                final String errorStr = response.errorBody().string();
+                    IRequest iRequest = retrofit.create(IRequest.class);
+                    Call<String> initEquipment = iRequest.initEquipment(body);
+                    initEquipment.enqueue(new MyCallBack<String>() {
+                        @Override
+                        public void _onResponse(Response<String> response) {
+                            try {
+                                if (response.raw().code() == 200) {
+                                    //跳转加工设备初始化成功页面2
+                                    Intent intent = new Intent(C03S003_001Activity.this, C03S003_002Activity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    final String errorStr = response.errorBody().string();
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            createAlertDialog(C03S003_001Activity.this, errorStr, Toast.LENGTH_LONG);
+                                        }
+                                    });
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        createAlertDialog(C03S003_001Activity.this, errorStr, Toast.LENGTH_LONG);
+                                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            } finally {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (null != loading && loading.isShowing()) {
+                                            loading.dismiss();
+                                        }
                                     }
                                 });
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
+                        }
+
+                        @Override
+                        public void _onFailure(Throwable t) {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (null != loading && loading.isShowing()) {
                                         loading.dismiss();
                                     }
+                                    createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                                 }
                             });
                         }
-                    }
-
-                    @Override
-                    public void _onFailure(Throwable t) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (null != loading && loading.isShowing()) {
-                                    loading.dismiss();
-                                }
-                                createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
                             }
-                        });
-                    }
-                });
+                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
             }
         }
     }
