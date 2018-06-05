@@ -31,8 +31,10 @@ import android.widget.*;
 import com.apiclient.pojo.AuthCustomer;
 import com.apiclient.vo.AuthCustomerVO;
 import com.apiclient.vo.RfidContainerVO;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
@@ -873,20 +875,6 @@ public abstract class CommonActivity extends Activity {
     }
 
 
-    /**
-     * 获取泛型的Collection Type
-     * @param collectionClass 泛型的Collection
-     * @param elementClasses 元素类
-     * @return JavaType Java类型
-     * @since 1.0
-     */
-    public static JavaType getCollectionType(ObjectMapper mapper, Class<?> collectionClass, Class<?>... elementClasses) {
-        return mapper.getTypeFactory().constructParametricType(collectionClass, elementClasses);
-    }
-
-
-
-
 
     //授权弹框
     private PopupWindow popupWindowAuthorization;
@@ -1359,6 +1347,88 @@ public abstract class CommonActivity extends Activity {
      */
     public boolean isMainThread_looper_thread_id() {
         return Looper.getMainLooper().getThread().getId() == Thread.currentThread().getId();
+    }
+
+
+    /**
+     * 获取泛型的Collection Type
+     * @param collectionClass 泛型的Collection
+     * @param elementClasses 元素类
+     * @return JavaType Java类型
+     * @since 1.0
+     */
+    public static JavaType getCollectionType(ObjectMapper mapper, Class<?> collectionClass, Class<?>... elementClasses) {
+        return mapper.getTypeFactory().constructParametricType(collectionClass, elementClasses);
+    }
+
+    private ObjectMapper mapper = new ObjectMapper();
+
+    /**
+     * json 转 Object
+     * @param json 内容
+     * @param valueType 转换类型
+     * @param <T>
+     * @return 根据传入的类型返回
+     * @throws IOException
+     * @throws JsonParseException
+     * @throws JsonMappingException
+     */
+    public <T> T jsonToObject(String json, Class<T> valueType) throws IOException, JsonParseException, JsonMappingException {
+        if (jsonIsNull(json)) {
+            return null;
+        }
+
+        return mapper.readValue(json, valueType);
+    }
+
+    /**
+     * json 转 Object
+     * @param json 内容
+     * @param collectionClass 集合类型
+     * @param elementClasses 集合中元素类型
+     * @param <T>
+     * @return 根据传入的类型返回
+     * @throws IOException
+     * @throws JsonParseException
+     * @throws JsonMappingException
+     */
+    public <T> T jsonToObject(String json, Class<?> collectionClass, Class<?>... elementClasses) throws IOException, JsonParseException, JsonMappingException {
+        if (jsonIsNull(json)) {
+            return null;
+        }
+
+        return mapper.readValue(json, getCollectionType(mapper, collectionClass, elementClasses));
+    }
+
+    /**
+     * Object 转 json
+     * @param value
+     * @return
+     * @throws JsonProcessingException
+     */
+    public String objectToJson(Object value) throws JsonProcessingException {
+        return mapper.writeValueAsString(value);
+    }
+
+
+    /**
+     * 检查 json 是否为空，"{}"为空
+     * @param json
+     * @return
+     */
+    private boolean jsonIsNull(String json) {
+        if (json == null || "".equals(json)) {
+            return true;
+        }
+
+        // 如果 json 中有空格替换掉
+        String content = json.replaceAll(" ", "");
+
+        if ("{}".equals(content)) {
+            return true;
+        }
+
+        return false;
     }
 
 
