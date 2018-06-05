@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,23 +18,15 @@ import butterknife.OnClick;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.constants.UnInstallReasonEnum;
 import com.apiclient.pojo.*;
-import com.apiclient.vo.PackageUpVO;
 import com.apiclient.vo.ProductLineVO;
 import com.apiclient.vo.UnBindEquipmentVO;
-import com.apiclient.vo.UpCuttingToolVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
-import com.icomp.Iswtmv10.v01c01.c01s009.C01S009_002Activity;
-import com.icomp.Iswtmv10.v01c01.c01s009.C01S009_003Activity;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
-import com.icomp.common.adapter.C01S003_004Adapter;
-import com.icomp.wsdl.v01c01.c01s013.endpoint.C01S013Respons;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -100,59 +91,70 @@ public class C01S013_002Activity extends CommonActivity {
         //调用接口
         retrofit = RetrofitSingle.newInstance();
 
+        try {
+            Map<String, Object> paramMap = PARAM_MAP.get(1);
+            synthesisCuttingToolBindleRecords = (SynthesisCuttingToolBindleRecords) paramMap.get("synthesisCuttingToolBindleRecords");
+            synthesisCuttingToolBindleRecordsRFID = (String) paramMap.get("synthesisCuttingToolBindleRecordsRFID");
 
-        Map<String, Object> paramMap = PARAM_MAP.get(1);
-        synthesisCuttingToolBindleRecords = (SynthesisCuttingToolBindleRecords) paramMap.get("synthesisCuttingToolBindleRecords");
-        synthesisCuttingToolBindleRecordsRFID = (String) paramMap.get("synthesisCuttingToolBindleRecordsRFID");
+            for (UnInstallReasonEnum unInstallReasonEnum : UnInstallReasonEnum.values()) {
+                removeReasonList.add(unInstallReasonEnum);
+            }
 
-        for (UnInstallReasonEnum unInstallReasonEnum : UnInstallReasonEnum.values()){
-            removeReasonList.add(unInstallReasonEnum);
+            //查询加工零部件
+            getParts();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
-
-        //查询加工零部件
-        getParts();
     }
 
     private void getParts() {
-        loading.show();
-        IRequest iRequest = retrofit.create(IRequest.class);
+        try {
+            loading.show();
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        Gson gson = new Gson();
 
-        ProductLineVO productLineVO = new ProductLineVO();
-        productLineVO.setSynthesisCuttingToolCode(synthesisCuttingToolBindleRecords.getSynthesisCuttingToolCode());//合成刀
-        productLineVO.setAxleCode(synthesisCuttingToolBindleRecords.getProductLineAxleCode());//轴ID
-        productLineVO.setEquipmentCode(synthesisCuttingToolBindleRecords.getProductLineEquipmentCode());//设备
-        productLineVO.setProcessCode(synthesisCuttingToolBindleRecords.getProductLineProcessCode());//工序
+            ProductLineVO productLineVO = new ProductLineVO();
+            productLineVO.setSynthesisCuttingToolCode(synthesisCuttingToolBindleRecords.getSynthesisCuttingToolCode());//合成刀
+            productLineVO.setAxleCode(synthesisCuttingToolBindleRecords.getProductLineAxleCode());//轴ID
+            productLineVO.setEquipmentCode(synthesisCuttingToolBindleRecords.getProductLineEquipmentCode());//设备
+            productLineVO.setProcessCode(synthesisCuttingToolBindleRecords.getProductLineProcessCode());//工序
 
-        String jsonStr = gson.toJson(productLineVO);
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> getParts = iRequest.getParts(body);
-        getParts.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        ObjectMapper mapper = new ObjectMapper();
+            String jsonStr = objectToJson(productLineVO);
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                        productLineList = mapper.readValue(response.body(), getCollectionType(mapper, List.class, ProductLine.class));//丢刀
-                    } else {
-                        createAlertDialog(C01S013_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+            Call<String> getParts = iRequest.getParts(body);
+            getParts.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            productLineList = jsonToObject(response.body(), List.class, ProductLine.class);//丢刀
+                        } else {
+                            createAlertDialog(C01S013_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        loading.dismiss();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    loading.dismiss();
                 }
-            }
 
-            @Override
-            public void _onFailure(Throwable t) {
+                @Override
+                public void _onFailure(Throwable t) {
+                    loading.dismiss();
+                    createAlertDialog(C01S013_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            if (null != loading && loading.isShowing()) {
                 loading.dismiss();
-                createAlertDialog(C01S013_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
             }
-        });
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @OnClick({R.id.ll_01, R.id.ll_02})
@@ -352,89 +354,101 @@ public class C01S013_002Activity extends CommonActivity {
     }
 
     private void requestData(List<AuthCustomer> authorizationList) {
-        loading.show();
-
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> headsMap = new HashMap<>();
-
-        // 授权信息集合
-        List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
-        // 授权信息
-        ImpowerRecorder impowerRecorder = new ImpowerRecorder();
-
         try {
-            // 需要授权信息
-            if (is_need_authorization && authorizationList != null) {
-                //设定用户访问信息
-                @SuppressLint("WrongConstant")
-                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
-                String userInfoJson = sharedPreferences.getString("loginInfo", null);
+            loading.show();
 
-                AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
+            Map<String, String> headsMap = new HashMap<>();
 
-                // ------------ 授权信息 ------------
-                impowerRecorder.setToolCode(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
-                impowerRecorder.setRfidLasercode(synthesisCuttingToolBindleRecordsRFID);// rfid标签
-                impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
-                impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_UnInstall.getKey().toString());//操作key
+            // 授权信息集合
+            List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
+            // 授权信息
+            ImpowerRecorder impowerRecorder = new ImpowerRecorder();
+
+            try {
+                // 需要授权信息
+                if (is_need_authorization && authorizationList != null) {
+                    //设定用户访问信息
+                    @SuppressLint("WrongConstant")
+                    SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+                    String userInfoJson = sharedPreferences.getString("loginInfo", null);
+
+                    AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
+
+                    // ------------ 授权信息 ------------
+                    impowerRecorder.setToolCode(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
+                    impowerRecorder.setRfidLasercode(synthesisCuttingToolBindleRecordsRFID);// rfid标签
+                    impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
+                    impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                    impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_UnInstall.getKey().toString());//操作key
 
 //                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
 //                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
 //                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
 
-                impowerRecorderList.add(impowerRecorder);
-            }
-            headsMap.put("impower", mapper.writeValueAsString(impowerRecorderList));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        IRequest iRequest = retrofit.create(IRequest.class);
-
-        Gson gson = new Gson();
-
-        UnBindEquipmentVO unBindEquipmentVO = new UnBindEquipmentVO();
-        ProductLineVO productLineVO = new ProductLineVO();
-        productLineVO.setSynthesisCuttingToolCode(synthesisCuttingToolBindleRecords.getSynthesisCuttingToolCode());
-        unBindEquipmentVO.setProductLineVO(productLineVO);
-        unBindEquipmentVO.setBindRfid(synthesisCuttingToolBindleRecords.getBindRfid());
-        unBindEquipmentVO.setParts(productLine.getProductLineParts());//加工零部件
-        unBindEquipmentVO.setUnBindReason(unInstallReasonEnum.getKey());//卸下原因
-        unBindEquipmentVO.setCount(Integer.valueOf(et01.getText().toString().trim()));//加工数量
-
-        String jsonStr = gson.toJson(unBindEquipmentVO);
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
-        Call<String> unBindEquipment = iRequest.unBindEquipment(body, headsMap);
-
-        unBindEquipment.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        //跳转到成功详细页面
-                        Intent intent = new Intent(C01S013_002Activity.this, C01S013_0021Activity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        createAlertDialog(C01S013_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    loading.dismiss();
+                    impowerRecorderList.add(impowerRecorder);
                 }
+                headsMap.put("impower", objectToJson(impowerRecorderList));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                createAlertDialog(C01S013_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
             }
 
-            @Override
-            public void _onFailure(Throwable t) {
+            IRequest iRequest = retrofit.create(IRequest.class);
+
+
+            UnBindEquipmentVO unBindEquipmentVO = new UnBindEquipmentVO();
+            ProductLineVO productLineVO = new ProductLineVO();
+            productLineVO.setSynthesisCuttingToolCode(synthesisCuttingToolBindleRecords.getSynthesisCuttingToolCode());
+            unBindEquipmentVO.setProductLineVO(productLineVO);
+            unBindEquipmentVO.setBindRfid(synthesisCuttingToolBindleRecords.getBindRfid());
+            unBindEquipmentVO.setParts(productLine.getProductLineParts());//加工零部件
+            unBindEquipmentVO.setUnBindReason(unInstallReasonEnum.getKey());//卸下原因
+            unBindEquipmentVO.setCount(Integer.valueOf(et01.getText().toString().trim()));//加工数量
+
+            String jsonStr = objectToJson(unBindEquipmentVO);
+
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+            Call<String> unBindEquipment = iRequest.unBindEquipment(body, headsMap);
+
+            unBindEquipment.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            //跳转到成功详细页面
+                            Intent intent = new Intent(C01S013_002Activity.this, C01S013_0021Activity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            createAlertDialog(C01S013_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        loading.dismiss();
+                    }
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
+                    loading.dismiss();
+                    createAlertDialog(C01S013_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
                 loading.dismiss();
-                createAlertDialog(C01S013_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
             }
-        });
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
