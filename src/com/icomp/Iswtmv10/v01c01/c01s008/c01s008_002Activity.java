@@ -1,7 +1,4 @@
 package com.icomp.Iswtmv10.v01c01.c01s008;
-/**
- * 刀具拆分
- */
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,13 +20,10 @@ import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
-import com.icomp.Iswtmv10.v01c01.c01s010.c01s010_002Activity;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
 import okhttp3.RequestBody;
@@ -40,6 +34,9 @@ import retrofit2.Retrofit;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * 刀具拆分
+ */
 public class c01s008_002Activity extends CommonActivity {
 
     @BindView(R.id.tvTitle)
@@ -310,9 +307,7 @@ public class c01s008_002Activity extends CommonActivity {
                         RfidContainerVO rfidContainerVO = new RfidContainerVO();
                         rfidContainerVO.setLaserCode(rfidString);
 
-
-                        Gson gson = new Gson();
-                        String jsonStr = gson.toJson(rfidContainerVO);
+                        String jsonStr = objectToJson(rfidContainerVO);
                         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
                         Call<String> searchCuttingToolBind = iRequest.queryRFIDForUnConfig(body);
@@ -626,7 +621,6 @@ public class c01s008_002Activity extends CommonActivity {
         try {
             loading.show();
 
-            ObjectMapper mapper = new ObjectMapper();
             Map<String, String> headsMap = new HashMap<>();
 
             // 授权信息集合
@@ -642,7 +636,7 @@ public class c01s008_002Activity extends CommonActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
                     String userInfoJson = sharedPreferences.getString("loginInfo", null);
 
-                    AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
+                    AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
 
                     // ------------ 授权信息 ------------
                     impowerRecorder.setToolCode(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
@@ -657,7 +651,7 @@ public class c01s008_002Activity extends CommonActivity {
 
                     impowerRecorderList.add(impowerRecorder);
                 }
-                headsMap.put("impower", mapper.writeValueAsString(impowerRecorderList));
+                headsMap.put("impower", objectToJson(impowerRecorderList));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
@@ -689,12 +683,7 @@ public class c01s008_002Activity extends CommonActivity {
             packageUpVO.setSynthesisCuttingToolBind(synthesisCuttingToolBind);
 
 
-            String jsonStr = null;
-            try {
-                jsonStr = mapper.writeValueAsString(packageUpVO);
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-            }
+            String jsonStr = objectToJson(packageUpVO);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             Call<String> packageUp = iRequest.breakUp(body, headsMap);

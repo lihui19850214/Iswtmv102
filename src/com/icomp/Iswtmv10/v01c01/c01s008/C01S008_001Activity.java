@@ -1,7 +1,4 @@
 package com.icomp.Iswtmv10.v01c01.c01s008;
-/**
- * 刀具拆分
- */
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +14,6 @@ import com.apiclient.pojo.SynthesisCuttingToolBind;
 import com.apiclient.pojo.SynthesisCuttingToolConfig;
 import com.apiclient.pojo.SynthesisCuttingToolLocationConfig;
 import com.apiclient.vo.SynthesisCuttingToolInitVO;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -30,11 +25,13 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 刀具拆分
+ */
 public class C01S008_001Activity extends CommonActivity {
 
     @BindView(R.id.tvScan)
@@ -150,8 +147,7 @@ public class C01S008_001Activity extends CommonActivity {
                     SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
                     synthesisCuttingToolInitVO.setRfidCode(rfidString);
 
-                    Gson gson = new Gson();
-                    String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
+                    String jsonStr = objectToJson(synthesisCuttingToolInitVO);
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
                     Map<String, String> headsMap = new HashMap<>();
@@ -165,8 +161,7 @@ public class C01S008_001Activity extends CommonActivity {
                                 String inpower = response.headers().get("impower");
 
                                 if (response.raw().code() == 200) {
-                                    ObjectMapper mapper = new ObjectMapper();
-                                    synthesisCuttingToolBind = mapper.readValue(response.body(), SynthesisCuttingToolBind.class);
+                                    synthesisCuttingToolBind = jsonToObject(response.body(), SynthesisCuttingToolBind.class);
                                     synthesisCuttingToolBindRFID = rfidString;
 
                                     if (synthesisCuttingToolBind != null) {
@@ -244,13 +239,7 @@ public class C01S008_001Activity extends CommonActivity {
 
     public void setTextViewHandler(String inpower) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            Map<String, String> inpowerMap = new HashMap<>();
-            try {
-                inpowerMap = mapper.readValue(inpower, Map.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            Map<String, String> inpowerMap = jsonToObject(inpower, Map.class);
 
             // 判断是否显示提示框
             if ("1".equals(inpowerMap.get("type"))) {
@@ -315,6 +304,9 @@ public class C01S008_001Activity extends CommonActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    if (null != loading && loading.isShowing()) {
+                        loading.dismiss();
+                    }
                     Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -394,71 +386,80 @@ public class C01S008_001Activity extends CommonActivity {
 
 
     private void search(SynthesisCuttingToolConfig synthesisCuttingToolConfig) {
-        List<SynthesisCuttingToolLocationConfig> synthesisCuttingToolLocationConfigList = synthesisCuttingToolConfig.getSynthesisCuttingToolLocationConfigList();
+        try {
+            List<SynthesisCuttingToolLocationConfig> synthesisCuttingToolLocationConfigList = synthesisCuttingToolConfig.getSynthesisCuttingToolLocationConfigList();
 
+            for (SynthesisCuttingToolLocationConfig synthesisCuttingToolLocationConfig : synthesisCuttingToolLocationConfigList) {
+                Log.e("code", synthesisCuttingToolLocationConfig.getCuttingTool().getCode());
+            }
 
-        for(SynthesisCuttingToolLocationConfig synthesisCuttingToolLocationConfig : synthesisCuttingToolLocationConfigList){
-            Log.e("code", synthesisCuttingToolLocationConfig.getCuttingTool().getCode());
-        }
+            SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
+            synthesisCuttingToolInitVO.setSynthesisCode(synthesisCuttingToolConfig.getSynthesisCuttingToolCode());
 
-        SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
-        synthesisCuttingToolInitVO.setSynthesisCode(synthesisCuttingToolConfig.getSynthesisCuttingToolCode());
+            //调用接口，查询合成刀具组成信息
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        //调用接口，查询合成刀具组成信息
-        IRequest iRequest = retrofit.create(IRequest.class);
+            String jsonStr = objectToJson(synthesisCuttingToolInitVO);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
+            Call<String> getBind = iRequest.getBind(body, new HashMap<String, String>());
+            getBind.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            SynthesisCuttingToolConfig synthesisCuttingToolConfig = jsonToObject(response.body(), SynthesisCuttingToolConfig.class);
 
-        Gson gson = new Gson();
-        String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
-        Call<String> getBind = iRequest.getBind(body, new HashMap<String, String>());
-        getBind.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        Gson gson = new Gson();
-                        SynthesisCuttingToolConfig synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
-
-                        Log.e("synthesisCutting", synthesisCuttingToolConfig.toString());
-                    } else {
-                        final String errorStr = response.errorBody().string();
+                            Log.e("synthesisCutting", synthesisCuttingToolConfig.toString());
+                        } else {
+                            final String errorStr = response.errorBody().string();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    createAlertDialog(C01S008_001Activity.this, errorStr, Toast.LENGTH_LONG);
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                createAlertDialog(C01S008_001Activity.this, errorStr, Toast.LENGTH_LONG);
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
+                                }
                             }
                         });
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             if (null != loading && loading.isShowing()) {
                                 loading.dismiss();
                             }
+                            createAlertDialog(C01S008_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                         }
                     });
+
                 }
-            }
-
-            @Override
-            public void _onFailure(Throwable t) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (null != loading && loading.isShowing()) {
-                            loading.dismiss();
-                        }
-                        createAlertDialog(C01S008_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (null != loading && loading.isShowing()) {
+                        loading.dismiss();
                     }
-                });
-
-            }
-        });
+                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
 
