@@ -32,7 +32,8 @@ android:background="@color/backgroundcolor">
                         android:digits="@string/allowInput"
                         android:singleLine="true"
                         android:textColor="@color/baseColor"
-                        android:textSize="@dimen/daoju_all" />
+                        android:textSize="@dimen/daoju_all"
+                        android:textCursorDrawable="@drawable/text_cursor_shape"/>
 
         </LinearLayout>
 
@@ -64,7 +65,8 @@ android:background="@color/backgroundcolor">
                         android:digits="@string/onlyAllowInputNumbers"
                         android:singleLine="true"
                         android:textColor="@color/baseColor"
-                        android:textSize="@dimen/daoju_all" />
+                        android:textSize="@dimen/daoju_all"
+                        android:textCursorDrawable="@drawable/text_cursor_shape"/>
 
         </LinearLayout>
 
