@@ -46,8 +46,6 @@ public class C01S015_001Activity extends CommonActivity {
     Button btnSearch;
     @BindView(R.id.tv_01)
     TextView tv01;
-    @BindView(R.id.tv_02)
-    TextView tv02;
     @BindView(R.id.ll_01)
     LinearLayout ll01;
     @BindView(R.id.tv_title)
