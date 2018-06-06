@@ -19,8 +19,6 @@ import com.apiclient.pojo.CuttingToolBind;
 import com.apiclient.pojo.RfidContainer;
 import com.apiclient.vo.CuttingToolBindVO;
 import com.apiclient.vo.CuttingToolVO;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -32,15 +30,12 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 刀具绑定页面1
- * Created by FanLL on 2017/6/16.
  */
-
 public class C01S015_001Activity extends CommonActivity {
 
     @BindView(R.id.et_01)
@@ -100,42 +95,52 @@ public class C01S015_001Activity extends CommonActivity {
         if (cuttingToolBind.getRfidContainer() == null || cuttingToolBind.getRfidContainer().getLaserCode() == null || "".equals(cuttingToolBind.getRfidContainer().getLaserCode())) {
             createAlertDialog(C01S015_001Activity.this, "请扫描 RFID 标签", Toast.LENGTH_LONG);
         } else {
-            loading.show();
+            try {
+                loading.show();
 
-            IRequest iRequest = retrofit.create(IRequest.class);
+                IRequest iRequest = retrofit.create(IRequest.class);
 
-            Gson gson = new Gson();
+                String jsonStr = objectToJson(cuttingToolBind);
+                RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-            String jsonStr = gson.toJson(cuttingToolBind);
-            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                Call<String> bindUnbind = iRequest.bindUnbind(body);
 
-            Call<String> bindUnbind = iRequest.bindUnbind(body);
-
-            bindUnbind.enqueue(new MyCallBack<String>() {
-                @Override
-                public void _onResponse(Response<String> response) {
-                    try {
-                        if (response.raw().code() == 200) {
-                            Intent intent = new Intent(C01S015_001Activity.this, C01S015_003Activity.class);
-                            startActivity(intent);
-                            finish();
-                        } else {
-                            createAlertDialog(C01S015_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                bindUnbind.enqueue(new MyCallBack<String>() {
+                    @Override
+                    public void _onResponse(Response<String> response) {
+                        try {
+                            if (response.raw().code() == 200) {
+                                Intent intent = new Intent(C01S015_001Activity.this, C01S015_003Activity.class);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                createAlertDialog(C01S015_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        } finally {
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
+                            }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                    } finally {
-                        loading.dismiss();
                     }
-                }
 
-                @Override
-                public void _onFailure(Throwable t) {
+                    @Override
+                    public void _onFailure(Throwable t) {
+                        if (null != loading && loading.isShowing()) {
+                            loading.dismiss();
+                        }
+                        createAlertDialog(C01S015_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (null != loading && loading.isShowing()) {
                     loading.dismiss();
-                    createAlertDialog(C01S015_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                 }
-            });
+                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            }
 //            showDialogAlert("绑定刀具的刀身码是：" + tv01.getText().toString().trim());
         }
     }
@@ -243,9 +248,7 @@ public class C01S015_001Activity extends CommonActivity {
 
             IRequest iRequest = retrofit.create(IRequest.class);
 
-            Gson gson = new Gson();
-
-            String jsonStr = gson.toJson(params);
+            String jsonStr = objectToJson(params);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             Call<String> getUnbind = iRequest.getUnbind(body);
@@ -255,10 +258,7 @@ public class C01S015_001Activity extends CommonActivity {
                 public void _onResponse(Response<String> response) {
                     try {
                         if (response.raw().code() == 200) {
-                            Gson gson = new Gson();
-                            Type type = new TypeToken<List<CuttingToolBind>>() {
-                            }.getType();
-                            cuttingToolBindList = gson.fromJson(response.body(), type);
+                            cuttingToolBindList = jsonToObject(response.body(), List.class, CuttingToolBind.class);
 
                             if (cuttingToolBindList == null || cuttingToolBindList.size() == 0) {
                                 cuttingToolBindList = new ArrayList<>();
@@ -276,18 +276,25 @@ public class C01S015_001Activity extends CommonActivity {
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                     } finally {
-                        loading.dismiss();
+                        if (null != loading && loading.isShowing()) {
+                            loading.dismiss();
+                        }
                     }
                 }
 
                 @Override
                 public void _onFailure(Throwable t) {
-                    loading.dismiss();
+                    if (null != loading && loading.isShowing()) {
+                        loading.dismiss();
+                    }
                     createAlertDialog(C01S015_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
+                loading.dismiss();
+            }
             Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
     }
@@ -381,42 +388,43 @@ public class C01S015_001Activity extends CommonActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isCanScan = true;
+                try {
+                    IRequest iRequest = retrofit.create(IRequest.class);
 
-                IRequest iRequest = retrofit.create(IRequest.class);
+                    String jsonStr = objectToJson(cuttingToolBind);
 
-                Gson gson = new Gson();
+                    RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                String jsonStr = gson.toJson(cuttingToolBind);
-                ;
-                RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                    Call<String> bindUnbind = iRequest.bindUnbind(body);
 
-                Call<String> bindUnbind = iRequest.bindUnbind(body);
-
-                bindUnbind.enqueue(new MyCallBack<String>() {
-                    @Override
-                    public void _onResponse(Response<String> response) {
-                        try {
-                            if (response.raw().code() == 200) {
-                                Intent intent = new Intent(C01S015_001Activity.this, C01S015_003Activity.class);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                createAlertDialog(C01S015_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                    bindUnbind.enqueue(new MyCallBack<String>() {
+                        @Override
+                        public void _onResponse(Response<String> response) {
+                            try {
+                                if (response.raw().code() == 200) {
+                                    Intent intent = new Intent(C01S015_001Activity.this, C01S015_003Activity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    createAlertDialog(C01S015_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            } finally {
+                                dialog.dismiss();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            dialog.dismiss();
                         }
-                    }
 
-                    @Override
-                    public void _onFailure(Throwable t) {
-                        dialog.dismiss();
-                        createAlertDialog(C01S015_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                    }
-                });
+                        @Override
+                        public void _onFailure(Throwable t) {
+                            dialog.dismiss();
+                            createAlertDialog(C01S015_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
