@@ -935,7 +935,7 @@
     <style name="SpinnerViewStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_weight">9</item>
+        <item name="android:layout_weight">8</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/itemtextColor</item>
@@ -946,7 +946,7 @@
     <style name="SpinnerImageViewStyle">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
+        <item name="android:layout_weight">2</item>
         <item name="android:layout_gravity">right|center_vertical</item>
     </style>
 
