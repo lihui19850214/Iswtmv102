@@ -20,7 +20,6 @@ import com.apiclient.pojo.AuthCustomer;
 import com.apiclient.pojo.DjOutapplyAkp;
 import com.apiclient.vo.OutApplyVO;
 import com.apiclient.vo.SearchOutLiberaryVO;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -111,9 +110,8 @@ public class c01s004_003Activity extends CommonActivity {
             @Override
             public void _onResponse(Response<String> response) {
                 try {
-                    ObjectMapper mapper = new ObjectMapper();
                     if (response.raw().code() == 200) {
-                        searchOutLiberaryVOList = mapper.readValue(response.body(), getCollectionType(mapper, List.class, SearchOutLiberaryVO.class));
+                        searchOutLiberaryVOList = jsonToObject(response.body(), List.class, SearchOutLiberaryVO.class);
                         if (searchOutLiberaryVOList == null || searchOutLiberaryVOList.size() == 0) {
                             searchOutLiberaryVOList = new ArrayList<>();
                             Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
@@ -309,15 +307,13 @@ public class c01s004_003Activity extends CommonActivity {
                 return;
             }
 
-            ObjectMapper mapper = new ObjectMapper();
-
             try {
                 //设定用户访问信息
                 @SuppressLint("WrongConstant")
                 SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
                 String userInfoJson = sharedPreferences.getString("loginInfo", null);
 
-                AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
+                AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
                 outApplyVO.setKuguanOperatorCode(authCustomer.getCode());// 操作者code
             } catch (IOException e) {
                 e.printStackTrace();
@@ -329,8 +325,7 @@ public class c01s004_003Activity extends CommonActivity {
 
             outApplyVO.setDjOutapplyAkp(djOutapplyAkp);
 
-            String jsonStr = mapper.writeValueAsString(outApplyVO);
-
+            String jsonStr = objectToJson(outApplyVO);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             Call<String> outApply = iRequest.outApply(body);
