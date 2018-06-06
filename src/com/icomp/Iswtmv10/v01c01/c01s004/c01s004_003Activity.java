@@ -123,14 +123,18 @@ public class c01s004_003Activity extends CommonActivity {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                 } finally {
-                    loading.dismiss();
+                    if (null != loading && loading.isShowing()) {
+                        loading.dismiss();
+                    }
                 }
             }
 
             @Override
             public void _onFailure(Throwable t) {
+                if (null != loading && loading.isShowing()) {
+                    loading.dismiss();
+                }
                 createAlertDialog(c01s004_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                loading.dismiss();
             }
         });
     }
@@ -345,18 +349,25 @@ public class c01s004_003Activity extends CommonActivity {
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                     } finally {
-                        loading.dismiss();
+                        if (null != loading && loading.isShowing()) {
+                            loading.dismiss();
+                        }
                     }
                 }
 
                 @Override
                 public void _onFailure(Throwable t) {
-                    loading.dismiss();
+                    if (null != loading && loading.isShowing()) {
+                        loading.dismiss();
+                    }
                     createAlertDialog(c01s004_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
+                loading.dismiss();
+            }
             Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
     }
