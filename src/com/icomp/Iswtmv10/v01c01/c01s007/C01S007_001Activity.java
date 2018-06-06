@@ -117,18 +117,25 @@ public class C01S007_001Activity extends CommonActivity {
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                     } finally {
-                        loading.dismiss();
+                        if (null != loading && loading.isShowing()) {
+                            loading.dismiss();
+                        }
                     }
                 }
 
                 @Override
                 public void _onFailure(Throwable t) {
-                    loading.dismiss();
+                    if (null != loading && loading.isShowing()) {
+                        loading.dismiss();
+                    }
                     createAlertDialog(C01S007_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
+                loading.dismiss();
+            }
             Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
     }
@@ -192,18 +199,25 @@ public class C01S007_001Activity extends CommonActivity {
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                     } finally {
-                        loading.dismiss();
+                        if (null != loading && loading.isShowing()) {
+                            loading.dismiss();
+                        }
                     }
                 }
 
                 @Override
                 public void _onFailure(Throwable t) {
+                    if (null != loading && loading.isShowing()) {
+                        loading.dismiss();
+                    }
                     createAlertDialog(C01S007_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                    loading.dismiss();
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
+                loading.dismiss();
+            }
             Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
     }
