@@ -38,22 +38,11 @@
 
                     <TextView
                             android:id="@+id/tv_01"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
-                            android:gravity="center_vertical" />
-
-                    <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
+                            style="@style/SpinnerViewStyle"/>
 
                     <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right|center_vertical"
-                            android:layout_marginRight="20dp"
-                            android:src="@drawable/arrow" />
+                            android:src="@drawable/arrow"
+                            style="@style/SpinnerImageViewStyle" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -88,24 +77,11 @@
 
                     <TextView
                             android:id="@+id/tv_02"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
-                            android:textSize="@dimen/daoju_all"
-                            android:textColor="@color/baseColor"
-                            android:gravity="center_vertical" />
-
-                    <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"/>
+                            style="@style/SpinnerViewStyle"/>
 
                     <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right|center_vertical"
-                            android:layout_marginRight="20dp"
-                            android:src="@drawable/arrow" />
+                            android:src="@drawable/arrow"
+                            style="@style/SpinnerImageViewStyle" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -137,10 +113,10 @@
                         android:background="@drawable/border"
                         android:inputType="number"
                         android:maxLength="6"
-                        android:numeric="integer"
                         android:singleLine="true"
                         android:textColor="@color/baseColor"
-                        android:textSize="@dimen/daoju_all" />
+                        android:textSize="@dimen/daoju_all"
+                        android:textCursorDrawable="@drawable/text_cursor_shape"/>
             </LinearLayout>
         </LinearLayout>
 
