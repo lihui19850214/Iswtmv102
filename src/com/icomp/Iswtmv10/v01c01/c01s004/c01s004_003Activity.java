@@ -121,6 +121,7 @@ public class c01s004_003Activity extends CommonActivity {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                 } finally {
                     loading.dismiss();
                 }
