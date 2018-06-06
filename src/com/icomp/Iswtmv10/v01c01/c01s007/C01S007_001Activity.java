@@ -13,9 +13,6 @@ import butterknife.OnClick;
 import com.apiclient.pojo.DjOutapplyAkp;
 import com.apiclient.pojo.QimingRecords;
 import com.apiclient.vo.QimingRecordsVO;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -26,15 +23,12 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 刀具打码
- * Created by Fanll on 2018/1/16.
  */
-
 public class C01S007_001Activity extends CommonActivity {
 
 
@@ -96,9 +90,7 @@ public class C01S007_001Activity extends CommonActivity {
             QimingRecordsVO qimingRecordsVO = new QimingRecordsVO();
             qimingRecordsVO.setApplyNo(djOutapplyAkp.getApplyno());
 
-            Gson gson = new Gson();
-            String jsonStr = gson.toJson(qimingRecordsVO);
-
+            String jsonStr = objectToJson(qimingRecordsVO);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             Call<String> queryBladeCodes = iRequest.queryBladeCodes(body);
@@ -107,10 +99,7 @@ public class C01S007_001Activity extends CommonActivity {
                 public void _onResponse(Response<String> response) {
                     try {
                         if (response.raw().code() == 200) {
-                            Gson gson = new Gson();
-                            Type type = new TypeToken<List<QimingRecords>>() {
-                            }.getType();
-                            qimingRecordsList = gson.fromJson(response.body(), type);
+                            qimingRecordsList = jsonToObject(response.body(), List.class, QimingRecords.class);
 
                             if (qimingRecordsList == null || qimingRecordsList.size() == 0) {
                                 qimingRecordsList = new ArrayList<>();
@@ -190,8 +179,7 @@ public class C01S007_001Activity extends CommonActivity {
                 public void _onResponse(Response<String> response) {
                     try {
                         if (response.raw().code() == 200) {
-                            ObjectMapper mapper = new ObjectMapper();
-                            DjOutapplyAkpList = mapper.readValue(response.body(), getCollectionType(mapper, List.class, DjOutapplyAkp.class));
+                            DjOutapplyAkpList = jsonToObject(response.body(), List.class, DjOutapplyAkp.class);
 
                             if (DjOutapplyAkpList == null || DjOutapplyAkpList.size() == 0) {
                                 DjOutapplyAkpList = new ArrayList<>();
