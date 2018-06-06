@@ -86,15 +86,9 @@
                         android:id="@+id/tv_01"
                         style="@style/SpinnerViewStyle" />
 
-                <TextView
-                        android:id="@+id/tv_02"
-                        android:visibility="gone"
-                        style="@style/SpinnerViewStyle" />
-
                 <ImageView
-                        android:padding="3dp"
-                        style="@style/SpinnerImageViewStyle"
-                        android:src="@drawable/spinnerdropdown" />
+                        android:src="@drawable/arrow"
+                        style="@style/SpinnerImageViewStyle" />
 
             </LinearLayout>
 
