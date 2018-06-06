@@ -174,7 +174,7 @@ public class C00S000_003Activity extends CommonActivity {
         menuMap.put("Cutting_tool_OutSide", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("6_1");
+        tool_outgoing.setCapabilityID("6");
         tool_outgoing.setCapabilityName("厂外修磨");
         tool_outgoing.setCapabilityUrl("v01c01.c01s019.C01S019_000Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s019"));
