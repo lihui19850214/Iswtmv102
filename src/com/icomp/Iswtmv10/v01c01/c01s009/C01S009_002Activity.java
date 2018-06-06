@@ -1,7 +1,4 @@
 package com.icomp.Iswtmv10.v01c01.c01s009;
-/**
- * 刀具组装
- */
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -11,7 +8,6 @@ import android.os.Message;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
 import android.widget.*;
@@ -24,8 +20,6 @@ import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -40,6 +34,9 @@ import retrofit2.Retrofit;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * 刀具组装
+ */
 public class C01S009_002Activity extends CommonActivity {
 
     @BindView(R.id.tvTitle)
@@ -303,8 +300,7 @@ public class C01S009_002Activity extends CommonActivity {
                         CuttingToolBindVO cuttingToolBindVO = new CuttingToolBindVO();
                         cuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
 
-                        Gson gson = new Gson();
-                        String jsonStr = gson.toJson(cuttingToolBindVO);
+                        String jsonStr = objectToJson(cuttingToolBindVO);
                         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
                         Call<String> searchCuttingToolBind = iRequest.searchCuttingToolBind(body);
@@ -313,8 +309,7 @@ public class C01S009_002Activity extends CommonActivity {
                             public void _onResponse(Response<String> response) {
                                 try {
                                     if (response.raw().code() == 200) {
-                                        Gson gson = new Gson();
-                                        CuttingToolBind cuttingToolBind = gson.fromJson(response.body(), CuttingToolBind.class);
+                                        CuttingToolBind cuttingToolBind = jsonToObject(response.body(), CuttingToolBind.class);
 
                                         if (cuttingToolBind != null) {
                                             if (!checkRfidData(cuttingToolBind.getCuttingTool().getBusinessCode())) {
@@ -847,7 +842,6 @@ public class C01S009_002Activity extends CommonActivity {
         try {
             loading.show();
 
-            ObjectMapper mapper = new ObjectMapper();
             Map<String, String> headsMap = new HashMap<>();
 
             // 授权信息集合
@@ -863,7 +857,7 @@ public class C01S009_002Activity extends CommonActivity {
                     SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
                     String userInfoJson = sharedPreferences.getString("loginInfo", null);
 
-                    AuthCustomer authCustomer = mapper.readValue(userInfoJson, AuthCustomer.class);
+                    AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
 
                     // ------------ 授权信息 ------------
                     impowerRecorder.setToolCode(synthesisCuttingToolConfig.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
@@ -878,7 +872,7 @@ public class C01S009_002Activity extends CommonActivity {
 
                     impowerRecorderList.add(impowerRecorder);
                 }
-                headsMap.put("impower", mapper.writeValueAsString(impowerRecorderList));
+                headsMap.put("impower", objectToJson(impowerRecorderList));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
@@ -923,9 +917,7 @@ public class C01S009_002Activity extends CommonActivity {
             packageUpVO.setUpCuttingToolVOS(upCuttingToolVOList);
             packageUpVO.setSynthesisCuttingToolBind(synthesisCuttingToolBind);
 
-
-            Gson gson = new Gson();
-            String jsonStr = gson.toJson(packageUpVO);
+            String jsonStr = objectToJson(packageUpVO);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             Call<String> packageUp = iRequest.packageUp(body, headsMap);

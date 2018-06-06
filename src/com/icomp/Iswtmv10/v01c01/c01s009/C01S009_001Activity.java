@@ -1,9 +1,5 @@
 package com.icomp.Iswtmv10.v01c01.c01s009;
 
-/**
- * 刀具组装
- */
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +13,6 @@ import butterknife.OnClick;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.SynthesisCuttingToolConfig;
 import com.apiclient.vo.SynthesisCuttingToolInitVO;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -35,7 +29,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * 刀具组装
+ */
 public class C01S009_001Activity extends CommonActivity {
 
     @BindView(R.id.btnCancel)
@@ -134,8 +130,7 @@ public class C01S009_001Activity extends CommonActivity {
             SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
             synthesisCuttingToolInitVO.setSynthesisCode(synthesisCode);
 
-            Gson gson = new Gson();
-            String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
+            String jsonStr = objectToJson(synthesisCuttingToolInitVO);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
@@ -145,8 +140,7 @@ public class C01S009_001Activity extends CommonActivity {
                     try {
 
                         if (response.raw().code() == 200) {
-                            Gson gson = new Gson();
-                            synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
+                            synthesisCuttingToolConfig = jsonToObject(response.body(), SynthesisCuttingToolConfig.class);
 
                             if (synthesisCuttingToolConfig != null) {
                                 // TODO 业务处理，需要确定
@@ -257,8 +251,7 @@ public class C01S009_001Activity extends CommonActivity {
                     SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
                     synthesisCuttingToolInitVO.setRfidCode(rfidString);
 
-                    Gson gson = new Gson();
-                    String jsonStr = gson.toJson(synthesisCuttingToolInitVO);
+                    String jsonStr = objectToJson(synthesisCuttingToolInitVO);
                     RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
                     Map<String, String> headsMap = new HashMap<>();
@@ -272,8 +265,7 @@ public class C01S009_001Activity extends CommonActivity {
                                 String inpower = response.headers().get("impower");
 
                                 if (response.raw().code() == 200) {
-                                    Gson gson = new Gson();
-                                    synthesisCuttingToolConfig = gson.fromJson(response.body(), SynthesisCuttingToolConfig.class);
+                                    synthesisCuttingToolConfig = jsonToObject(response.body(), SynthesisCuttingToolConfig.class);
                                     synthesisCuttingToolConfigRFID = rfidString;
 
                                     if (synthesisCuttingToolConfig != null) {
@@ -348,14 +340,8 @@ public class C01S009_001Activity extends CommonActivity {
     }
 
 
-    public void handleMessage(String inpower) {
-        ObjectMapper mapper = new ObjectMapper();
-        Map<String, String> inpowerMap = new HashMap<>();
-        try {
-            inpowerMap = mapper.readValue(inpower, Map.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void handleMessage(String inpower) throws IOException {
+        Map<String, String> inpowerMap = jsonToObject(inpower, Map.class);
 
         // 判断是否显示提示框
         if ("1".equals(inpowerMap.get("type"))) {
@@ -530,7 +516,6 @@ public class C01S009_001Activity extends CommonActivity {
      * 添加布局
      */
     private void addAlertLayout(LinearLayout llContainer) {
-
         final View mLinearLayout = LayoutInflater.from(this).inflate(R.layout.item_daojuchaifen_0, null);
         TextView tvNum = (TextView) mLinearLayout.findViewById(R.id.tvNum);
         TextView tvHeChengNum = (TextView) mLinearLayout.findViewById(R.id.tvHeChengNum);
