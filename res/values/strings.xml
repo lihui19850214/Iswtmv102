@@ -125,8 +125,8 @@
     <string name="c03s001_002_004">辅具</string>
     <string name="c03s001_002_005">其他</string>
     <string name="c03s001_002_006">配套</string>
-    <string name="c03s001_003_001">请点击扫描按钮并扫描空标签</string>
-    <string name="c03s001_003_002">当前扫描数量：</string>
+    <string name="c03s001_003_001">请点击扫描按钮初始化合成刀具</string>
+    <string name="c03s001_003_002">当前初始化数量：</string>
     <string name="c03s001_003_003">返回后所有初始化数据将会清空</string>
     <string name="c03s001_003_006">扫描数量不能为0，请点击扫描按钮，完成初始化动作</string>
     <string name="c03s001_004_001">合成刀具初始化完成</string>
