@@ -8,112 +8,100 @@ android:background="@color/backgroundcolor">
     <LinearLayout style="@style/MiddleLinerLayoutStyle" android:layout_marginTop="20dp">
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/text_content_size"
                     android:gravity="left|center"
                     android:text="@string/materialNumber"/>
 
-            <LinearLayout
+            <EditText
+                    android:id="@+id/etmaterialNumber"
                     android:layout_width="0dp"
                     android:layout_weight="2"
-                    android:layout_height="wrap_content">
-                <EditText
-                        android:id="@+id/etmaterialNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/border"
-                        android:digits="@string/allowInput"
-                        android:textColor="@color/baseColor"
-                        android:textSize="@dimen/daoju_all" />
-            </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border"
+                    android:textCursorDrawable="@drawable/text_cursor_shape"
+                    android:digits="@string/allowInput"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/daoju_all"
+                    android:singleLine="true"
+                    />
         </LinearLayout>
 
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
+
             <TextView
                     android:id="@+id/tvNum"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/text_content_size"
                     android:gravity="left|center"
                     android:text="报废数量"/>
 
-            <LinearLayout
+
+            <EditText
+                    android:id="@+id/etgrindingQuantity"
                     android:layout_width="0dp"
                     android:layout_weight="2"
-                    android:layout_height="wrap_content">
-                <EditText
-                        android:id="@+id/etgrindingQuantity"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/border"
-                        android:inputType="number"
-                        android:maxLength="6"
-                        android:digits="@string/onlyAllowInputNumbers"
-                        android:singleLine="true"
-                        android:textColor="@color/baseColor"
-                        android:textSize="@dimen/daoju_all" />
-            </LinearLayout>
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border"
+                    android:textCursorDrawable="@drawable/text_cursor_shape"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:digits="@string/onlyAllowInputNumbers"
+                    android:singleLine="true"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/daoju_all" />
         </LinearLayout>
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1.5"
                 android:orientation="horizontal"
-                android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
+                tools:ignore="Suspicious0dp"
+                android:layout_marginTop="10dp">
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/text_content_size"
                     android:gravity="left|center"
                     android:text="报废状态"/>
 
+
             <LinearLayout
                     android:layout_width="0dp"
                     android:layout_weight="2"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
                 <LinearLayout
                         android:id="@+id/ll_01"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/border"
-                        android:clickable="true"
-                        android:onClick="dropdown"
-                        android:orientation="horizontal">
+                        style="@style/SpinnerLinerLayoutStyle">
 
                     <TextView
                             android:id="@+id/tv_01"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="5dp"
-                            android:gravity="center_vertical" />
-
-                    <View
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1" />
+                            style="@style/SpinnerViewStyle"/>
 
                     <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right|center_vertical"
-                            android:layout_marginRight="20dp"
-                            android:src="@drawable/arrow" />
+                            android:src="@drawable/arrow"
+                            style="@style/SpinnerImageViewStyle"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -121,6 +109,7 @@ android:background="@color/backgroundcolor">
 
         <LinearLayout
             style="@style/MiddleTwoButtonLinerLayoutStyle"
+            android:layout_weight="2"
             android:gravity="bottom">
 
             <Button

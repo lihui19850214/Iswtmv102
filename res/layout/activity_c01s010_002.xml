@@ -66,7 +66,7 @@
                         android:background="@drawable/table_border_c">
 
                     <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:gravity="center"
                             android:layout_weight="1"
@@ -79,10 +79,10 @@
                             android:background="@color/baseColor"/>
 
                     <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:gravity="center"
-                            android:layout_weight="1"
+                            android:layout_weight="1.2"
                             android:textColor="@color/baseColor"
                             android:text="刀具类型" />
 
@@ -92,10 +92,10 @@
                             android:background="@color/baseColor"/>
 
                     <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:gravity="center"
-                            android:layout_weight="1"
+                            android:layout_weight="0.8"
                             android:textColor="@color/baseColor"
                             android:text="总数量" />
 
@@ -105,7 +105,7 @@
                             android:background="@color/baseColor"/>
 
                     <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:gravity="center"
                             android:layout_weight="1"
@@ -118,7 +118,7 @@
                             android:background="@color/baseColor"/>
 
                     <TextView
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="40dp"
                             android:gravity="center"
                             android:layout_weight="1"
