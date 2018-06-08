@@ -392,7 +392,7 @@ public interface IRequest {
      * @return json格式数据
      */
     @POST("/ScrapBusiness/getCuttingToolBind")
-    Call<String> getCuttingToolBind(@Body RequestBody json);
+    Call<String> getCuttingToolBind(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
     /**
      * 根据材料号获取材料刀
@@ -408,7 +408,7 @@ public interface IRequest {
      * @return json格式数据
      */
     @POST("/ScrapBusiness/addScrap")
-    Call<String> addScrap(@Body RequestBody json);
+    Call<String> addScrap(@Body RequestBody json, @HeaderMap Map<String, String> headers);
     // --------------报废结束--------------
 
 

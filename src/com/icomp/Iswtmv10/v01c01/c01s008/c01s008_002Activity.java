@@ -81,11 +81,16 @@ public class c01s008_002Activity extends CommonActivity {
 
         retrofit = RetrofitSingle.newInstance();
 
-        Map<String, Object> paramMap = PARAM_MAP.get(1);
-        synthesisCuttingToolBindRFID = (String) paramMap.get("synthesisCuttingToolBindRFID");
-        synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap.get("synthesisCuttingToolBind");
+        try {
+            Map<String, Object> paramMap = PARAM_MAP.get(1);
+            synthesisCuttingToolBindRFID = (String) paramMap.get("synthesisCuttingToolBindRFID");
+            synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap.get("synthesisCuttingToolBind");
 
-        setValue();
+            setValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setValue() {
@@ -490,7 +495,7 @@ public class c01s008_002Activity extends CommonActivity {
         // 内部table3
         TableLayout tableLayout3 = new TableLayout(this);
         tableLayout3.setLayoutParams(param2);
-        tableLayout3.addView(getRowEdit(tvZuzhuangNum, chaifenNum, isZuanTou, synthesisCuttingToolLocation.getCuttingTool().getBusinessCode()));
+        tableLayout3.addView(getRow(tvZuzhuangNum, chaifenNum));
 
 
         // 添加到行中
@@ -518,43 +523,8 @@ public class c01s008_002Activity extends CommonActivity {
         tv1.setGravity(Gravity.CENTER);
         tv1.setId(id);
         tv1.setText(text);
-        tv1.setTag("1");//代表钻头
 
         tableRow.addView(tv1);
-
-        return tableRow;
-    }
-
-    private TableRow getRowEdit(int id, String text, boolean isZuanTou, final String cailiao) {
-        TableRow.LayoutParams param = new TableRow.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-
-        TableRow.LayoutParams param2 = new TableRow.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics())), 1f);
-
-        TableRow tableRow = new TableRow(this);
-        tableRow.setLayoutParams(param);
-        tableRow.setFocusable(true);
-        tableRow.setFocusableInTouchMode(true);
-
-
-        final EditText et1 = new EditText(this);
-        et1.setLayoutParams(param2);
-        et1.setGravity(Gravity.CENTER);
-        et1.setId(id);
-        et1.setText(text);
-        et1.setInputType(InputType.TYPE_CLASS_NUMBER);
-        if (isZuanTou) {
-            et1.setFocusable(false);
-            et1.setFocusableInTouchMode(false);
-        } else {
-            et1.setFocusable(false);
-            et1.setFocusableInTouchMode(false);
-        }
-
-        tableRow.addView(et1);
 
         return tableRow;
     }

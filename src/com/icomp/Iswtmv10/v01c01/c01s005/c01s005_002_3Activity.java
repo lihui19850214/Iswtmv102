@@ -1,16 +1,21 @@
 package com.icomp.Iswtmv10.v01c01.c01s005;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.apiclient.pojo.AuthCustomer;
-import com.apiclient.pojo.CuttingToolsScrap;
-import com.google.gson.Gson;
+import com.apiclient.constants.OperationEnum;
+import com.apiclient.constants.ScrapReasonEnum;
+import com.apiclient.constants.ScrapStateEnum;
+import com.apiclient.pojo.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -18,15 +23,14 @@ import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.Iswtmv10.v01c01.c01s005.modul.TongDaoModul;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
+import com.icomp.common.utils.GetItemHeight;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * 刀具报废页面2
@@ -49,16 +53,25 @@ public class c01s005_002_3Activity extends CommonActivity {
     @BindView(R.id.activity_c01s005_002_3)
     LinearLayout activityC01s0050023;
 
-    private int position = 0;
     private List<TongDaoModul> jsonList = new ArrayList<>();
 
 
-    List<CuttingToolsScrap> cuttingToolsScrap = new ArrayList<>();
+    List<CuttingToolsScrap> cuttingToolsScrapList = new ArrayList<>();
 
 
+    // 报废原因下拉列表所有数据
+    List<ScrapReasonEnum> scrapReasonList = new ArrayList<>();
+    // 当前选择的报废原因
+    private int scrap_reason_posttion;
 
-    List<String> scrapStatusList = new ArrayList<>();
 
+    // 报废状态下拉列表所有数据 key=name
+    private Map<String, String> scrapStatusMap = new HashMap<>();
+
+    // 根据 rfid 查询的数据
+    private Map<String, CuttingToolsScrap> rfidToMap = new HashMap<>();
+    // 根据才料号查询的数据
+    private Map<String, CuttingToolsScrap> materialNumToMap = new HashMap<>();
 
     private Retrofit retrofit;
 
@@ -70,11 +83,35 @@ public class c01s005_002_3Activity extends CommonActivity {
 
         retrofit = RetrofitSingle.newInstance();
 
-        Map<String, Object> paramMap = PARAM_MAP.get(1);
-        cuttingToolsScrap = (List<CuttingToolsScrap>) paramMap.get("cuttingToolsScrapList");
+        //存储所有报废状态，key=name
+        for (ScrapStateEnum scrapStateEnum : ScrapStateEnum.values()){
+            scrapStatusMap.put(scrapStateEnum.getKey(), scrapStateEnum.getName());
+        }
 
-        for (CuttingToolsScrap cuttingToolsScrap : cuttingToolsScrap) {
-            addLayout(cuttingToolsScrap);
+        //存储所有报废原因，下拉列表
+        for (ScrapReasonEnum scrapReasonEnum : ScrapReasonEnum.values()){
+            scrapReasonList.add(scrapReasonEnum);
+        }
+
+        try {
+            Map<String, Object> paramMap = PARAM_MAP.get(1);
+            rfidToMap = (Map<String, CuttingToolsScrap>) paramMap.get("rfidToMap");
+            materialNumToMap = (Map<String, CuttingToolsScrap>) paramMap.get("materialNumToMap");
+            cuttingToolsScrapList = (List<CuttingToolsScrap>) paramMap.get("cuttingToolsScrapList");
+
+            for (CuttingToolsScrap cuttingToolsScrap : cuttingToolsScrapList) {
+                CuttingTool cuttingTool = cuttingToolsScrap.getCuttingTool();
+
+                if (cuttingTool.getCuttingToolBindList() == null || cuttingTool.getCuttingToolBindList().size() == 0) {
+                    addLayout(cuttingToolsScrap.getMaterialNum(), scrapStatusMap.get(cuttingToolsScrap.getCause()), cuttingToolsScrap.getCount() + "");
+                } else {
+                    CuttingToolBind cuttingToolBind = cuttingTool.getCuttingToolBindList().get(0);
+                    addLayout(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode(), cuttingToolsScrap.getCount() + "");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -107,18 +144,17 @@ public class c01s005_002_3Activity extends CommonActivity {
 
     /**
      * 添加布局
-     * @param cuttingToolsScrap
      */
-    private void addLayout(CuttingToolsScrap cuttingToolsScrap) {
+    private void addLayout(String cailiao, String laserCode, String num) {
         View mLinearLayout = LayoutInflater.from(this).inflate(R.layout.item_yiti_daojubaofei_static, null);
+
         TextView tvCaiLiao = (TextView) mLinearLayout.findViewById(R.id.tvCailiao);
         TextView tvsingleProductCode = (TextView) mLinearLayout.findViewById(R.id.tvsingleProductCode);
         TextView tvNum = (TextView) mLinearLayout.findViewById(R.id.tvNum);
 
-
-        tvCaiLiao.setText(cuttingToolsScrap.getMaterialNum());
-        tvsingleProductCode.setText(cuttingToolsScrap.getCuttingTool().getBusinessCode());
-        tvNum.setText(cuttingToolsScrap.getCount());
+        tvCaiLiao.setText(cailiao);
+        tvsingleProductCode.setText(laserCode);
+        tvNum.setText(num);
 
         mLlContainer.addView(mLinearLayout);
     }
@@ -146,7 +182,7 @@ public class c01s005_002_3Activity extends CommonActivity {
     /**
      * 报废原因下拉框
      */
-    public void showPopupWindow() {
+    public void showPopupWindow(View view2) {
         View view = LayoutInflater.from(c01s005_002_3Activity.this).inflate(R.layout.spinner_c03s004_001, null);
         ListView listView = (ListView) view.findViewById(R.id.ll_spinner);
         ScrapStatusAdapter myAdapter = new ScrapStatusAdapter();
@@ -168,24 +204,28 @@ public class c01s005_002_3Activity extends CommonActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                tv01.setText(scrapStatusList.get(i));
+                tv01.setText(scrapReasonList.get(i).getName());
                 //TODO 需要获取下拉列表值
 
                 popupWindow.dismiss();
             }
         });
-        popupWindow.showAsDropDown(ll01);
+
+//        popupWindow.showAsDropDown(ll01);
+
+        int windowPos[] = calculatePopWindowPos(ll01, view, listView);
+        popupWindow.showAtLocation(view, Gravity.TOP, windowPos[0], windowPos[1]);
     }
 
     class ScrapStatusAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return scrapStatusList.size();
+            return scrapReasonList.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return scrapStatusList.get(i);
+            return scrapReasonList.get(i);
         }
 
         @Override
@@ -197,53 +237,172 @@ public class c01s005_002_3Activity extends CommonActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             View view1 = LayoutInflater.from(c01s005_002_3Activity.this).inflate(R.layout.item_c03s004_001, null);
             TextView textView = (TextView) view1.findViewById(R.id.tv_01);
-            textView.setText(scrapStatusList.get(i));
+            textView.setText(scrapReasonList.get(i).getName());
             return view1;
         }
+    }
+
+    /**
+     * 计算出来的位置，y方向就在anchorView的上面和下面对齐显示，x方向就是与屏幕右边对齐显示
+     * 如果anchorView的位置有变化，就可以适当自己额外加入偏移来修正
+     * @param anchorView  呼出window的view
+     * @param contentView   window的内容布局
+     * @return window显示的左上角的xOff,yOff坐标
+     */
+    private static int[] calculatePopWindowPos(final View anchorView, final View contentView, ListView listView) {
+        final int windowPos[] = new int[2];
+        final int anchorLoc[] = new int[2];
+        // 获取锚点View在屏幕上的左上角坐标位置
+        anchorView.getLocationOnScreen(anchorLoc);
+        final int anchorHeight = anchorView.getHeight();
+        final int anchorWidth = anchorView.getWidth();
+        // 获取屏幕的高宽
+        final int screenHeight = GetItemHeight.getScreenHeight(anchorView.getContext());
+        final int screenWidth = GetItemHeight.getScreenWidth(anchorView.getContext());
+        contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        // 计算contentView的高宽
+        final int windowHeight = getTotalHeightofListView(listView);
+        final int windowWidth = contentView.getMeasuredWidth();
+        // 判断需要向上弹出还是向下弹出显示
+        final boolean isNeedShowUp = (screenHeight - anchorLoc[1] - anchorHeight < windowHeight);
+        if (isNeedShowUp) {
+            windowPos[0] = 0;
+            windowPos[1] = anchorLoc[1] - windowHeight;
+        } else {
+            windowPos[0] = 0;
+            windowPos[1] = anchorLoc[1] + anchorHeight;
+        }
+        return windowPos;
+    }
+
+    public static int getTotalHeightofListView(ListView listView) {
+        ListAdapter mAdapter = listView.getAdapter();
+        if (mAdapter == null) {
+            return 0;
+        }
+
+        int totalHeight = 0;
+
+        for (int i = 0; i < mAdapter.getCount(); i++) {
+            View mView = mAdapter.getView(i, null, listView);
+            mView.measure(
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            //mView.measure(0, 0);
+            totalHeight += mView.getMeasuredHeight();
+            Log.d("数据" + i, String.valueOf(totalHeight));
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (mAdapter.getCount() - 1));
+        Log.d("数据", "listview总高度="+ params.height);
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+        return totalHeight;
     }
 
 
     //提交添报废刀具
     private void requestData(List<AuthCustomer> authorizationList) {
-        loading.show();
-        IRequest iRequest = retrofit.create(IRequest.class);
+        try {
+            loading.show();
 
-        Gson gson = new Gson();
+            Map<String, String> headsMap = new HashMap<>();
 
-        //TODO 授权信息不知道放哪
-//        authorizationList.get(0);
+            // 授权信息集合
+            List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
+            // 授权信息
+            ImpowerRecorder impowerRecorder = new ImpowerRecorder();
 
-        String jsonStr = gson.toJson(cuttingToolsScrap);
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            try {
+                // 需要授权信息
+                if (is_need_authorization && authorizationList != null) {
+                    //设定用户访问信息
+                    @SuppressLint("WrongConstant")
+                    SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+                    String userInfoJson = sharedPreferences.getString("loginInfo", null);
 
-        Call<String> addOutsideFactory = iRequest.addOutsideFactory(body, new HashMap<String, String>());
+                    AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
 
-        addOutsideFactory.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
+                    Set<String> rfids = rfidToMap.keySet();
+                    for (String rfid : rfids) {
+                        CuttingToolsScrap cuttingToolsScrap = rfidToMap.get(rfid);
 
-                        //跳转到成功详细页面
-                        Intent intent = new Intent(c01s005_002_3Activity.this, c01s005_002_4Activity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        createAlertDialog(c01s005_002_3Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        CuttingToolBind cuttingToolBind = cuttingToolsScrap.getCuttingTool().getCuttingToolBindList().get(0);
+
+
+                        impowerRecorder = new ImpowerRecorder();
+
+                        // ------------ 授权信息 ------------
+                        impowerRecorder.setToolCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 合成刀编码
+                        impowerRecorder.setRfidLasercode(rfid);// rfid标签
+                        impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
+                        impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                        // TODO 缺少报废，暂时先不报错
+                        impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_Bind.getKey().toString());//操作key
+
+//                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
+//                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
+//                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
+
+                        impowerRecorderList.add(impowerRecorder);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
+                }
+                headsMap.put("impower", objectToJson(impowerRecorderList));
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                createAlertDialog(c01s005_002_3Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            }
+
+            IRequest iRequest = retrofit.create(IRequest.class);
+
+            for (CuttingToolsScrap cuttingToolsScrap : cuttingToolsScrapList) {
+                cuttingToolsScrap.setCause(scrapReasonList.get(scrap_reason_posttion).getKey());
+            }
+
+            String jsonStr = objectToJson(cuttingToolsScrapList);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+            Call<String> addScrap = iRequest.addScrap(body, headsMap);
+
+            addScrap.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            //跳转到成功详细页面
+                            Intent intent = new Intent(c01s005_002_3Activity.this, c01s005_002_4Activity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            createAlertDialog(c01s005_002_3Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        loading.dismiss();
+                    }
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
+                    createAlertDialog(c01s005_002_3Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                     loading.dismiss();
                 }
-            }
-
-            @Override
-            public void _onFailure(Throwable t) {
-                createAlertDialog(c01s005_002_3Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-        });
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -251,7 +410,7 @@ public class c01s005_002_3Activity extends CommonActivity {
     /**
      * 遍历所有数据并转化为json
      */
-    private String bianliAndToJson() {
+    private String bianliAndToJson() throws JsonProcessingException {
         jsonList.clear();
         if (mLlContainer.getChildCount() == 0) {
             return null;
@@ -288,8 +447,8 @@ public class c01s005_002_3Activity extends CommonActivity {
 
             }
         }
-        Gson gson = new Gson();
-        return gson.toJson(jsonList);
+
+        return objectToJson(jsonList);
     }
 
     class MyAdapter extends BaseAdapter {

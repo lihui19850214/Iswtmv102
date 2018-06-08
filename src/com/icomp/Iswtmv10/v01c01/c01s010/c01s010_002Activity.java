@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -84,28 +85,32 @@ public class c01s010_002Activity extends CommonActivity {
 
         retrofit = RetrofitSingle.newInstance();
 
+        try {
+            Map<String, Object> paramMap = PARAM_MAP.get(1);
+            if (paramMap != null) {
+                tv01.setText((String) paramMap.get("title"));// 合成刀具编码
+                outsideListData = (List<List<Map<String, Object>>>) paramMap.get("outsideListData");
+                synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap.get("synthesisCuttingToolConfig");
+                synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap.get("synthesisCuttingToolBind");
+                rfidSet = (Set<String>) paramMap.get("rfidSet");
+                cbDiudao.setChecked((paramMap.get("cbDiudao") == null) ? false : (Boolean) paramMap.get("cbDiudao"));
+                synthesisCuttingToolConfigRFID = (String) paramMap.get("synthesisCuttingToolConfigRFID");
 
-        Map<String, Object> paramMap = PARAM_MAP.get(1);
-        if (paramMap != null) {
-            tv01.setText((String) paramMap.get("title"));// 合成刀具编码
-            outsideListData = (List<List<Map<String, Object>>>) paramMap.get("outsideListData");
-            synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap.get("synthesisCuttingToolConfig");
-            synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap.get("synthesisCuttingToolBind");
-            rfidSet = (Set<String>) paramMap.get("rfidSet");
-            cbDiudao.setChecked((paramMap.get("cbDiudao") == null) ? false : (Boolean) paramMap.get("cbDiudao"));
-            synthesisCuttingToolConfigRFID = (String) paramMap.get("synthesisCuttingToolConfigRFID");
-
-            if (outsideListData != null && outsideListData.size() > 0) {
-                for (int i = 0; i < outsideListData.size(); i++) {
-                    addLayout(outsideListData.get(i));
+                if (outsideListData != null && outsideListData.size() > 0) {
+                    for (int i = 0; i < outsideListData.size(); i++) {
+                        addLayout(outsideListData.get(i));
+                    }
+                } else {
+                    outsideListData = new ArrayList<>();
+                    synthesisCuttingToolConfig = new SynthesisCuttingToolConfig();
+                    synthesisCuttingToolBind = new SynthesisCuttingToolBind();
+                    rfidSet = new HashSet<>();
+                    synthesisCuttingToolConfigRFID = "";
                 }
-            } else {
-                outsideListData = new ArrayList<>();
-                synthesisCuttingToolConfig = new SynthesisCuttingToolConfig();
-                synthesisCuttingToolBind = new SynthesisCuttingToolBind();
-                rfidSet = new HashSet<>();
-                synthesisCuttingToolConfigRFID = "";
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -325,7 +330,7 @@ public class c01s010_002Activity extends CommonActivity {
                                 try {
                                     if (response.raw().code() == 200) {
                                         ObjectMapper mapper = new ObjectMapper();
-
+                                        // 辅具和配套不显示在列表上
                                         synthesisCuttingToolConfig = mapper.readValue(response.body(), SynthesisCuttingToolConfig.class);
                                         synthesisCuttingToolConfigRFID = rfidString;
                                         if (synthesisCuttingToolConfig != null) {
@@ -548,6 +553,7 @@ public class c01s010_002Activity extends CommonActivity {
                             String inpower = response.headers().get("impower");
 
                             ObjectMapper mapper = new ObjectMapper();
+                            // 真实数据，设别上插了哪些钻头、刀片等
                             synthesisCuttingToolBind = mapper.readValue(response.body(), SynthesisCuttingToolBind.class);
 
                             // 不为null继续操作
@@ -557,6 +563,7 @@ public class c01s010_002Activity extends CommonActivity {
                                     List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList = synthesisCuttingToolBind.getSynthesisCuttingToolLocationList();
 
                                     for (SynthesisCuttingToolLocation synthesisCuttingToolLocation : synthesisCuttingToolLocationList) {
+                                        // 如果钻头没有刀身码需要弹框输入刀身码，然后存储到起来，不填写刀身码不能往下走
                                         // 卸下
                                         DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
                                         downCuttingToolVO.setDownCode(synthesisCuttingToolLocation.getCuttingTool().getBusinessCode());
@@ -679,26 +686,7 @@ public class c01s010_002Activity extends CommonActivity {
             for (SynthesisCuttingToolLocationConfig synthesisCuttingToolLocationConfig : SynthesisCuttingToolLocationConfigList) {
                 List<Map<String, Object>> insideListDate = new ArrayList<>();
                 Map<String, Object> map = new HashMap<>();
-
-
-                // 换装
-                UpCuttingToolVO upCuttingToolVO = new UpCuttingToolVO();
-                upCuttingToolVO.setUpCode(synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode());
-                upCuttingToolVO.setUpCount(0);
-
-
-                map.put("synthesisCuttingToolLocationConfig", synthesisCuttingToolLocationConfig);
-                map.put("upCuttingToolVO", upCuttingToolVO);
-                if (downCuttingToolVOMap.containsKey(synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode())) {
-                    map.put("downCuttingToolVO", downCuttingToolVOMap.get(synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode()));
-                } else {
-                    // 卸下
-                    DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
-                    downCuttingToolVO.setDownCode(synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode());
-                    downCuttingToolVO.setDownCount(0);
-                    downCuttingToolVO.setDownLostCount(0);
-                    map.put("downCuttingToolVO", downCuttingToolVO);
-                }
+                boolean isFuju = false;
 
 //            // 判断是否是钻头
 //            if ("1".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
@@ -711,7 +699,33 @@ public class c01s010_002Activity extends CommonActivity {
                     if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
                         map.put("isZuanTou", true);
                     }
+                } else if (CuttingToolTypeEnum.fj.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getType())) {
+                    isFuju = true;
                 }
+
+                // 卸下
+                DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
+
+                if (downCuttingToolVOMap.containsKey(synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode())) {
+                    downCuttingToolVO = downCuttingToolVOMap.get(synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode());
+                } else {
+                    downCuttingToolVO.setDownCode(synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode());
+                    downCuttingToolVO.setDownCount(0);
+                    downCuttingToolVO.setDownLostCount(0);
+                }
+
+                // 换上
+                UpCuttingToolVO upCuttingToolVO = new UpCuttingToolVO();
+                upCuttingToolVO.setUpCode(synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode());
+                if (isFuju) {
+                    upCuttingToolVO.setUpCount(downCuttingToolVO.getDownCount());
+                } else {
+                    upCuttingToolVO.setUpCount(0);
+                }
+
+                map.put("synthesisCuttingToolLocationConfig", synthesisCuttingToolLocationConfig);
+                map.put("upCuttingToolVO", upCuttingToolVO);
+                map.put("downCuttingToolVO", downCuttingToolVO);
                 insideListDate.add(map);
 
 
@@ -724,71 +738,90 @@ public class c01s010_002Activity extends CommonActivity {
 
                 // 替换刀1
                 if (cuttingTool1 != null) {
-                    upCuttingToolVO = new UpCuttingToolVO();
-                    upCuttingToolVO.setUpCode(cuttingTool1.getBusinessCode());
-                    upCuttingToolVO.setUpCount(0);
-
                     map = new HashMap<>();
-                    map.put("cuttingTool", cuttingTool1);
-                    map.put("upCuttingToolVO", upCuttingToolVO);
+                    // 卸下
+                    downCuttingToolVO = new DownCuttingToolVO();
+
                     if (downCuttingToolVOMap.containsKey(cuttingTool1.getBusinessCode())) {
-                        map.put("downCuttingToolVO", downCuttingToolVOMap.get(cuttingTool1.getBusinessCode()));
+                        downCuttingToolVO = downCuttingToolVOMap.get(cuttingTool1.getBusinessCode());
                     } else {
-                        // 卸下
-                        DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
                         downCuttingToolVO.setDownCode(cuttingTool1.getBusinessCode());
                         downCuttingToolVO.setDownCount(0);
                         downCuttingToolVO.setDownLostCount(0);
-                        map.put("downCuttingToolVO", downCuttingToolVO);
                     }
+
+                    // 换上
+                    upCuttingToolVO = new UpCuttingToolVO();
+                    upCuttingToolVO.setUpCode(cuttingTool1.getBusinessCode());
+                    if (isFuju) {
+                        upCuttingToolVO.setUpCount(downCuttingToolVO.getDownCount());
+                    } else {
+                        upCuttingToolVO.setUpCount(0);
+                    }
+
+                    map.put("cuttingTool", cuttingTool1);
+                    map.put("upCuttingToolVO", upCuttingToolVO);
+                    map.put("downCuttingToolVO", downCuttingToolVO);
                     insideListDate.add(map);
                 }
 
 
                 // 替换刀2
                 if (cuttingTool2 != null) {
-                    upCuttingToolVO = new UpCuttingToolVO();
-                    upCuttingToolVO.setUpCode(cuttingTool2.getBusinessCode());
-                    upCuttingToolVO.setUpCount(0);
-
-
                     map = new HashMap<>();
-                    map.put("cuttingTool", cuttingTool2);
-                    map.put("upCuttingToolVO", upCuttingToolVO);
+                    // 卸下
+                    downCuttingToolVO = new DownCuttingToolVO();
+
                     if (downCuttingToolVOMap.containsKey(cuttingTool2.getBusinessCode())) {
-                        map.put("downCuttingToolVO", downCuttingToolVOMap.get(cuttingTool2.getBusinessCode()));
+                        downCuttingToolVO = downCuttingToolVOMap.get(cuttingTool2.getBusinessCode());
                     } else {
-                        // 卸下
-                        DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
                         downCuttingToolVO.setDownCode(cuttingTool2.getBusinessCode());
                         downCuttingToolVO.setDownCount(0);
                         downCuttingToolVO.setDownLostCount(0);
-                        map.put("downCuttingToolVO", downCuttingToolVO);
                     }
+
+                    // 换上
+                    upCuttingToolVO = new UpCuttingToolVO();
+                    upCuttingToolVO.setUpCode(cuttingTool2.getBusinessCode());
+                    if (isFuju) {
+                        upCuttingToolVO.setUpCount(downCuttingToolVO.getDownCount());
+                    } else {
+                        upCuttingToolVO.setUpCount(0);
+                    }
+
+                    map.put("cuttingTool", cuttingTool2);
+                    map.put("upCuttingToolVO", upCuttingToolVO);
+                    map.put("downCuttingToolVO", downCuttingToolVO);
                     insideListDate.add(map);
                 }
 
 
                 // 替换刀3
                 if (cuttingTool3 != null) {
-                    upCuttingToolVO = new UpCuttingToolVO();
-                    upCuttingToolVO.setUpCode(cuttingTool3.getBusinessCode());
-                    upCuttingToolVO.setUpCount(0);
-
-
                     map = new HashMap<>();
-                    map.put("cuttingTool", cuttingTool3);
-                    map.put("upCuttingToolVO", upCuttingToolVO);
+                    // 卸下
+                    downCuttingToolVO = new DownCuttingToolVO();
+
                     if (downCuttingToolVOMap.containsKey(cuttingTool3.getBusinessCode())) {
-                        map.put("downCuttingToolVO", downCuttingToolVOMap.get(cuttingTool3.getBusinessCode()));
+                        downCuttingToolVO = downCuttingToolVOMap.get(cuttingTool3.getBusinessCode());
                     } else {
-                        // 卸下
-                        DownCuttingToolVO downCuttingToolVO = new DownCuttingToolVO();
                         downCuttingToolVO.setDownCode(cuttingTool3.getBusinessCode());
                         downCuttingToolVO.setDownCount(0);
                         downCuttingToolVO.setDownLostCount(0);
-                        map.put("downCuttingToolVO", downCuttingToolVO);
                     }
+
+                    // 换上
+                    upCuttingToolVO = new UpCuttingToolVO();
+                    upCuttingToolVO.setUpCode(cuttingTool3.getBusinessCode());
+                    if (isFuju) {
+                        upCuttingToolVO.setUpCount(downCuttingToolVO.getDownCount());
+                    } else {
+                        upCuttingToolVO.setUpCount(0);
+                    }
+
+                    map.put("cuttingTool", cuttingTool3);
+                    map.put("upCuttingToolVO", upCuttingToolVO);
+                    map.put("downCuttingToolVO", downCuttingToolVO);
                     insideListDate.add(map);
                 }
 
@@ -869,6 +902,9 @@ public class c01s010_002Activity extends CommonActivity {
 
             String daojuType = "";
             boolean isZuanTou = false;
+            boolean isFuju = false;
+            // 是否可编辑 true可编辑；false不可编辑；
+            boolean editable = true;
 
 //        //刀具类型(1钻头、2刀片、3一体刀、4专机、9其他)
 //        if ("1".equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
@@ -889,6 +925,7 @@ public class c01s010_002Activity extends CommonActivity {
                 // griding_zt("1","可刃磨钻头"),griding_dp("2","可刃磨刀片"),single_use_dp("3","一次性刀片"),other("9","其他");
                 if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
                     isZuanTou = true;
+                    editable = false;
                     daojuType = CuttingToolConsumeTypeEnum.griding_zt.getName();
                 } else if (CuttingToolConsumeTypeEnum.griding_dp.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getConsumeType())) {
                     daojuType = CuttingToolConsumeTypeEnum.griding_dp.getName();
@@ -898,6 +935,8 @@ public class c01s010_002Activity extends CommonActivity {
                     daojuType = CuttingToolConsumeTypeEnum.other.getName();
                 }
             } else if (CuttingToolTypeEnum.fj.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getType())) {
+                isFuju = true;
+                editable = false;
                 daojuType = CuttingToolTypeEnum.fj.getName();
             } else if (CuttingToolTypeEnum.pt.getKey().equals(synthesisCuttingToolLocationConfig.getCuttingTool().getType())) {
                 daojuType = CuttingToolTypeEnum.pt.getName();
@@ -911,12 +950,16 @@ public class c01s010_002Activity extends CommonActivity {
                     ViewGroup.LayoutParams.WRAP_CONTENT);
 
             TableRow.LayoutParams param2 = new TableRow.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics())),
                     ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+
+            TableRow.LayoutParams param2_1 = new TableRow.LayoutParams(
+                    ((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics())),
+                    ViewGroup.LayoutParams.WRAP_CONTENT, 1.2f);
 
             TableRow.LayoutParams param3 = new TableRow.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT, 1f);
+                    ViewGroup.LayoutParams.MATCH_PARENT, 0.8f);
 
 
             // 行
@@ -949,7 +992,7 @@ public class c01s010_002Activity extends CommonActivity {
 
             // 内部table2
             TableLayout tableLayout2 = new TableLayout(this);
-            tableLayout2.setLayoutParams(param2);
+            tableLayout2.setLayoutParams(param2_1);
             tableLayout2.addView(getRow(tvDaoJuType, daojuType));
 
             if (cuttingTool1 != null) {
@@ -984,18 +1027,18 @@ public class c01s010_002Activity extends CommonActivity {
             // 内部table3
             TableLayout tableLayout3 = new TableLayout(this);
             tableLayout3.setLayoutParams(param2);
-            tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO.getUpCount()), isZuanTou, synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode(), outsideRowNumber, 0));
+            tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO.getUpCount()), editable, synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode(), outsideRowNumber, 0));
 
             if (cuttingTool1 != null) {
-                tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO1.getUpCount()), isZuanTou, cuttingTool1.getBusinessCode(), outsideRowNumber, 1));
+                tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO1.getUpCount()), editable, cuttingTool1.getBusinessCode(), outsideRowNumber, 1));
             }
 
             if (cuttingTool2 != null) {
-                tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO2.getUpCount()), isZuanTou, cuttingTool2.getBusinessCode(), outsideRowNumber, 2));
+                tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO2.getUpCount()), editable, cuttingTool2.getBusinessCode(), outsideRowNumber, 2));
             }
 
             if (cuttingTool3 != null) {
-                tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO3.getUpCount()), isZuanTou, cuttingTool3.getBusinessCode(), outsideRowNumber, 3));
+                tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO3.getUpCount()), editable, cuttingTool3.getBusinessCode(), outsideRowNumber, 3));
             }
 
             // 添加到行中
@@ -1005,18 +1048,18 @@ public class c01s010_002Activity extends CommonActivity {
             // 内部table4
             TableLayout tableLayout4 = new TableLayout(this);
             tableLayout4.setLayoutParams(param2);
-            tableLayout4.addView(getRowEdit(tvDiudaoNum, String.valueOf(downCuttingToolVO.getDownLostCount()), isZuanTou, synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode(), outsideRowNumber, 0));
+            tableLayout4.addView(getRowEdit(tvDiudaoNum, String.valueOf(downCuttingToolVO.getDownLostCount()), editable, synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode(), outsideRowNumber, 0));
 
             if (cuttingTool1 != null) {
-                tableLayout4.addView(getRowEdit(tvDiudaoNum, String.valueOf(downCuttingToolVO1.getDownLostCount()), isZuanTou, cuttingTool1.getBusinessCode(), outsideRowNumber, 1));
+                tableLayout4.addView(getRowEdit(tvDiudaoNum, String.valueOf(downCuttingToolVO1.getDownLostCount()), editable, cuttingTool1.getBusinessCode(), outsideRowNumber, 1));
             }
 
             if (cuttingTool2 != null) {
-                tableLayout4.addView(getRowEdit(tvDiudaoNum, String.valueOf(downCuttingToolVO2.getDownLostCount()), isZuanTou, cuttingTool2.getBusinessCode(), outsideRowNumber, 2));
+                tableLayout4.addView(getRowEdit(tvDiudaoNum, String.valueOf(downCuttingToolVO2.getDownLostCount()), editable, cuttingTool2.getBusinessCode(), outsideRowNumber, 2));
             }
 
             if (cuttingTool3 != null) {
-                tableLayout4.addView(getRowEdit(tvDiudaoNum, String.valueOf(downCuttingToolVO3.getDownLostCount()), isZuanTou, cuttingTool3.getBusinessCode(), outsideRowNumber, 3));
+                tableLayout4.addView(getRowEdit(tvDiudaoNum, String.valueOf(downCuttingToolVO3.getDownLostCount()), editable, cuttingTool3.getBusinessCode(), outsideRowNumber, 3));
             }
 
             // 添加到行中
@@ -1044,8 +1087,8 @@ public class c01s010_002Activity extends CommonActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
         TableRow.LayoutParams param2 = new TableRow.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics())), 1f);
+                ((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics())),
+                ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
 
         TableRow tableRow = new TableRow(this);
         tableRow.setLayoutParams(param);
@@ -1054,6 +1097,8 @@ public class c01s010_002Activity extends CommonActivity {
         tv1.setLayoutParams(param2);
         tv1.setGravity(Gravity.CENTER);
         tv1.setId(id);
+        tv1.setLines(2);
+        tv1.setEllipsize(TextUtils.TruncateAt.valueOf("END"));
         tv1.setText(text);
 
         tableRow.addView(tv1);
@@ -1065,20 +1110,20 @@ public class c01s010_002Activity extends CommonActivity {
      *
      * @param id 组件 ID
      * @param text 显示内容
-     * @param isZuanTou 是否是钻头
+     * @param editable 是否可编辑：true可编辑；false不可编辑；
      * @param cailiao 材料号
      * @param outsideRowNumber 外部行号
      * @param insideRowNumber 内部行号
      * @return
      */
-    private TableRow getRowEdit(final int id, String text, boolean isZuanTou, final String cailiao, final int outsideRowNumber, final int insideRowNumber) {
+    private TableRow getRowEdit(final int id, String text, boolean editable, final String cailiao, final int outsideRowNumber, final int insideRowNumber) {
         TableRow.LayoutParams param = new TableRow.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
 
         TableRow.LayoutParams param2 = new TableRow.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics())), 1f);
+                ((int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 0, getResources().getDisplayMetrics())),
+                ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
 
         TableRow tableRow = new TableRow(this);
         tableRow.setLayoutParams(param);
@@ -1090,12 +1135,10 @@ public class c01s010_002Activity extends CommonActivity {
         et1.setLayoutParams(param2);
         et1.setGravity(Gravity.CENTER);
         et1.setId(id);
+        et1.setTextSize(15);
         et1.setText(text);
         et1.setInputType(InputType.TYPE_CLASS_NUMBER);
-        if (isZuanTou) {
-            et1.setFocusable(false);
-            et1.setFocusableInTouchMode(false);
-        } else {
+        if (editable) {
             et1.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1124,6 +1167,9 @@ public class c01s010_002Activity extends CommonActivity {
                     }
                 }
             });
+        } else {
+            et1.setFocusable(false);
+            et1.setFocusableInTouchMode(false);
         }
 
         tableRow.addView(et1);

@@ -14,7 +14,6 @@ import com.apiclient.pojo.CuttingToolBind;
 import com.apiclient.pojo.ProductLineEquipment;
 import com.apiclient.pojo.SynthesisCuttingToolBind;
 import com.apiclient.vo.RFIDQueryVO;
-import com.google.gson.Gson;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -82,6 +81,7 @@ public class c01s002_002Activity extends CommonActivity {
                     stop_scan();
                 }
 
+                is_need_authorization = true;
                 authorizationWindow(1, new AuthorizationWindowCallBack() {
                     @Override
                     public void success(List<AuthCustomer> authorizationList) {
@@ -166,72 +166,83 @@ public class c01s002_002Activity extends CommonActivity {
             }
 
             if (!rfidList.contains(rfidString)) {
-                loading.show();
+                try {
+                    loading.show();
 
-                //调用接口，查询合成刀具组成信息
-                IRequest iRequest = retrofit.create(IRequest.class);
+                    //调用接口，查询合成刀具组成信息
+                    IRequest iRequest = retrofit.create(IRequest.class);
 
-                Gson gson = new Gson();
+                    //TODO 需要处理参数
+                    RFIDQueryVO rFIDQueryVO = new RFIDQueryVO();
+                    rFIDQueryVO.setRfidCode(rfidString);
 
-                //TODO 需要处理参数
-                RFIDQueryVO rFIDQueryVO = new RFIDQueryVO();
-                rFIDQueryVO.setRfidCode(rfidString);
-                String jsonStr = gson.toJson(rFIDQueryVO);
-                RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                    String jsonStr = objectToJson(rFIDQueryVO);
+                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                Call<String> queryByRFID = iRequest.queryByRFID(body);
-                queryByRFID.enqueue(new MyCallBack<String>() {
-                    @Override
-                    public void _onResponse(Response<String> response) {
-                        try {
-                            if (response.raw().code() == 200) {
-                                Gson gson = new Gson();
-                                RFIDQueryVO rfidQueryVO = gson.fromJson(response.body(), RFIDQueryVO.class);
+                    Call<String> queryByRFID = iRequest.queryByRFID(body);
+                    queryByRFID.enqueue(new MyCallBack<String>() {
+                        @Override
+                        public void _onResponse(Response<String> response) {
+                            try {
+                                if (response.raw().code() == 200) {
+                                    RFIDQueryVO rfidQueryVO = jsonToObject(response.body(), RFIDQueryVO.class);
 
-                                CuttingToolBind cuttingToolBind = rfidQueryVO.getCuttingToolBind();// 材料刀，单品刀
-                                ProductLineEquipment productLineEquipment = rfidQueryVO.getEquipment();// 设备
-                                SynthesisCuttingToolBind synthesisCuttingToolBind = rfidQueryVO.getSynthesisCuttingToolBind();// 合成刀具
+                                    if (rfidQueryVO != null) {
+                                        CuttingToolBind cuttingToolBind = rfidQueryVO.getCuttingToolBind();// 材料刀，单品刀
+                                        ProductLineEquipment productLineEquipment = rfidQueryVO.getEquipment();// 设备
+                                        SynthesisCuttingToolBind synthesisCuttingToolBind = rfidQueryVO.getSynthesisCuttingToolBind();// 合成刀具
 
-                                StringBuffer content = new StringBuffer();
-                                if (cuttingToolBind != null) {
-                                    content.append("材料号：" + cuttingToolBind.getCuttingTool().getBusinessCode() + "\n");
-                                    //content.append("状态：" + cuttingToolBind.getCuttingTool() + "\n");//TODO 不知道是哪个字段
-                                    content.append("刀身码：" + cuttingToolBind.getBladeCode());
-                                } else if (productLineEquipment != null) {
-                                    content.append("设备代码：" + productLineEquipment.getCode());
-                                } else if (synthesisCuttingToolBind != null) {
-                                    content.append("合成刀具编码：" + synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());
-                                } else if (false) {// TODO 是否还有人员信息和标签
-                                    content.append("员工号：" + "\n");
-                                    content.append("真实姓名：" + "\n");
-                                    content.append("部门：" + "\n");
+                                        StringBuffer content = new StringBuffer();
+                                        if (cuttingToolBind != null) {
+                                            content.append("材料号：" + cuttingToolBind.getCuttingTool().getBusinessCode() + "\n");
+                                            //content.append("状态：" + cuttingToolBind.getCuttingTool() + "\n");//TODO 不知道是哪个字段
+                                            content.append("刀身码：" + cuttingToolBind.getBladeCode());
+                                        } else if (productLineEquipment != null) {
+                                            content.append("设备代码：" + productLineEquipment.getCode());
+                                        } else if (synthesisCuttingToolBind != null) {
+                                            content.append("合成刀具编码：" + synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());
+                                        } else if (false) {// TODO 是否还有人员信息和标签
+                                            content.append("员工号：" + "\n");
+                                            content.append("真实姓名：" + "\n");
+                                            content.append("部门：" + "\n");
+                                        }
+
+                                        if (!"".equals(content.toString())) {
+                                            showDialogAlert(content.toString(), rfidString);
+                                        }
+                                    } else {
+                                        Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    createAlertDialog(c01s002_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                    //重新启动扫描线程
+                                    scanThread = new scanThread();
+                                    scanThread.start();
                                 }
-
-                                if (!"".equals(content.toString())) {
-                                    showDialogAlert(content.toString(), rfidString);
-                                }
-                            } else {
-                                createAlertDialog(c01s002_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
-                                //重新启动扫描线程
-                                scanThread = new scanThread();
-                                scanThread.start();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                            } finally {
+                                loading.dismiss();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            loading.dismiss();
                         }
-                    }
 
-                    @Override
-                    public void _onFailure(Throwable t) {
-                        if (!isCanScan) {
-                            stop_scan();
+                        @Override
+                        public void _onFailure(Throwable t) {
+                            if (!isCanScan) {
+                                stop_scan();
+                            }
+                            loading.dismiss();
+                            createAlertDialog(c01s002_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                         }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    if (null != loading && loading.isShowing()) {
                         loading.dismiss();
-                        createAlertDialog(c01s002_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                     }
-                });
+                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                }
             } else {
                 // 重复扫描
                 Toast.makeText(getApplicationContext(), "重复扫描", Toast.LENGTH_SHORT).show();
@@ -292,46 +303,53 @@ public class c01s002_002Activity extends CommonActivity {
 
     //提交清空 RFID 标签数据
     private void requestData(List<AuthCustomer> authorizationList) {
-        loading.show();
-        IRequest iRequest = retrofit.create(IRequest.class);
+        try {
+            loading.show();
+            IRequest iRequest = retrofit.create(IRequest.class);
 
-        Gson gson = new Gson();
-
-        // TODO 需要处理参数
-        RFIDQueryVO rFIDQueryVO = new RFIDQueryVO();
-        // TODO 授权信息不知道放哪
+            // TODO 需要处理参数
+            RFIDQueryVO rFIDQueryVO = new RFIDQueryVO();
+            // TODO 授权信息不知道放哪
 //        authorizationList.get(0);
-        String jsonStr = gson.toJson(rFIDQueryVO);
+            String jsonStr = objectToJson(rFIDQueryVO);
 
-        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> clearRFID = iRequest.clearRFID(body);
+            Call<String> clearRFID = iRequest.clearRFID(body);
 
-        clearRFID.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        //跳转到成功详细页面
-                        Intent intent = new Intent(c01s002_002Activity.this, c01s002_003Activity.class);
-                        startActivity(intent);
-                        finish();
-                    } else {
-                        createAlertDialog(c01s002_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+            clearRFID.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            //跳转到成功详细页面
+                            Intent intent = new Intent(c01s002_002Activity.this, c01s002_003Activity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            createAlertDialog(c01s002_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    } finally {
+                        loading.dismiss();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    loading.dismiss();
                 }
-            }
 
-            @Override
-            public void _onFailure(Throwable t) {
+                @Override
+                public void _onFailure(Throwable t) {
+                    loading.dismiss();
+                    createAlertDialog(c01s002_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
                 loading.dismiss();
-                createAlertDialog(c01s002_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
             }
-        });
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
 
