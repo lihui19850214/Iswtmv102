@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/OverallSituationLinerLayoutStyle"
+    tools:context="com.icomp.Iswtmv10.v01c01.c01s004.c01s004_003Activity">
+
+    <TextView android:text="@string/C01S004" style="@style/FunctionalTitleTextViewStyle"/>
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="left|center"
+                    android:text="订单号"/>
+
+            <TextView
+                    android:id="@+id/tv_01"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border"
+                    android:textColor="@color/baseColor"/>
+        </LinearLayout>
+
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="9"
+                android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
+            <LinearLayout
+                    android:layout_below="@id/tvTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:orientation="horizontal">
+
+                    <LinearLayout
+                            android:background="@drawable/table_border_c"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+                        <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:textColor="@color/baseColor"
+                                android:text="材料号"
+                                android:gravity="center"/>
+
+                    </LinearLayout>
+                    <ImageView
+                            android:id="@+id/ivAdd"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.1"
+                            android:src="@drawable/cancel"
+                            android:padding="5dp"/>
+
+                </LinearLayout>
+                <LinearLayout
+                        android:id="@+id/llContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+        <Button android:id="@+id/btnReturn" android:text="@string/returnBy" style="@style/BottomButtonStyle"/>
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button android:id="@+id/btnNext" android:text="@string/next" style="@style/BottomButtonStyle"/>
+    </LinearLayout>
+
+</LinearLayout>

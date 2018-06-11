@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <TextView android:text="安上设备" style="@style/FunctionalTitleTextViewStyle"/>
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
+        <TextView
+                android:layout_height="wrap_content"
+                android:text="请扫描要安上设备的合成刀具标签或者输入要安上的合成刀具刀身码"
+                style="@style/MiddleTextPromptStule"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingTop="20dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="center"
+                    android:text="合成刀具刀身码:"/>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+
+                <EditText
+                        android:id="@+id/et_00"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_no_radius"
+                        android:digits="@string/onlyAllowInputNumbers"
+                        android:textColor="@color/baseColor"
+                        android:textSize="20sp"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/text_cursor_shape"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <View style="@style/View_1"/>
+        <View style="@style/View_1"/>
+        <View style="@style/View_1"/>
+
+        <TextView
+                android:id="@+id/tvScan"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:background="@drawable/border_c"
+                android:text="@string/scan"
+                android:textColor="@color/baseColor"
+                android:gravity="center"
+                android:layout_marginBottom="40dp"
+                android:textSize="@dimen/button_textsize"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button
+                android:id="@+id/btn_return"
+                android:onClick="appReturn"
+                android:text="返回"
+                style="@style/BottomButtonStyle"/>
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button
+                android:id="@+id/btn_next"
+                android:onClick="appNext"
+                android:text="下一步"
+                style="@style/BottomButtonStyle"/>
+
+    </LinearLayout>
+</LinearLayout>

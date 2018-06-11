@@ -5,9 +5,15 @@
     android:layout_height="match_parent"
     android:background="@color/baseColor">
 
-    <View
-        android:layout_weight="0.5"
-        style="@style/View_1" />
+    <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.5"
+            android:gravity="center"
+            android:text="授权签收"
+            android:textSize="15sp"
+            android:textColor="@color/textColor" />
 
     <Button
         android:id="@+id/btnInputAuthorization"
