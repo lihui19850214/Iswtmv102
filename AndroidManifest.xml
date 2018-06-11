@@ -207,6 +207,11 @@
         </activity>
 
         <!-- 安上设备 -->
+
+        <activity
+                android:name=".v01c01.c01s011.C01S011_001Activity"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
         <activity
                 android:name=".v01c01.c01s011.C01S011_002Activity"
                 android:screenOrientation="portrait"
