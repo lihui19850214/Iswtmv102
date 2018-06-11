@@ -82,10 +82,10 @@ public class c01s002_002Activity extends CommonActivity {
                 }
 
                 is_need_authorization = true;
-                authorizationWindow(1, new AuthorizationWindowCallBack() {
+                authorizationWindow(new AuthorizationWindowCallBack() {
                     @Override
-                    public void success(List<AuthCustomer> authorizationList) {
-                        requestData(authorizationList);
+                    public void success(AuthCustomer authCustomer) {
+                        requestData(authCustomer);
                     }
 
                     @Override
@@ -302,7 +302,7 @@ public class c01s002_002Activity extends CommonActivity {
 
 
     //提交清空 RFID 标签数据
-    private void requestData(List<AuthCustomer> authorizationList) {
+    private void requestData(AuthCustomer authCustomer) {
         try {
             loading.show();
             IRequest iRequest = retrofit.create(IRequest.class);

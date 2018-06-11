@@ -126,10 +126,10 @@ public class c01s005_002_3Activity extends CommonActivity {
                 finish();
                 break;
             case R.id.btnNext:
-                authorizationWindow(1, new AuthorizationWindowCallBack() {
+                authorizationWindow(new AuthorizationWindowCallBack() {
                     @Override
-                    public void success(List<AuthCustomer> authorizationList) {
-                        requestData(authorizationList);
+                    public void success(AuthCustomer authCustomer) {
+                        requestData(authCustomer);
                     }
 
                     @Override
@@ -303,7 +303,7 @@ public class c01s005_002_3Activity extends CommonActivity {
 
 
     //提交添报废刀具
-    private void requestData(List<AuthCustomer> authorizationList) {
+    private void requestData(AuthCustomer authCustomer) {
         try {
             loading.show();
 
@@ -316,13 +316,13 @@ public class c01s005_002_3Activity extends CommonActivity {
 
             try {
                 // 需要授权信息
-                if (is_need_authorization && authorizationList != null) {
+                if (is_need_authorization && authCustomer != null) {
                     //设定用户访问信息
                     @SuppressLint("WrongConstant")
                     SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
                     String userInfoJson = sharedPreferences.getString("loginInfo", null);
 
-                    AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
+                    AuthCustomer customer = jsonToObject(userInfoJson, AuthCustomer.class);
 
                     Set<String> rfids = rfidToMap.keySet();
                     for (String rfid : rfids) {
@@ -336,8 +336,8 @@ public class c01s005_002_3Activity extends CommonActivity {
                         // ------------ 授权信息 ------------
                         impowerRecorder.setToolCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 合成刀编码
                         impowerRecorder.setRfidLasercode(rfid);// rfid标签
-                        impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                        impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                        impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
+                        impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
                         // TODO 缺少报废，暂时先不报错
                         impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_Bind.getKey().toString());//操作key
 

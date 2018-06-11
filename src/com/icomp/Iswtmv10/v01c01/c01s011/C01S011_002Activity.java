@@ -710,10 +710,10 @@ public class C01S011_002Activity extends CommonActivity {
 
         if (null != tv01 && !"".equals(tv01.getText().toString().trim()) && null != tv02 && !"".equals(tv02.getText().toString().trim())) {
 
-            authorizationWindow(1, new AuthorizationWindowCallBack() {
+            authorizationWindow(new AuthorizationWindowCallBack() {
                 @Override
-                public void success(List<AuthCustomer> authorizationList) {
-                    requestData(authorizationList);
+                public void success(AuthCustomer authCustomer) {
+                    requestData(authCustomer);
                 }
 
                 @Override
@@ -728,7 +728,7 @@ public class C01S011_002Activity extends CommonActivity {
     }
 
 
-    private void requestData(List<AuthCustomer> authorizationList) {
+    private void requestData(AuthCustomer authCustomer) {
         try {
             loading.show();
 
@@ -741,19 +741,19 @@ public class C01S011_002Activity extends CommonActivity {
 
             try {
                 // 需要授权信息
-                if (is_need_authorization && authorizationList != null) {
+                if (is_need_authorization && authCustomer != null) {
                     //设定用户访问信息
                     @SuppressLint("WrongConstant")
                     SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
                     String userInfoJson = sharedPreferences.getString("loginInfo", null);
 
-                    AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
+                    AuthCustomer customer = jsonToObject(userInfoJson, AuthCustomer.class);
 
                     // ------------ 授权信息 ------------
                     impowerRecorder.setToolCode(synthesisCuttingToolBing.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
                     impowerRecorder.setRfidLasercode(synthesisCuttingToolBingRFID);// rfid标签
-                    impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                    impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                    impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
+                    impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
                     impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_Install.getKey().toString());//操作key
 
 //                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名

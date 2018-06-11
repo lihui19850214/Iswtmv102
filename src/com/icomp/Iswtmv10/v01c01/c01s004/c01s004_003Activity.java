@@ -34,6 +34,8 @@ import retrofit2.Retrofit;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 刀具出库页面1
@@ -80,14 +82,14 @@ public class c01s004_003Activity extends CommonActivity {
     DjOutapplyAkp djOutapplyAkp = new DjOutapplyAkp();
     OutApplyVO outApplyVO = new OutApplyVO();
 
+    // 授权信息: lingliao:领料签收；kezhang:科长签收；
+    Map<String, AuthCustomer> authCustomerMap = new HashMap<>();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c01s004_003);
         ButterKnife.bind(this);
-
-//        //创建Activity时，添加到List进行管理
-//        SysApplication.getInstance().addActivity(this);
 
         retrofit = RetrofitSingle.newInstance();
 
@@ -115,6 +117,16 @@ public class c01s004_003Activity extends CommonActivity {
                         if (searchOutLiberaryVOList == null || searchOutLiberaryVOList.size() == 0) {
                             searchOutLiberaryVOList = new ArrayList<>();
                             Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                        } else {
+                            tv01.setText(searchOutLiberaryVOList.get(0).getName());
+                            searchOutLiberaryVO = searchOutLiberaryVOList.get(0);
+
+                            djOutapplyAkp = searchOutLiberaryVO.getDjOutapplyAkp();
+
+                            Message message = new Message();
+                            message.obj = searchOutLiberaryVO;
+                            //输入授权和扫描授权的handler
+                            outOrderInfoHandler.sendMessage(message);
                         }
                     } else {
                         createAlertDialog(c01s004_003Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
@@ -152,24 +164,62 @@ public class c01s004_003Activity extends CommonActivity {
                 if (orderText == null || "".equals(orderText)) {
                     createAlertDialog(this, "请选择要出库的单号", Toast.LENGTH_SHORT);
                     return;
+                } else {
+                    // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
+                    // 如果是钻头需要走另一个流程
+                    if (CuttingToolTypeEnum.dj.getKey().equals(searchOutLiberaryVO.getCuttingToolType()) && CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(searchOutLiberaryVO.getCuttingToolConsumeType())) {
+                        char endChar = searchOutLiberaryVO.getMtlno().charAt(searchOutLiberaryVO.getMtlno().length()-1);
+
+                        Intent intent = null;
+
+                        // 最后一位是字母代表是"旧刀"，反之"新刀"
+                        if (Pattern.matches("[a-zA-Z]", String.valueOf(endChar))) {
+                            intent = new Intent(c01s004_003Activity.this, c01s004_003_1Activity.class);
+                        }
+                        // "新刀"
+                        else {
+                            intent = new Intent(c01s004_003Activity.this, c01s004_003_2Activity.class);
+                        }
+
+                        // 用于页面之间传值，新方法
+                        Map<String, Object> paramMap = new HashMap<>();
+                        paramMap.put("searchOutLiberaryVOList", searchOutLiberaryVOList);
+                        paramMap.put("searchOutLiberaryVO", searchOutLiberaryVO);
+//                        paramMap.put("djOutapplyAkp", djOutapplyAkp);
+                        PARAM_MAP.put(1, paramMap);
+
+                        // 不清空页面之间传递的值
+                        intent.putExtra("isClearParamMap", false);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        // 需要授权
+                        is_need_authorization = true;
+
+                        authorizationWindow("领料授权签收", new AuthorizationWindowCallBack() {
+                            @Override
+                            public void success(AuthCustomer authCustomer) {
+                                authCustomerMap.put("lingliao", authCustomer);
+
+                                authorizationWindow("科长授权签收", new AuthorizationWindowCallBack() {
+                                    @Override
+                                    public void success(AuthCustomer authCustomer) {
+                                        authCustomerMap.put("kezhang", authCustomer);
+                                        requestData(authCustomerMap);
+                                    }
+
+                                    @Override
+                                    public void fail() {}
+                                });
+                            }
+
+                            @Override
+                            public void fail() {}
+                        });
+
+
+                    }
                 }
-
-//                showDialogAlert("出库订单：" + orderText);
-
-                // 需要授权
-                is_need_authorization = true;
-
-                authorizationWindow(2, new AuthorizationWindowCallBack() {
-                    @Override
-                    public void success(List<AuthCustomer> authorizationList) {
-                        requestData(authorizationList);
-                    }
-
-                    @Override
-                    public void fail() {
-
-                    }
-                });
                 break;
             case R.id.ll_02:
                 showPopupWindow();
@@ -298,15 +348,17 @@ public class c01s004_003Activity extends CommonActivity {
     /**
      * 将出库单号数据提交
      */
-    private void requestData(List<AuthCustomer> authorizationList) {
+    private void requestData(Map<String, AuthCustomer> authCustomerMap) {
         try {
             loading.show();
 
-            if (authorizationList != null && authorizationList.size() > 1) {
+            if (authCustomerMap != null) {
+                AuthCustomer authCustomerLingliao = authCustomerMap.get("lingliao");
+                AuthCustomer authCustomerKezhang = authCustomerMap.get("kezhang");
                 // 领料
-                outApplyVO.setLinglOperatorRfidCode(authorizationList.get(0).getRfidContainer().getLaserCode());
+                outApplyVO.setLinglOperatorRfidCode(authCustomerLingliao.getRfidContainer().getLaserCode());
                 // 科长
-                outApplyVO.setKezhangRfidCode(authorizationList.get(1).getRfidContainer().getLaserCode());
+                outApplyVO.setKezhangRfidCode(authCustomerKezhang.getRfidContainer().getLaserCode());
             } else {
                 createAlertDialog(c01s004_003Activity.this, getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
                 return;
@@ -370,50 +422,6 @@ public class c01s004_003Activity extends CommonActivity {
             }
             Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
-    }
-
-
-    /**
-     * 显示数据提示dialog
-     */
-    private void showDialogAlert(String content) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialog2);
-        final AlertDialog dialog = builder.create();
-        View view = View.inflate(this, R.layout.dialog_alert, null);
-        Button btnConfirm = (Button) view.findViewById(R.id.btn_confirm);
-        Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
-        TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
-        tvContent.setText(content);
-
-        btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                is_need_authorization = true;
-                authorizationWindow(2, new AuthorizationWindowCallBack() {
-                    @Override
-                    public void success(List<AuthCustomer> authorizationList) {
-                        requestData(authorizationList);
-                    }
-
-                    @Override
-                    public void fail() {
-
-                    }
-                });
-                dialog.dismiss();
-            }
-        });
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
-
-        dialog.show();
-        dialog.setContentView(view);
-        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
     }
 
 }
