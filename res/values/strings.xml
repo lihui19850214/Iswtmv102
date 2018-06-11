@@ -185,6 +185,7 @@
     <string name="initialization">初始化</string>
     <string name="serialNumber">序号</string>
     <string name="materialNumber">材料号</string>
+    <string name="knifeBodyCode">刀身码</string>
     <string name="singleProductCode">单品编码</string>
     <string name="syntheticTool">合成刀具</string>
     <string name="syntheticToolCoding">合成刀具编码</string>
