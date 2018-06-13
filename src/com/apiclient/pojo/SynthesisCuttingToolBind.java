@@ -9,7 +9,7 @@ import java.util.List;
 * Automated Build
 * 实体 SynthesisCuttingToolBind 
 */
-public class SynthesisCuttingToolBind implements Serializable {
+public class SynthesisCuttingToolBind implements Serializable{
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -56,6 +56,12 @@ public class SynthesisCuttingToolBind implements Serializable {
     * @Description  合成刀业务编码
      */
     private String synthesisCode;
+    /**
+     * @fieldName bladeCode
+    * @fieldType  Integer
+    * @Description  刀身码
+     */
+    private String bladeCode;
 
     /**
      * @fieldName rfidContainerCode
@@ -70,6 +76,7 @@ public class SynthesisCuttingToolBind implements Serializable {
      */
     private SynthesisCuttingTool synthesisCuttingTool;
 
+    private List<SynthesisCuttingToolBindleRecords> synthesisCuttingToolBindleRecordsList;
     private List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList;
 
 
@@ -124,6 +131,13 @@ public class SynthesisCuttingToolBind implements Serializable {
     public void setSynthesisCode(String synthesisCode) {
         this.synthesisCode = synthesisCode;
     }
+    public String getBladeCode() {
+        return bladeCode;
+    }
+
+    public void setBladeCode(String bladeCode) {
+        this.bladeCode = bladeCode;
+    }
 
     public RfidContainer getRfidContainer() {
         return rfidContainer;
@@ -140,6 +154,13 @@ public class SynthesisCuttingToolBind implements Serializable {
         this.synthesisCuttingTool = synthesisCuttingTool;
     }
 
+    public List<SynthesisCuttingToolBindleRecords> getSynthesisCuttingToolBindleRecordsList() {
+        return synthesisCuttingToolBindleRecordsList;
+    }
+
+    public void setSynthesisCuttingToolBindleRecordsList(List<SynthesisCuttingToolBindleRecords> synthesisCuttingToolBindleRecordsList) {
+        this.synthesisCuttingToolBindleRecordsList = synthesisCuttingToolBindleRecordsList;
+    }
     public List<SynthesisCuttingToolLocation> getSynthesisCuttingToolLocationList() {
         return synthesisCuttingToolLocationList;
     }

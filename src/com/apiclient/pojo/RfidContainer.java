@@ -9,7 +9,7 @@ import java.util.List;
 * Automated Build
 * 实体 RfidContainer 
 */
-public class RfidContainer implements Serializable {
+public class RfidContainer implements Serializable{
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -58,10 +58,10 @@ public class RfidContainer implements Serializable {
     private Integer isDel;
     /**
      * @fieldName operatorCode
-    * @fieldType  Integer
+    * @fieldType  String
     * @Description  操作人
      */
-    private Integer operatorCode;
+    private String operatorCode;
     /**
      * @fieldName prevOperation
     * @fieldType  String
@@ -87,11 +87,18 @@ public class RfidContainer implements Serializable {
      */
     private String operatorName;
     /**
-     * @fieldName operatorTime
-     * @fieldType  Timestamp
-     * @Description  操作时间
-     */
+     * @fieldName operatorTime
+    * @fieldType  Timestamp
+    * @Description  最后操作时间
+     */
     private Timestamp operatorTime;
+    /**
+     * @fieldName synthesisBladeCode
+    * @fieldType  String
+    * @Description  合成刀刀身码
+     */
+    private String synthesisBladeCode;
+
 
     private List<AuthCustomer> authCustomerList;
     private List<CuttingToolBind> cuttingToolBindList;
@@ -150,11 +157,11 @@ public class RfidContainer implements Serializable {
     public void setIsDel(Integer isDel) {
         this.isDel = isDel;
     }
-    public Integer getOperatorCode() {
+    public String getOperatorCode() {
         return operatorCode;
     }
 
-    public void setOperatorCode(Integer operatorCode) {
+    public void setOperatorCode(String operatorCode) {
         this.operatorCode = operatorCode;
     }
     public String getPrevOperation() {
@@ -185,6 +192,20 @@ public class RfidContainer implements Serializable {
     public void setOperatorName(String operatorName) {
         this.operatorName = operatorName;
     }
+    public Timestamp getOperatorTime() {
+        return operatorTime;
+    }
+
+    public void setOperatorTime(Timestamp operatorTime) {
+        this.operatorTime = operatorTime;
+    }
+    public String getSynthesisBladeCode() {
+        return synthesisBladeCode;
+    }
+
+    public void setSynthesisBladeCode(String synthesisBladeCode) {
+        this.synthesisBladeCode = synthesisBladeCode;
+    }
 
 
     public List<AuthCustomer> getAuthCustomerList() {
@@ -214,14 +235,6 @@ public class RfidContainer implements Serializable {
 
     public void setSynthesisCuttingToolBindList(List<SynthesisCuttingToolBind> synthesisCuttingToolBindList) {
         this.synthesisCuttingToolBindList = synthesisCuttingToolBindList;
-    }
-
-    public Timestamp getOperatorTime() {
-        return operatorTime;
-    }
-
-    public void setOperatorTime(Timestamp operatorTime) {
-        this.operatorTime = operatorTime;
     }
 
 }
