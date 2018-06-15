@@ -3,24 +3,31 @@ package com.icomp.Iswtmv10.v01c01.c01s018;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.os.Message;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.*;
-import com.apiclient.vo.*;
+import com.apiclient.vo.InsideVO;
+import com.apiclient.vo.ProductLineEquipmentVO;
+import com.apiclient.vo.RfidContainerVO;
+import com.apiclient.vo.SharpenVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
-import com.icomp.common.activity.AuthorizationWindowCallBack;
+import com.icomp.Iswtmv10.v01c01.c01s011.C01S011_002Activity;
 import com.icomp.common.activity.CommonActivity;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -46,11 +53,20 @@ public class C01S018_003Activity extends CommonActivity {
     @BindView(R.id.btnNext)
     Button btnNext;
 
-    @BindView(R.id.tv_00)
-    TextView tv00;
+
     @BindView(R.id.tvScan)
     TextView tvScan;
 
+    @BindView(R.id.tv_01)
+    TextView tv01;
+    @BindView(R.id.ll_01)
+    LinearLayout ll01;
+
+
+    // 设备列表
+    List<ProductLineEquipment> productLineEquipmentList = new ArrayList<>();
+    //选中的设备列表项
+    ProductLineEquipment productLineEquipment = null;
 
     // 根据 rfid 查询的数据
     private Map<String, CuttingToolBind> rfidToMap = new HashMap<>();
@@ -89,6 +105,66 @@ public class C01S018_003Activity extends CommonActivity {
         }
     }
 
+    private void init() {
+        try {
+            //调用接口，查询合成刀具组成信息
+            IRequest iRequest = retrofit.create(IRequest.class);
+
+            String jsonStr = "{}";
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+            Call<String> queryGrindingEquipments = iRequest.queryGrindingEquipments(body);
+            queryGrindingEquipments.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            // 设备下拉列表项
+                            productLineEquipmentList = jsonToObject(response.body(), List.class, ProductLineEquipment.class);
+                            if (productLineEquipmentList == null || productLineEquipmentList.size() == 0) {
+                                productLineEquipmentList = new ArrayList<>();
+                                Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            createAlertDialog(C01S018_003Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    } finally {
+                        if (null != loading && loading.isShowing()) {
+                            loading.dismiss();
+                        }
+                    }
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
+                            }
+                            createAlertDialog(C01S018_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (null != loading && loading.isShowing()) {
+                        loading.dismiss();
+                    }
+                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     @OnClick({R.id.btnCancel, R.id.btnNext, R.id.tvScan})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -106,17 +182,18 @@ public class C01S018_003Activity extends CommonActivity {
                 if (equipmentCode == null || "".equals(equipmentCode)) {
                     createAlertDialog(C01S018_003Activity.this, "请扫描设备", Toast.LENGTH_LONG);
                 } else {
-                    authorizationWindow(1, new AuthorizationWindowCallBack() {
-                        @Override
-                        public void success(List<AuthCustomer> authorizationList) {
-                            requestData(authorizationList);
-                        }
-
-                        @Override
-                        public void fail() {
-
-                        }
-                    });
+                    requestData(null);
+//                    authorizationWindow(new AuthorizationWindowCallBack() {
+//                        @Override
+//                        public void success(AuthCustomer authCustomer) {
+//                            requestData(authCustomer);
+//                        }
+//
+//                        @Override
+//                        public void fail() {
+//
+//                        }
+//                    });
                 }
                 break;
         }
@@ -130,22 +207,21 @@ public class C01S018_003Activity extends CommonActivity {
 
         TextView tvCaiLiao = (TextView) mLinearLayout.findViewById(R.id.tvCailiao);
         TextView tvsingleProductCode = (TextView) mLinearLayout.findViewById(R.id.tvsingleProductCode);
-        TextView tvNum = (TextView) mLinearLayout.findViewById(R.id.tvNum);
+//        TextView tvNum = (TextView) mLinearLayout.findViewById(R.id.tvNum);
 
         tvCaiLiao.setText(cailiao);
 
         tvCaiLiao.setText(cailiao);
         if (laserCode == null || "".equals(laserCode)) {
             tvsingleProductCode.setText("-");
-            tvNum.setText(num);
+//            tvNum.setText(num);
         } else {
             tvsingleProductCode.setText(laserCode);
-            tvNum.setText("-");
+//            tvNum.setText("-");
         }
 
         mLlContainer.addView(mLinearLayout);
     }
-
 
 
     //扫描线程
@@ -208,66 +284,52 @@ public class C01S018_003Activity extends CommonActivity {
                     RfidContainerVO rfidContainerVO = new RfidContainerVO();
                     rfidContainerVO.setLaserCode(rfidString);
 
-                    ProductLineEquipmentVO productLineEquipmentVO = new ProductLineEquipmentVO();
-                    productLineEquipmentVO.setRfidContainerVO(rfidContainerVO);
+
+                    ProductLineEquipmentVO equipmentVO = new ProductLineEquipmentVO();
+                    equipmentVO.setRfidContainerVO(rfidContainerVO);
 
                     //调用接口，查询合成刀具组成信息
                     IRequest iRequest = retrofit.create(IRequest.class);
 
-                    String jsonStr = objectToJson(productLineEquipmentVO);
-                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+                    String jsonStr = objectToJson(equipmentVO);
+                    RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                    Call<String> searchProductLineEquipment = iRequest.searchProductLineEquipment(body);
-                    searchProductLineEquipment.enqueue(new MyCallBack<String>() {
+                    Call<String> queryGrindingEquipmentsByRFID = iRequest.queryGrindingEquipmentsByRFID(body);
+                    queryGrindingEquipmentsByRFID.enqueue(new MyCallBack<String>() {
                         @Override
                         public void _onResponse(Response<String> response) {
                             try {
                                 if (response.raw().code() == 200) {
-                                    final ProductLineEquipment productLineEquipment = jsonToObject(response.body(), ProductLineEquipment.class);
-                                    if (productLineEquipment != null) {
-                                        equipmentCode = productLineEquipment.getCode();
+                                    final ProductLineEquipment productLineEquipmentTemp = jsonToObject(response.body(), ProductLineEquipment.class);
+                                    if (productLineEquipmentTemp != null) {
+                                        equipmentCode = productLineEquipmentTemp.getCode();
 
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                tv00.setText(productLineEquipment.getName());
+                                        boolean isPiPei = false;
+                                        // 设备下拉列表项
+                                        for (ProductLineEquipment equipment : productLineEquipmentList) {
+                                            if (equipmentCode.equals(equipment.getCode())) {
+                                                tv01.setText(equipment.getName());
+                                                productLineEquipment = equipment;
+                                                isPiPei = true;
+                                                break;
                                             }
-                                        });
+                                        }
+                                        if (!isPiPei) {
+                                            Toast.makeText(getApplicationContext(), "设备列表中没有此设备", Toast.LENGTH_SHORT).show();
+                                        }
                                     } else {
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                        Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
-                                    final String errorStr = response.errorBody().string();
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            createAlertDialog(C01S018_003Activity.this, errorStr, Toast.LENGTH_LONG);
-                                        }
-                                    });
-
+                                    createAlertDialog(C01S018_003Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                             } finally {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (null != loading && loading.isShowing()) {
-                                            loading.dismiss();
-                                        }
-                                    }
-                                });
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
+                                }
                             }
                         }
 
@@ -301,6 +363,68 @@ public class C01S018_003Activity extends CommonActivity {
     }
 
 
+    /**
+     * 点击安上设备下拉框
+     */
+    private void showPopupWindow() {
+        View view = LayoutInflater.from(C01S018_003Activity.this).inflate(R.layout.spinner_c03s004_001, null);
+        ListView listView = (ListView) view.findViewById(R.id.ll_spinner);
+        MyAdapter myAdapter = new MyAdapter();
+        listView.setAdapter(myAdapter);
+        final PopupWindow popupWindow = new PopupWindow(view, ll01.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setBackgroundDrawable(new PaintDrawable());
+        popupWindow.setFocusable(true);
+        popupWindow.setTouchable(true);
+        popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                    popupWindow.dismiss();
+                    return true;
+                }
+                return false;
+            }
+        });
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                tv01.setText(productLineEquipmentList.get(i).getName());
+                productLineEquipment = productLineEquipmentList.get(i);
+
+                popupWindow.dismiss();
+            }
+        });
+        popupWindow.showAsDropDown(ll01);
+    }
+
+    //设备的Adapter
+    class MyAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return productLineEquipmentList.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return productLineEquipmentList.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            View view1 = LayoutInflater.from(C01S018_003Activity.this).inflate(R.layout.item_c03s004_001, null);
+            TextView textView = (TextView) view1.findViewById(R.id.tv_01);
+            textView.setText(productLineEquipmentList.get(i).getName());
+            return view1;
+        }
+    }
+
+
 //    @Override
 //    protected void onNewIntent(Intent intent) {
 //        super.onNewIntent(intent);
@@ -320,9 +444,8 @@ public class C01S018_003Activity extends CommonActivity {
 //        }
 //    }
 
-
     //提交添加场内刃磨
-    private void requestData(List<AuthCustomer> authorizationList) {
+    private void requestData(AuthCustomer authCustomer) {
         try {
             loading.show();
 
@@ -335,13 +458,13 @@ public class C01S018_003Activity extends CommonActivity {
 
             try {
                 // 需要授权信息
-                if (is_need_authorization && authorizationList != null) {
+                if (is_need_authorization && authCustomer != null) {
                     //设定用户访问信息
                     @SuppressLint("WrongConstant")
                     SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
                     String userInfoJson = sharedPreferences.getString("loginInfo", null);
 
-                    AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
+                    AuthCustomer customer = jsonToObject(userInfoJson, AuthCustomer.class);
 
                     Set<String> rfids = rfidToMap.keySet();
                     for (String rfid : rfids) {
@@ -351,8 +474,8 @@ public class C01S018_003Activity extends CommonActivity {
                         // ------------ 授权信息 ------------
                         impowerRecorder.setToolCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 合成刀编码
                         impowerRecorder.setRfidLasercode(rfid);// rfid标签
-                        impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                        impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                        impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
+                        impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
                         impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_Inside.getKey().toString());//操作key
 
 //                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
@@ -380,11 +503,11 @@ public class C01S018_003Activity extends CommonActivity {
             insideVO.setEquipmentCode(equipmentCode);
 
             String jsonStr = objectToJson(insideVO);
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+// TODO 没有异常处理，代码需要去掉
+            Call<String> insideGrinding = iRequest.insideGrinding(body, headsMap);
 
-            Call<String> addInsideFactory = iRequest.addInsideFactory(body, headsMap);
-
-            addInsideFactory.enqueue(new MyCallBack<String>() {
+            insideGrinding.enqueue(new MyCallBack<String>() {
                 @Override
                 public void _onResponse(Response<String> response) {
                     try {

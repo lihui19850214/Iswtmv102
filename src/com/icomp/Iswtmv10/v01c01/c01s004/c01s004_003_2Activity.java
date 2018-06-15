@@ -1,20 +1,22 @@
 package com.icomp.Iswtmv10.v01c01.c01s004;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Message;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.AuthCustomer;
+import com.apiclient.pojo.CuttingToolBind;
 import com.apiclient.pojo.DjOutapplyAkp;
+import com.apiclient.pojo.RfidContainer;
+import com.apiclient.vo.AuthCustomerVO;
 import com.apiclient.vo.OutApplyVO;
 import com.apiclient.vo.SearchOutLiberaryVO;
 import com.apiclient.vo.SynthesisCuttingToolInitVO;
@@ -25,17 +27,14 @@ import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.activity.ExceptionProcessCallBack;
+import com.icomp.common.utils.FCBCodeHandler;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 刀具出库页面2-新刀
@@ -45,15 +44,20 @@ public class c01s004_003_2Activity extends CommonActivity {
 
     @BindView(R.id.tv_01)
     TextView tv01;
-    @BindView(R.id.llContainer)
-    LinearLayout llContainer;
-
+    @BindView(R.id.tv_02)
+    TextView tv02;
+    @BindView(R.id.tvScan)
+    TextView tvScan;
     @BindView(R.id.btnReturn)
     Button btnReturn;
     @BindView(R.id.btnNext)
     Button btnNext;
-
     private Retrofit retrofit;
+
+    // 出库数
+    int outageNumber = 0;
+    // 输入的刀身码数量
+    int bladeCodeNum = 0;
 
     // 出库订单
     List<SearchOutLiberaryVO> searchOutLiberaryVOList = new ArrayList<>();
@@ -67,72 +71,48 @@ public class c01s004_003_2Activity extends CommonActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_c01s004_003_1);
+        setContentView(R.layout.activity_c01s004_003_2);
         ButterKnife.bind(this);
 
         retrofit = RetrofitSingle.newInstance();
 
-        initView();
+        // TODO 调试数据
+//        bladeCodeNum = 2;
+//        rfidSet.add("rfid1");
+//        rfidSet.add("rfid2");
+
+        try {
+            Map<String, Object> paramMap = PARAM_MAP.get(1);
+            searchOutLiberaryVOList = (List<SearchOutLiberaryVO>) paramMap.get("searchOutLiberaryVOList");
+            searchOutLiberaryVO = (SearchOutLiberaryVO) paramMap.get("searchOutLiberaryVO");
+            djOutapplyAkp = (DjOutapplyAkp) paramMap.get("djOutapplyAkp");
+
+            outageNumber = Integer.parseInt(djOutapplyAkp.getUnitqty());
+            tv01.setText(outageNumber+"");
+            tv02.setText(bladeCodeNum+"");
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
+
         // 出库数量==已扫描数量(标签不需要验证)，如果满足就挤掉第一个
     }
 
-    /**
-     * 将上一画面的信息展示到当前画面，进行信息确认
-     */
-    private void initView() {
-        loading.show();
-        IRequest iRequest = retrofit.create(IRequest.class);
 
-        String jsonStr = "{}";
-        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
-        Call<String> getOrders = iRequest.getOrders(body);
-
-        getOrders.enqueue(new MyCallBack<String>() {
-            @Override
-            public void _onResponse(Response<String> response) {
-                try {
-                    if (response.raw().code() == 200) {
-                        searchOutLiberaryVOList = jsonToObject(response.body(), List.class, SearchOutLiberaryVO.class);
-                        if (searchOutLiberaryVOList == null || searchOutLiberaryVOList.size() == 0) {
-                            searchOutLiberaryVOList = new ArrayList<>();
-                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        createAlertDialog(c01s004_003_2Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                } finally {
-                    if (null != loading && loading.isShowing()) {
-                        loading.dismiss();
-                    }
-                }
-            }
-
-            @Override
-            public void _onFailure(Throwable t) {
-                if (null != loading && loading.isShowing()) {
-                    loading.dismiss();
-                }
-                createAlertDialog(c01s004_003_2Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-            }
-        });
-    }
-
-    @OnClick({R.id.btnReturn, R.id.btnNext, R.id.ll_02})
+    @OnClick({R.id.btnReturn, R.id.btnNext, R.id.tvScan})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnReturn:
+                Intent intent = new Intent(c01s004_003_2Activity.this, c01s004_003Activity.class);
+                // 不清空页面之间传递的值
+                intent.putExtra("isClearParamMap", false);
+                startActivity(intent);
                 finish();
                 break;
             case R.id.btnNext:
-                //如果取TEXT值则可以直接取:outOrder.getSelectedItem.ToString()或者:((CItem)outOrder.getSelectedItem).getValue();
-                String orderText = tv01.getText().toString();
 
-                if (orderText == null || "".equals(orderText)) {
-                    createAlertDialog(this, "请选择要出库的单号", Toast.LENGTH_SHORT);
+                if (outageNumber != bladeCodeNum) {
+                    createAlertDialog(this, "请继续扫描刀盒上的标签", Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -152,13 +132,18 @@ public class c01s004_003_2Activity extends CommonActivity {
                             }
 
                             @Override
-                            public void fail() {}
+                            public void fail() {
+                            }
                         });
                     }
 
                     @Override
-                    public void fail() {}
+                    public void fail() {
+                    }
                 });
+                break;
+            case R.id.tvScan:
+                scan();
                 break;
             default:
         }
@@ -174,36 +159,42 @@ public class c01s004_003_2Activity extends CommonActivity {
             if (authCustomerMap != null) {
                 AuthCustomer authCustomerLingliao = authCustomerMap.get("lingliao");
                 AuthCustomer authCustomerKezhang = authCustomerMap.get("kezhang");
+
+                AuthCustomerVO llAuthCustomerVO = new AuthCustomerVO();
+                AuthCustomerVO kzAuthCustomerVO = new AuthCustomerVO();
+
+                llAuthCustomerVO.setCode(llAuthCustomerVO.getCode());
+                kzAuthCustomerVO.setCode(kzAuthCustomerVO.getCode());
                 // 领料
-                outApplyVO.setLinglOperatorRfidCode(authCustomerLingliao.getRfidContainer().getLaserCode());
+                outApplyVO.setLlAuthCustomerVO(llAuthCustomerVO);
                 // 科长
-                outApplyVO.setKezhangRfidCode(authCustomerKezhang.getRfidContainer().getLaserCode());
+                outApplyVO.setKzAuthCustomerVO(kzAuthCustomerVO);
             } else {
                 createAlertDialog(c01s004_003_2Activity.this, getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
                 return;
             }
 
-            try {
-                //设定用户访问信息
-                @SuppressLint("WrongConstant")
-                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
-                String userInfoJson = sharedPreferences.getString("loginInfo", null);
 
-                AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
-                outApplyVO.setKuguanOperatorCode(authCustomer.getCode());// 操作者code
-            } catch (IOException e) {
-                e.printStackTrace();
-                createAlertDialog(c01s004_003_2Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
-                return;
+            List<CuttingToolBind> cuttingToolBindsList = new ArrayList<>();
+
+            for (String rfid : rfidSet) {
+                RfidContainer rfidContainer = new RfidContainer();
+                rfidContainer.setLaserCode(rfid);
+
+                CuttingToolBind cuttingToolBind = new CuttingToolBind();
+                cuttingToolBind.setRfidContainer(rfidContainer);// 标签
+
+                cuttingToolBindsList.add(cuttingToolBind);
             }
 
-            IRequest iRequest = retrofit.create(IRequest.class);
-
-            outApplyVO.setDjOutapplyAkp(djOutapplyAkp);
+            outApplyVO.setCuttingToolBinds(cuttingToolBindsList);
+            outApplyVO.setApplyno(djOutapplyAkp.getApplyno());
+            outApplyVO.setMtlCode(FCBCodeHandler.fcbCodeHandler(djOutapplyAkp.getMtlno()));
 
             String jsonStr = objectToJson(outApplyVO);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
+            IRequest iRequest = retrofit.create(IRequest.class);
             Call<String> outApply = iRequest.outApply(body);
             outApply.enqueue(new MyCallBack<String>() {
                 @Override
@@ -243,35 +234,11 @@ public class c01s004_003_2Activity extends CommonActivity {
         }
     }
 
-    int position = 0;
-    /**
-     * 添加布局
-     */
-    private void addLayout(final String cailiao, String laserCode, final String rfid, String num) {
-        final View mLinearLayout = LayoutInflater.from(this).inflate(R.layout.item_chukubind, null);
-
-        final TextView tvWuliao = (TextView) mLinearLayout.findViewById(R.id.tvWuliao);
-        TextView tvsingleProductCode = (TextView) mLinearLayout.findViewById(R.id.tvsingleProductCode);//单品编码
-        TextView tvBind = (TextView) mLinearLayout.findViewById(R.id.tvBind);
-
-        tvWuliao.setText(cailiao);
-        tvsingleProductCode.setText(laserCode);
-
-        tvWuliao.setTag(position);
-        mLinearLayout.setTag(position);
-
-        tvBind.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scan();
-            }
-        });
-
-        position++;
-        llContainer.addView(mLinearLayout);
-    }
-
     //-----------------------------扫描开始-------------------------------
+
+    Set<String> rfidSet = new HashSet<>();
+    List<String> rfidList = new ArrayList<>();
+
     /**
      * 开始扫描
      */
@@ -318,132 +285,28 @@ public class c01s004_003_2Activity extends CommonActivity {
                             popupWindow.dismiss();
                         }
 
-                        loading.show();
+                        if (rfidSet.contains(rfidString)) {
+                            // 重复扫描
+                            Toast.makeText(getApplicationContext(), "重复扫描", Toast.LENGTH_SHORT).show();
+                        } else {
+                            if (bladeCodeNum < Integer.parseInt(djOutapplyAkp.getUnitqty())) {
+                                bladeCodeNum++;
+                                tv02.setText(bladeCodeNum+"");
+                                rfidSet.add(rfidString);
+                            } else {
+                                rfidSet.remove(rfidList.remove(0));
+
+                                rfidSet.add(rfidString);
+                                rfidList.add(rfidString);
+                            }
+                        }
                     }
                 });
 
-                try {
-                    //调用接口，查询合成刀具组成信息
-                    IRequest iRequest = retrofit.create(IRequest.class);
-
-                    SynthesisCuttingToolInitVO synthesisCuttingToolInitVO = new SynthesisCuttingToolInitVO();
-                    synthesisCuttingToolInitVO.setRfidCode(rfidString);
-
-                    String jsonStr = objectToJson(synthesisCuttingToolInitVO);
-                    RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
-                    Map<String, String> headsMap = new HashMap<>();
-                    headsMap.put("impower", OperationEnum.SynthesisCuttingTool_UnConfig.getKey().toString());
-
-                    Call<String> getBind = iRequest.getBind(body, headsMap);
-                    getBind.enqueue(new MyCallBack<String>() {
-                        @Override
-                        public void _onResponse(Response<String> response) {
-                            try {
-                                String inpower = response.headers().get("impower");
-
-                                if (response.raw().code() == 200) {
-//                                    synthesisCuttingToolBind = jsonToObject(response.body(), SynthesisCuttingToolBind.class);
-//                                    synthesisCuttingToolBindRFID = rfidString;
-//
-//                                    if (synthesisCuttingToolBind != null) {
-//                                        setTextViewHandler(inpower);
-//                                    } else {
-//                                        Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
-//                                    }
-                                } else {
-                                    final String errorStr = response.errorBody().string();
-                                    createAlertDialog(c01s004_003_2Activity.this, errorStr, Toast.LENGTH_LONG);
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                            } finally {
-                                if (null != loading && loading.isShowing()) {
-                                    loading.dismiss();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void _onFailure(Throwable t) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (null != loading && loading.isShowing()) {
-                                        loading.dismiss();
-                                    }
-                                    createAlertDialog(c01s004_003_2Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                                }
-                            });
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (null != loading && loading.isShowing()) {
-                                loading.dismiss();
-                            }
-                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
             }
         }
     }
 
-
-
-    public void setTextViewHandler(String inpower) {
-        try {
-            Map<String, String> inpowerMap = jsonToObject(inpower, Map.class);
-
-            // 判断是否显示提示框
-            if ("1".equals(inpowerMap.get("type"))) {
-                // 是否需要授权 true为需要授权；false为不需要授权
-                is_need_authorization = false;
-
-
-            } else if ("2".equals(inpowerMap.get("type"))) {
-                is_need_authorization = true;
-                exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                    @Override
-                    public void confirm() {
-
-                    }
-
-                    @Override
-                    public void cancel() {
-                        // 不做任何操作
-                    }
-                });
-            } else if ("3".equals(inpowerMap.get("type"))) {
-                is_need_authorization = false;
-                stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                    @Override
-                    public void confirm() {
-                        finish();
-                    }
-
-                    @Override
-                    public void cancel() {
-                        // 实际上没有用
-                        finish();
-                    }
-                });
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
     //-----------------------------扫描结束-------------------------------
 
 }

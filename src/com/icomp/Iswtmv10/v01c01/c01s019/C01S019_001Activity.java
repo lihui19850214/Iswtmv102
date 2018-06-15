@@ -60,6 +60,10 @@ public class C01S019_001Activity extends CommonActivity {
     private int position = 0;
 
     private List<SharpenVO> sharpenVOList = new ArrayList<>();
+    // 物料号列表项
+    List<CuttingTool> cuttingToolList = new ArrayList<>();
+    // 物料号选项
+    CuttingTool cuttingTool = new CuttingTool();
 
     // 根据 rfid 查询的数据
     private Map<String, CuttingToolBind> rfidToMap = new HashMap<>();
@@ -202,58 +206,198 @@ public class C01S019_001Activity extends CommonActivity {
 //        }
 //    }
 
-    //查询弹框
-    private PopupWindow addPopupWindow;
 
     /**
      * 显示数据提示dialog
      */
-    //显示材料号和修磨数量的弹框
+    //显示物料号和刀身码的弹框
     private void showDialog() {
-        if (null == addPopupWindow || !addPopupWindow.isShowing()) {
-            //点击查询按钮以后，设置扫描按钮不可用
-            LayoutInflater layoutInflater = LayoutInflater.from(this);
-            final View view = layoutInflater.inflate(R.layout.dialog_c01s018_001, null);
-            addPopupWindow = new PopupWindow(view, (int) (screenWidth * 0.8), (int) (screenHeight * 0.4));
-            addPopupWindow.setFocusable(true);
-            addPopupWindow.setOutsideTouchable(false);
-            addPopupWindow.showAtLocation(view, Gravity.CENTER_VERTICAL, 0, 0);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.dialog_c01s018_001, null);
+        final AlertDialog dialog = new AlertDialog.Builder(this, R.style.MyDialog).create();
+//        dialog.setView((this).getLayoutInflater().inflate(R.layout.dialog_c01s018_001, null));
 
-            final EditText etmaterialNumber = (EditText) view.findViewById(R.id.etmaterialNumber);
-            etmaterialNumber.setTransformationMethod(new AllCapTransformationMethod());
-            final EditText etgrindingQuantity = (EditText) view.findViewById(R.id.etgrindingQuantity);
 
-            Button btnCancel = (Button) view.findViewById(R.id.btnCancel);
-            Button btnConfirm = (Button) view.findViewById(R.id.btnConfirm);
+        final EditText et_t = (EditText) view.findViewById(R.id.et_t);
+        final EditText etgrindingQuantity = (EditText) view.findViewById(R.id.etgrindingQuantity);
 
-            btnCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    addPopupWindow.dismiss();
+        final LinearLayout ll01 = (LinearLayout) view.findViewById(R.id.ll_01);
+        final TextView tv01 = (TextView) view.findViewById(R.id.tv_01);
+
+        // 物料号下拉列表
+        ll01.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 收起软键盘
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(etgrindingQuantity.getWindowToken(), 0);
+
+                View view = LayoutInflater.from(C01S019_001Activity.this).inflate(R.layout.spinner_c03s004_001, null);
+                ListView listView = (ListView) view.findViewById(R.id.ll_spinner);
+                MyAdapter2 myAdapter = new MyAdapter2();
+                listView.setAdapter(myAdapter);
+
+                final PopupWindow popupWindow = new PopupWindow(view, ll01.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT, true);
+                popupWindow.setBackgroundDrawable(new PaintDrawable());
+                popupWindow.setFocusable(true);
+                popupWindow.setTouchable(true);
+
+                popupWindow.setTouchInterceptor(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if (motionEvent.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                            popupWindow.dismiss();
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        tv01.setText(cuttingToolList.get(i).getBusinessCode());
+                        cuttingTool = cuttingToolList.get(i);
+                        // TODO 取值不正确
+                        popupWindow.dismiss();
+                    }
+                });
+                popupWindow.showAsDropDown(ll01);
+            }
+        });
+
+        Button btnCancel = (Button) view.findViewById(R.id.btnCancel);
+        Button btnConfirm = (Button) view.findViewById(R.id.btnConfirm);
+        Button btnSearch = (Button) view.findViewById(R.id.btnSearch);
+
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null == et_t.getText().toString().trim() || "".equals(et_t.getText().toString().trim())) {
+                    createAlertDialog(C01S019_001Activity.this, "请输入合成刀", Toast.LENGTH_LONG);
+                } else {
+                    searchBysynthesisCode(et_t.getText().toString().trim());
                 }
-            });
+            }
+        });
 
-            btnConfirm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (null == etmaterialNumber.getText().toString().trim() || "".equals(etmaterialNumber.getText().toString().trim())) {
-                        createAlertDialog(C01S019_001Activity.this, "请输入材料号", Toast.LENGTH_LONG);
-                    } else if (null == etgrindingQuantity.getText().toString().trim() || "".equals(etgrindingQuantity.getText().toString().trim())) {
-                        createAlertDialog(C01S019_001Activity.this, "请输入修磨数量", Toast.LENGTH_LONG);
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (null == cuttingTool) {
+                    createAlertDialog(C01S019_001Activity.this, "请选择物料号", Toast.LENGTH_LONG);
+                } else if (null == etgrindingQuantity.getText() || "".equals(etgrindingQuantity.getText().toString().trim())) {
+                    createAlertDialog(C01S019_001Activity.this, "请输入修磨数量", Toast.LENGTH_LONG);
+                } else {
+                    if (Integer.parseInt(etgrindingQuantity.getText().toString()) <= 0) {
+                        createAlertDialog(C01S019_001Activity.this, "数量要大于0", 0);
+                        return;
+                    }
+                    if (materialNumToMap.containsKey(cuttingTool.getBusinessCode())) {
+                        createAlertDialog(C01S019_001Activity.this, "已存在", Toast.LENGTH_SHORT);
                     } else {
-                        if (Integer.parseInt(etgrindingQuantity.getText().toString()) <= 0) {
-                            createAlertDialog(C01S019_001Activity.this, "数量要大于0", 0);
-                            return;
-                        }
-                        if (materialNumToMap.containsKey(etmaterialNumber.getText().toString())) {
-                            createAlertDialog(C01S019_001Activity.this, "已存在", Toast.LENGTH_SHORT);
-                        } else {
-                            search(etmaterialNumber.getText().toString().trim(), etgrindingQuantity.getText().toString().trim());
-                        }
-                        addPopupWindow.dismiss();
+                        dialog.dismiss();
+                        search(cuttingTool.getBusinessCode(), etgrindingQuantity.getText().toString().trim());
                     }
                 }
+            }
+        });
+
+
+        dialog.show();
+        dialog.setContentView(view);
+//        dialog.getWindow().setContentView(view);
+        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
+
+    }
+
+    //物料号下拉框的Adapter
+    class MyAdapter2 extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return cuttingToolList.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return cuttingToolList.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            View view1 = LayoutInflater.from(C01S019_001Activity.this).inflate(R.layout.item_c03s004_001, null);
+            TextView textView = (TextView) view1.findViewById(R.id.tv_01);
+            textView.setText(cuttingToolList.get(i).getBusinessCode());
+            //TODO 需要取值数据
+            return view1;
+        }
+    }
+
+
+    /**
+     * 输入合成刀T号，查询材料刀具信息
+     * @param synthesisCode
+     */
+    private void searchBysynthesisCode(final String synthesisCode) {
+        try {
+            loading.show();
+            IRequest iRequest = retrofit.create(IRequest.class);
+
+            SynthesisCuttingToolVO synthesisCuttingToolVO = new SynthesisCuttingToolVO();
+            synthesisCuttingToolVO.setSynthesisCode(synthesisCode);
+
+            String jsonStr = objectToJson(synthesisCuttingToolVO);
+            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+            Call<String> getCuttingToolByTCode = iRequest.getCuttingToolByTCode(body);
+            getCuttingToolByTCode.enqueue(new MyCallBack<String>() {
+                @Override
+                public void _onResponse(Response<String> response) {
+                    try {
+                        if (response.raw().code() == 200) {
+                            cuttingToolList = jsonToObject(response.body(), List.class, CuttingTool.class);
+
+                            if (cuttingToolList == null || cuttingToolList.size() == 0) {
+                                cuttingToolList = new ArrayList<>();
+                                Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            createAlertDialog(C01S019_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    } finally {
+                        loading.dismiss();
+                    }
+                }
+
+                @Override
+                public void _onFailure(Throwable t) {
+                    loading.dismiss();
+                    createAlertDialog(C01S019_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                }
             });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (null != loading && loading.isShowing()) {
+                loading.dismiss();
+            }
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
     }
 

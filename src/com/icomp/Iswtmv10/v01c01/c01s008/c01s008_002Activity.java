@@ -562,7 +562,7 @@ public class c01s008_002Activity extends CommonActivity {
 
                 if (downCuttingToolVO.getDownCount() < synthesisCuttingToolLocation.getCount()) {
                     downCuttingToolVO.setDownCount(num);
-                    downCuttingToolVO.setDownRfidCode(rfid);
+                    downCuttingToolVO.setDownRfidLaserCode(rfid);
 
                     // 外部行
                     TableRow mTableRow = (TableRow) mTlContainer.getChildAt(outsideRowNumber);

@@ -18,6 +18,7 @@ import com.apiclient.constants.CuttingToolTypeEnum;
 import com.apiclient.constants.GrindingEnum;
 import com.apiclient.pojo.AuthCustomer;
 import com.apiclient.pojo.DjOutapplyAkp;
+import com.apiclient.vo.AuthCustomerVO;
 import com.apiclient.vo.OutApplyVO;
 import com.apiclient.vo.SearchOutLiberaryVO;
 import com.icomp.Iswtmv10.R;
@@ -26,6 +27,7 @@ import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
+import com.icomp.common.utils.FCBCodeHandler;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -78,7 +80,9 @@ public class c01s004_003Activity extends CommonActivity {
 
     // 出库订单
     List<SearchOutLiberaryVO> searchOutLiberaryVOList = new ArrayList<>();
+    // 显示订单
     SearchOutLiberaryVO searchOutLiberaryVO = new SearchOutLiberaryVO();
+    // 给服务器传回订单
     DjOutapplyAkp djOutapplyAkp = new DjOutapplyAkp();
     OutApplyVO outApplyVO = new OutApplyVO();
 
@@ -93,7 +97,27 @@ public class c01s004_003Activity extends CommonActivity {
 
         retrofit = RetrofitSingle.newInstance();
 
-        initView();
+        Map<String, Object> paramMap = PARAM_MAP.get(1);
+        if (paramMap != null) {
+            try {
+                searchOutLiberaryVOList = (List<SearchOutLiberaryVO>) paramMap.get("searchOutLiberaryVOList");
+                searchOutLiberaryVO = (SearchOutLiberaryVO) paramMap.get("searchOutLiberaryVO");
+                djOutapplyAkp = (DjOutapplyAkp) paramMap.get("djOutapplyAkp");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (searchOutLiberaryVOList != null && searchOutLiberaryVOList.size() > 0) {
+            tv01.setText(searchOutLiberaryVO.getName());
+
+            Message message = new Message();
+            message.obj = searchOutLiberaryVO;
+            //输入授权和扫描授权的handler
+            outOrderInfoHandler.sendMessage(message);
+        } else {
+            initView();
+        }
     }
 
     /**
@@ -185,7 +209,7 @@ public class c01s004_003Activity extends CommonActivity {
                         Map<String, Object> paramMap = new HashMap<>();
                         paramMap.put("searchOutLiberaryVOList", searchOutLiberaryVOList);
                         paramMap.put("searchOutLiberaryVO", searchOutLiberaryVO);
-//                        paramMap.put("djOutapplyAkp", djOutapplyAkp);
+                        paramMap.put("djOutapplyAkp", djOutapplyAkp);
                         PARAM_MAP.put(1, paramMap);
 
                         // 不清空页面之间传递的值
@@ -355,36 +379,29 @@ public class c01s004_003Activity extends CommonActivity {
             if (authCustomerMap != null) {
                 AuthCustomer authCustomerLingliao = authCustomerMap.get("lingliao");
                 AuthCustomer authCustomerKezhang = authCustomerMap.get("kezhang");
+
+                AuthCustomerVO llAuthCustomerVO = new AuthCustomerVO();
+                AuthCustomerVO kzAuthCustomerVO = new AuthCustomerVO();
+
+                llAuthCustomerVO.setCode(llAuthCustomerVO.getCode());
+                kzAuthCustomerVO.setCode(kzAuthCustomerVO.getCode());
                 // 领料
-                outApplyVO.setLinglOperatorRfidCode(authCustomerLingliao.getRfidContainer().getLaserCode());
+                outApplyVO.setLlAuthCustomerVO(llAuthCustomerVO);
                 // 科长
-                outApplyVO.setKezhangRfidCode(authCustomerKezhang.getRfidContainer().getLaserCode());
+                outApplyVO.setKzAuthCustomerVO(kzAuthCustomerVO);
             } else {
                 createAlertDialog(c01s004_003Activity.this, getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
                 return;
             }
 
-            try {
-                //设定用户访问信息
-                @SuppressLint("WrongConstant")
-                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
-                String userInfoJson = sharedPreferences.getString("loginInfo", null);
+            outApplyVO.setApplyno(djOutapplyAkp.getApplyno());//单号
+            outApplyVO.setMtlCode(FCBCodeHandler.fcbCodeHandler(djOutapplyAkp.getMtlno()));//物料号
 
-                AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
-                outApplyVO.setKuguanOperatorCode(authCustomer.getCode());// 操作者code
-            } catch (IOException e) {
-                e.printStackTrace();
-                createAlertDialog(c01s004_003Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
-                return;
-            }
-
-            IRequest iRequest = retrofit.create(IRequest.class);
-
-            outApplyVO.setDjOutapplyAkp(djOutapplyAkp);
 
             String jsonStr = objectToJson(outApplyVO);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
+            IRequest iRequest = retrofit.create(IRequest.class);
             Call<String> outApply = iRequest.outApply(body);
             outApply.enqueue(new MyCallBack<String>() {
                 @Override

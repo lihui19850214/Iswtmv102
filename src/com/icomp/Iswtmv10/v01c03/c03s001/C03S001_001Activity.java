@@ -11,6 +11,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.apiclient.pojo.SynthesisCuttingToolConfig;
+import com.apiclient.vo.RfidContainerVO;
 import com.apiclient.vo.SynthesisCuttingToolInitVO;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
@@ -63,6 +64,8 @@ public class C03S001_001Activity extends CommonActivity {
         //如果材料号不为空，显示在页面上
         if (null != params.getSynthesisCode()) {
             et01.setText(exChangeBig(params.getSynthesisCode()));
+        } else {
+            et01.setText("T");
         }
         //将光标设置在最后
         et01.setSelection(et01.getText().length());
@@ -143,14 +146,18 @@ public class C03S001_001Activity extends CommonActivity {
                 });
 
                 try {
-                    //调用接口，查询合成刀具组成信息
-                    IRequest iRequest = retrofit.create(IRequest.class);
+
+                    RfidContainerVO rfidContainerVO = new RfidContainerVO();
+                    rfidContainerVO.setLaserCode(rfidString);
+                    // TODO 参数需要改为 RfidContainerVO
                     params = new SynthesisCuttingToolInitVO();
                     params.setRfidCode(rfidString);
 
                     String jsonStr = objectToJson(params);
                     RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
+                    //调用接口，查询合成刀具组成信息
+                    IRequest iRequest = retrofit.create(IRequest.class);
                     Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
                     getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
                         @Override
@@ -234,13 +241,13 @@ public class C03S001_001Activity extends CommonActivity {
     private void search() {
         try {
             loading.show();
-            IRequest iRequest = retrofit.create(IRequest.class);
+
 
             String jsonStr = objectToJson(params);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
+            IRequest iRequest = retrofit.create(IRequest.class);
             Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
-
             getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
                 @Override
                 public void _onResponse(Response<String> response) {

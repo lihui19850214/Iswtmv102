@@ -59,7 +59,7 @@ public class C03S003_001Activity extends CommonActivity {
     private List<ProductLineAssemblyline> lineList = new ArrayList<>();
     //设备列表
     private List<ProductLineEquipment> equipmentEntityList = new ArrayList<>();
-    // 设备
+    // 设备 TODO 需要修改为 productLineEquipmentVO
     ProductLineEquipment productLineEquipment = new ProductLineEquipment();
     //扫描线程
     private scanThread scanThread;
@@ -384,6 +384,7 @@ public class C03S003_001Activity extends CommonActivity {
                 });
 
                 try {
+                    //TODO 需要修改为 RfidContainerVO
                     RfidContainer rfidContainer = new RfidContainer();
                     rfidContainer.setLaserCode(rfidString);
 

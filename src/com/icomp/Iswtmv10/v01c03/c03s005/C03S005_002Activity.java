@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.apiclient.pojo.AuthCustomer;
 import com.apiclient.pojo.RfidContainer;
+import com.apiclient.vo.AuthCustomerVO;
+import com.apiclient.vo.RfidContainerVO;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -139,12 +141,14 @@ public class C03S005_002Activity extends CommonActivity {
                 try {
                     //调用接口，查询员工信息
                     IRequest iRequest = retrofit.create(IRequest.class);
-                    RfidContainer rfidContainer = new RfidContainer();
-                    rfidContainer.setLaserCode(rfidString);
+                    RfidContainerVO rfidContainerVO = new RfidContainerVO();
+                    rfidContainerVO.setLaserCode(rfidString);
 
-                    params.setRfidContainer(rfidContainer);
+                    AuthCustomerVO authCustomerVO = new AuthCustomerVO();
+                    authCustomerVO.setRfidContainerVO(rfidContainerVO);
+                    authCustomerVO.setCode(params.getCode());
 
-                    String jsonStr = objectToJson(params);
+                    String jsonStr = objectToJson(authCustomerVO);
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
                     Call<String> initEmployee = iRequest.initEmployee(body);

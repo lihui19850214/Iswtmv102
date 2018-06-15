@@ -50,8 +50,8 @@ public class C01S018_002Activity extends CommonActivity {
 
     @BindView(R.id.tvTitle)
     TextView tvTitle;
-    @BindView(R.id.ivAdd)
-    ImageView ivAdd;
+//    @BindView(R.id.ivAdd)
+//    ImageView ivAdd;
     @BindView(R.id.textView4)
     TextView textView4;
 
@@ -127,8 +127,8 @@ public class C01S018_002Activity extends CommonActivity {
         }
     }
 
-
-    @OnClick({R.id.tvScan, R.id.btnCancel, R.id.btnNext, R.id.ivAdd})
+//, R.id.ivAdd
+    @OnClick({R.id.tvScan, R.id.btnCancel, R.id.btnNext})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.tvScan:
@@ -167,9 +167,9 @@ public class C01S018_002Activity extends CommonActivity {
                     createAlertDialog(C01S018_002Activity.this, "请添加材料", Toast.LENGTH_LONG);
                 }
                 break;
-            case R.id.ivAdd:
-                showDialog();
-                break;
+//            case R.id.ivAdd:
+//                showDialog();
+//                break;
             default:
         }
     }
@@ -327,13 +327,13 @@ public class C01S018_002Activity extends CommonActivity {
 
         final TextView tvCaiLiao = (TextView) mLinearLayout.findViewById(R.id.tvCailiao);
         TextView tvsingleProductCode = (TextView) mLinearLayout.findViewById(R.id.tvsingleProductCode);//单品编码
-        TextView tvNum = (TextView) mLinearLayout.findViewById(R.id.tvNum);
+//        TextView tvNum = (TextView) mLinearLayout.findViewById(R.id.tvNum);
         TextView tvRfidContain = (TextView) mLinearLayout.findViewById(R.id.tvRfidContain);
         ImageView tvRemove = (ImageView) mLinearLayout.findViewById(R.id.tvRemove);
 
         tvCaiLiao.setText(cailiao);
         tvsingleProductCode.setText(laserCode);
-        tvNum.setText(num);
+//        tvNum.setText(num);
         tvRfidContain.setText(rfid);
 
         tvCaiLiao.setTag(position);
@@ -374,7 +374,7 @@ public class C01S018_002Activity extends CommonActivity {
         if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
             isCanScan = false;
             mTvScan.setClickable(false);
-            ivAdd.setClickable(false);
+//            ivAdd.setClickable(false);
             mBtnCancel.setClickable(false);
             mBtnNext.setClickable(false);
             //显示扫描弹框的方法
@@ -397,7 +397,7 @@ public class C01S018_002Activity extends CommonActivity {
 //            rfidString = "18000A00000F045B";
             if ("close".equals(rfidString)) {
                 mTvScan.setClickable(true);
-                ivAdd.setClickable(true);
+//                ivAdd.setClickable(true);
                 mBtnCancel.setClickable(true);
                 mBtnNext.setClickable(true);
                 isCanScan = true;
@@ -408,7 +408,7 @@ public class C01S018_002Activity extends CommonActivity {
                     @Override
                     public void run() {
                         mTvScan.setClickable(true);
-                        ivAdd.setClickable(true);
+//                        ivAdd.setClickable(true);
                         mBtnCancel.setClickable(true);
                         mBtnNext.setClickable(true);
                         isCanScan = true;
@@ -442,17 +442,20 @@ public class C01S018_002Activity extends CommonActivity {
 
                     RfidContainerVO rfidContainerVO = new RfidContainerVO();
                     rfidContainerVO.setLaserCode(rfidString);
+
                     CuttingToolBindVO cuttingToolBindVO = new CuttingToolBindVO();
+                    // TODO 需要参数
+//                    cuttingToolBindVO.setBladeCode();
                     cuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
 
                     String jsonStr = objectToJson(cuttingToolBindVO);
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                    Map<String, String> headsMap = new HashMap<>();
-                    headsMap.put("impower", OperationEnum.Cutting_tool_Inside.getKey().toString());
+//                    Map<String, String> headsMap = new HashMap<>();
+//                    headsMap.put("impower", OperationEnum.Cutting_tool_Inside.getKey().toString());
 
-                    Call<String> getInCuttingToolBind = iRequest.getInCuttingToolBind(body, headsMap);
-                    getInCuttingToolBind.enqueue(new MyCallBack<String>() {
+                    Call<String> queryCuttingToolBind = iRequest.queryCuttingToolBind(body);
+                    queryCuttingToolBind.enqueue(new MyCallBack<String>() {
                         @Override
                         public void _onResponse(Response<String> response) {
                             try {
@@ -460,30 +463,19 @@ public class C01S018_002Activity extends CommonActivity {
                                     CuttingToolBind cuttingToolBind = jsonToObject(response.body(), CuttingToolBind.class);
 
                                     if (cuttingToolBind != null) {
-                                        isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
+//                                        isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
+                                        setValue(rfidString, cuttingToolBind);
                                     } else {
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                if (null != loading && loading.isShowing()) {
-                                                    loading.dismiss();
-                                                }
-                                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
+                                        if (null != loading && loading.isShowing()) {
+                                            loading.dismiss();
+                                        }
+                                        Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
-                                    final String errorStr = response.errorBody().string();
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (null != loading && loading.isShowing()) {
-                                                loading.dismiss();
-                                            }
-                                            createAlertDialog(C01S018_002Activity.this, errorStr, Toast.LENGTH_LONG);
-                                        }
-                                    });
-
+                                    if (null != loading && loading.isShowing()) {
+                                        loading.dismiss();
+                                    }
+                                    createAlertDialog(C01S018_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
