@@ -53,10 +53,8 @@ public class c01s004_003Activity extends CommonActivity {
     TextView tvTitle;
     @BindView(R.id.wuliaohao)
     TextView wuliaohao;
-    @BindView(R.id.cailiaohao)
-    TextView cailiaohao;
-    @BindView(R.id.xinghaoguige)
-    TextView xinghaoguige;
+    @BindView(R.id.djCode)
+    TextView djCode;
     @BindView(R.id.wuliaomingcheng)
     TextView wuliaomingcheng;
     @BindView(R.id.shengchanxian)
@@ -67,8 +65,6 @@ public class c01s004_003Activity extends CommonActivity {
     TextView yaohuoshuliang;
     @BindView(R.id.daojuleixing)
     TextView daojuleixing;
-    @BindView(R.id.xiumofangshi)
-    TextView xiumofangshi;
 
     @BindView(R.id.tv_01)
     TextView tv01;
@@ -192,7 +188,7 @@ public class c01s004_003Activity extends CommonActivity {
                     // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
                     // 如果是钻头需要走另一个流程
                     if (CuttingToolTypeEnum.dj.getKey().equals(searchOutLiberaryVO.getCuttingToolType()) && CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(searchOutLiberaryVO.getCuttingToolConsumeType())) {
-                        char endChar = searchOutLiberaryVO.getMtlno().charAt(searchOutLiberaryVO.getMtlno().length()-1);
+                        char endChar = searchOutLiberaryVO.getCuttingtollBusinessCode().charAt(searchOutLiberaryVO.getCuttingtollBusinessCode().length()-1);
 
                         Intent intent = null;
 
@@ -327,9 +323,8 @@ public class c01s004_003Activity extends CommonActivity {
 
             // 不等于 null 再赋值
             if (searchOutLiberaryVO != null) {
-                wuliaohao.setText(searchOutLiberaryVO.getMtlno());
-                cailiaohao.setText(searchOutLiberaryVO.getCuttingtollBusinessCode());
-                xinghaoguige.setText(searchOutLiberaryVO.getSpecifications());
+                wuliaohao.setText(searchOutLiberaryVO.getCuttingtollBusinessCode());
+                djCode.setText(searchOutLiberaryVO.getDjOutapplyAkp().getDjcode());
                 wuliaomingcheng.setText(searchOutLiberaryVO.getName());
                 shengchanxian.setText(searchOutLiberaryVO.getProductline());
                 gongwei.setText(searchOutLiberaryVO.getLocation());
@@ -364,7 +359,6 @@ public class c01s004_003Activity extends CommonActivity {
                 } else if (GrindingEnum.outside_tuceng.getKey().equals(searchOutLiberaryVO.getGrinding())) {
                     grinding = GrindingEnum.outside_tuceng.getName();
                 }
-                xiumofangshi.setText(grinding);
             }
         }
     };
@@ -383,8 +377,8 @@ public class c01s004_003Activity extends CommonActivity {
                 AuthCustomerVO llAuthCustomerVO = new AuthCustomerVO();
                 AuthCustomerVO kzAuthCustomerVO = new AuthCustomerVO();
 
-                llAuthCustomerVO.setCode(llAuthCustomerVO.getCode());
-                kzAuthCustomerVO.setCode(kzAuthCustomerVO.getCode());
+                llAuthCustomerVO.setCode(authCustomerLingliao.getCode());
+                kzAuthCustomerVO.setCode(authCustomerKezhang.getCode());
                 // 领料
                 outApplyVO.setLlAuthCustomerVO(llAuthCustomerVO);
                 // 科长
@@ -394,8 +388,22 @@ public class c01s004_003Activity extends CommonActivity {
                 return;
             }
 
+            try {
+                //设定用户访问信息
+                @SuppressLint("WrongConstant")
+                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+                String userInfoJson = sharedPreferences.getString("loginInfo", null);
+
+                AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
+                outApplyVO.setKuguanOperatorCode(authCustomer.getCode());// 操作者code
+            } catch (IOException e) {
+                e.printStackTrace();
+                createAlertDialog(c01s004_003Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                return;
+            }
+
             outApplyVO.setApplyno(djOutapplyAkp.getApplyno());//单号
-            outApplyVO.setMtlCode(FCBCodeHandler.fcbCodeHandler(djOutapplyAkp.getMtlno()));//物料号
+            outApplyVO.setMtlCode(FCBCodeHandler.fcbCodeHandler(searchOutLiberaryVO.getCuttingtollBusinessCode()));//物料号
 
 
             String jsonStr = objectToJson(outApplyVO);

@@ -2,6 +2,7 @@ package com.icomp.Iswtmv10.v01c01.c01s004;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -37,6 +38,7 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -174,6 +176,20 @@ public class c01s004_003_1Activity extends CommonActivity {
                 return;
             }
 
+            try {
+                //设定用户访问信息
+                @SuppressLint("WrongConstant")
+                SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+                String userInfoJson = sharedPreferences.getString("loginInfo", null);
+
+                AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
+                outApplyVO.setKuguanOperatorCode(authCustomer.getCode());// 操作者code
+            } catch (IOException e) {
+                e.printStackTrace();
+                createAlertDialog(c01s004_003_1Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                return;
+            }
+
 
             List<CuttingToolBind> cuttingToolBindsList = new ArrayList<>();
 
@@ -192,7 +208,7 @@ public class c01s004_003_1Activity extends CommonActivity {
 
             outApplyVO.setCuttingToolBinds(cuttingToolBindsList);
             outApplyVO.setApplyno(djOutapplyAkp.getApplyno());
-            outApplyVO.setMtlCode(FCBCodeHandler.fcbCodeHandler(djOutapplyAkp.getMtlno()));
+            outApplyVO.setMtlCode(FCBCodeHandler.fcbCodeHandler(searchOutLiberaryVO.getCuttingtollBusinessCode()));
 
 
             String jsonStr = objectToJson(outApplyVO);
@@ -299,7 +315,7 @@ public class c01s004_003_1Activity extends CommonActivity {
                         } else {
                             rfidMap.put(rfidString, bladeCode);
                             bladeCodeNum++;
-                            addLayout(djOutapplyAkp.getMtlno(), bladeCode, rfidString);
+                            addLayout(searchOutLiberaryVO.getCuttingtollBusinessCode(), bladeCode, rfidString);
                         }
                     }
                 });
