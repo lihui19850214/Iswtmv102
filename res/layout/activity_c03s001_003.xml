@@ -13,22 +13,40 @@
             android:layout_weight="2"
             style="@style/MiddleTextPromptStule" android:gravity="center|center_horizontal|center_vertical"/>
 
-        <TextView
-            android:id="@+id/tv_01"
-            android:layout_weight="2"
-            style="@style/MiddleTextPromptStule" android:text="@string/c03s001_003_002"
-            android:gravity="center_horizontal"/>
+        <View style="@style/View_1" />
+        <View style="@style/View_1" />
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="right|center"
+                    android:paddingRight="10dp"
+                    android:text="合成刀刀身码"/>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
+                <EditText
+                        android:id="@+id/et_01"
+                        android:layout_height="match_parent"
+                        style="@style/MiddleEditTextStyle"/>
+            </LinearLayout>
+        </LinearLayout>
+        <View style="@style/View_1" />
 
         <LinearLayout style="@style/MiddleTwoButtonLinerLayoutStyle">
 
             <Button
                 android:id="@+id/btnScan"
                 android:text="@string/scan"
-                style="@style/TwoButtonStyle" />
-
-            <Button
-                android:id="@+id/btnStop"
-                android:text="@string/stop"
                 style="@style/TwoButtonStyle" />
 
         </LinearLayout>
@@ -40,6 +58,7 @@
     <LinearLayout style="@style/BottomLinerLayoutStyle">
 
         <Button
+                android:id="@+id/btnReturn"
             android:text="@string/returnBy"
             android:onClick="btnReturn"
             style="@style/BottomButtonStyle" />
@@ -47,10 +66,10 @@
         <View style="@style/BottomLittlePartingLineStyle" />
 
         <Button
-            android:id="@+id/btnSubmit"
-            android:text="@string/submit"
-            android:onClick="btnSubmit"
-            style="@style/BottomButtonStyle" />
+                android:id="@+id/btnNext"
+                android:text="@string/next"
+                android:onClick="next"
+                style="@style/BottomButtonStyle" />
 
     </LinearLayout>
 
