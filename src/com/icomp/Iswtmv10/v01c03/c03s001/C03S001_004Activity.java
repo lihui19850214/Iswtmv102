@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import butterknife.OnClick;
 import com.icomp.Iswtmv10.R;
+import com.icomp.Iswtmv10.v01c01.c01s005.c01s005_002_2Activity;
+import com.icomp.Iswtmv10.v01c01.c01s005.c01s005_002_4Activity;
 import com.icomp.common.activity.CommonActivity;
 
 /**
@@ -19,18 +22,21 @@ public class C03S001_004Activity extends CommonActivity {
         setContentView(R.layout.activity_c03s001_004);
     }
 
-    //继续按钮处理--跳转到合成刀具初始化页面1
-    public void btnKeepOn(View view) {
-        Intent intent = new Intent(this, C03S001_003Activity.class);
-        // 不清空页面之间传递的值
-        intent.putExtra("isClearParamMap", false);
-        startActivity(intent);
-        finish();
-    }
-
-    //完成按钮处理--跳转到系统菜单页面
-    public void btnComplete(View view) {
-        finish();
+    @OnClick({R.id.btnKeepOn, R.id.btnComplete})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btnKeepOn:
+                Intent intent = new Intent(this, C03S001_003Activity.class);
+                // 不清空页面之间传递的值
+                intent.putExtra("isClearParamMap", false);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.btnComplete:
+                finish();
+                break;
+            default:
+        }
     }
 
 }
