@@ -40,13 +40,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 设备卸下2
- *
- * @author WHY
- * @ClassName: C01S013_002Activity
- * @date 2016-3-2 下午6:47:51
+ * 设备卸下页面2
  */
-
 public class C01S013_002Activity extends CommonActivity {
 
     @BindView(R.id.tv_01)
@@ -95,6 +90,12 @@ public class C01S013_002Activity extends CommonActivity {
             Map<String, Object> paramMap = PARAM_MAP.get(1);
             synthesisCuttingToolBindleRecords = (SynthesisCuttingToolBindleRecords) paramMap.get("synthesisCuttingToolBindleRecords");
             synthesisCuttingToolBindleRecordsRFID = (String) paramMap.get("synthesisCuttingToolBindleRecordsRFID");
+
+//            //TODO 需要检查是否正确
+//            tv01.setText(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());// 合成刀具编码
+//            tv02.setText(synthesisCuttingToolBindleRecords.getProductLineEquipment().getName());// 设备名称
+//            tv03.setText(synthesisCuttingToolBindleRecords.getProductLineAxle().getCode());// 轴号
+//            tv04.setText(synthesisCuttingToolBindleRecords.getProductLineProcess().getName());//对应工序，不知道是哪个字段
 
             for (UnInstallReasonEnum unInstallReasonEnum : UnInstallReasonEnum.values()) {
                 removeReasonList.add(unInstallReasonEnum);
@@ -324,10 +325,10 @@ public class C01S013_002Activity extends CommonActivity {
             createAlertDialog(C01S013_002Activity.this, "加工量不能为0", Toast.LENGTH_LONG);
         } else {
 
-            authorizationWindow(1, new AuthorizationWindowCallBack() {
+            authorizationWindow(new AuthorizationWindowCallBack() {
                 @Override
-                public void success(List<AuthCustomer> authorizationList) {
-                    requestData(authorizationList);
+                public void success(AuthCustomer authCustomer) {
+                    requestData(authCustomer);
                 }
 
                 @Override
@@ -356,7 +357,7 @@ public class C01S013_002Activity extends CommonActivity {
         return super.onTouchEvent(event);
     }
 
-    private void requestData(List<AuthCustomer> authorizationList) {
+    private void requestData(AuthCustomer authCustomer) {
         try {
             loading.show();
 
@@ -369,19 +370,19 @@ public class C01S013_002Activity extends CommonActivity {
 
             try {
                 // 需要授权信息
-                if (is_need_authorization && authorizationList != null) {
+                if (is_need_authorization && authCustomer != null) {
                     //设定用户访问信息
                     @SuppressLint("WrongConstant")
                     SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
                     String userInfoJson = sharedPreferences.getString("loginInfo", null);
 
-                    AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
+                    AuthCustomer customer = jsonToObject(userInfoJson, AuthCustomer.class);
 
                     // ------------ 授权信息 ------------
                     impowerRecorder.setToolCode(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
                     impowerRecorder.setRfidLasercode(synthesisCuttingToolBindleRecordsRFID);// rfid标签
-                    impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                    impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                    impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
+                    impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
                     impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_UnInstall.getKey().toString());//操作key
 
 //                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名

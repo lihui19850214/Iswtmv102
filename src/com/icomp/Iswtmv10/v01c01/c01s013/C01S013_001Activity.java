@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindView;
@@ -32,22 +33,13 @@ import java.util.Map;
 
 
 /**
- * 设备卸下1
- *
- * @author WHY
- * @ClassName: C01S013_001Activity
- * @date 2016-3-2 下午6:33:48
+ * 设备卸下页面1
  */
-
 public class C01S013_001Activity extends CommonActivity {
-    @BindView(R.id.tv_01)
-    TextView tv01;
-    @BindView(R.id.tv_02)
-    TextView tv02;
-    @BindView(R.id.tv_03)
-    TextView tv03;
-    @BindView(R.id.tv_04)
-    TextView tv04;
+
+    @BindView(R.id.et_00)
+    EditText et00;
+
     @BindView(R.id.btn_scan)
     TextView btnScan;
 
@@ -56,15 +48,19 @@ public class C01S013_001Activity extends CommonActivity {
     @BindView(R.id.btn_confirm)
     Button btnConfirm;
 
+
     private SynthesisCuttingToolBindleRecords synthesisCuttingToolBindleRecords = new SynthesisCuttingToolBindleRecords();
 
     //扫描线程
-    private scanThread scanThread;
+    private ScanThread scanThread;
     //调用接口
     private Retrofit retrofit;
 
     // 合成刀标签
     String synthesisCuttingToolBindleRecordsRFID = "";
+
+    // 刀身码
+    String bladeCode = "";
 
     /**
      * Called when the activity is first created.
@@ -84,11 +80,18 @@ public class C01S013_001Activity extends CommonActivity {
                 synthesisCuttingToolBindleRecords = (SynthesisCuttingToolBindleRecords) paramMap.get("synthesisCuttingToolBindleRecords");
                 synthesisCuttingToolBindleRecordsRFID = (String) paramMap.get("synthesisCuttingToolBindleRecordsRFID");
 
-                //TODO 需要检查是否正确
-                tv01.setText(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());
-                tv02.setText(synthesisCuttingToolBindleRecords.getProductLineEquipment().getName());
-                tv03.setText(synthesisCuttingToolBindleRecords.getProductLineAxle().getCode());
-                tv04.setText(synthesisCuttingToolBindleRecords.getProductLineProcess().getName());//对应工序，不知道是哪个字段
+                bladeCode = (String) paramMap.get("bladeCode");
+
+                //将输入的材料号自动转化为大写
+                et00.setTransformationMethod(new AllCapTransformationMethod());
+                //如果材料号不为空，显示在页面上
+                if (null != bladeCode && !"".equals(bladeCode)) {
+                    et00.setText(exChangeBig(bladeCode));
+                } else {
+                    et00.setText("T");
+                }
+                //将光标设置在最后
+                et00.setSelection(et00.getText().length());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -100,10 +103,6 @@ public class C01S013_001Activity extends CommonActivity {
         switch (view.getId()) {
             //扫描按钮处理
             case R.id.btn_scan:
-                tv01.setText("");
-                tv02.setText("");
-                tv03.setText("");
-                tv04.setText("");
                 scan();
                 break;
             //返回按钮处理
@@ -129,7 +128,7 @@ public class C01S013_001Activity extends CommonActivity {
             //显示扫描弹框的方法
             scanPopupWindow();
             //扫描线程
-            scanThread = new scanThread();
+            scanThread = new ScanThread();
             scanThread.start();
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
@@ -137,7 +136,7 @@ public class C01S013_001Activity extends CommonActivity {
     }
 
     //扫描线程
-    private class scanThread extends Thread {
+    private class ScanThread extends Thread {
         @Override
         public void run() {
             super.run();
@@ -276,22 +275,12 @@ public class C01S013_001Activity extends CommonActivity {
         if ("1".equals(inpowerMap.get("type"))) {
             // 是否需要授权 true为需要授权；false为不需要授权
             is_need_authorization = false;
-
-            //TODO 需要检查是否正确
-            tv01.setText(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());
-            tv02.setText(synthesisCuttingToolBindleRecords.getProductLineEquipment().getName());
-            tv03.setText(synthesisCuttingToolBindleRecords.getProductLineAxle().getCode());
-            tv04.setText(synthesisCuttingToolBindleRecords.getProductLineProcess().getName());//对应工序，不知道是哪个字段
         } else if ("2".equals(inpowerMap.get("type"))) {
             is_need_authorization = true;
             exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
                 @Override
                 public void confirm() {
-                    //TODO 需要检查是否正确
-                    tv01.setText(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());
-                    tv02.setText(synthesisCuttingToolBindleRecords.getProductLineEquipment().getName());
-                    tv03.setText(synthesisCuttingToolBindleRecords.getProductLineAxle().getCode());
-                    tv04.setText(synthesisCuttingToolBindleRecords.getProductLineProcess().getName());//对应工序，不知道是哪个字段
+
                 }
 
                 @Override
@@ -397,8 +386,8 @@ public class C01S013_001Activity extends CommonActivity {
 
     //提交按钮处理
     public void btnConfirm() {
-        if (tv01.getText().toString() == null || "".equals(tv01.getText().toString())) {
-            createAlertDialog(C01S013_001Activity.this, "请扫描标签", Toast.LENGTH_LONG);
+        if (et00.getText().toString() == null || "".equals(et00.getText().toString())) {
+            createAlertDialog(C01S013_001Activity.this, "请扫输入刀身码", Toast.LENGTH_LONG);
             return;
         }
 
