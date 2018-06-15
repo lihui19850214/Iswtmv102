@@ -215,7 +215,7 @@ public class c01s004_003_1Activity extends CommonActivity {
 
             outApplyVO.setCuttingToolBinds(cuttingToolBindsList);
             outApplyVO.setApplyno(djOutapplyAkp.getApplyno());
-            outApplyVO.setMtlCode(FCBCodeHandler.fcbCodeHandler(searchOutLiberaryVO.getCuttingtollBusinessCode()));
+            outApplyVO.setMtlCode(searchOutLiberaryVO.getCuttingtollBusinessCode());
 
 
             String jsonStr = objectToJson(outApplyVO);

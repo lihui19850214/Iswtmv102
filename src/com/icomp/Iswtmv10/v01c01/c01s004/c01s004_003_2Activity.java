@@ -206,7 +206,7 @@ public class c01s004_003_2Activity extends CommonActivity {
 
             outApplyVO.setCuttingToolBinds(cuttingToolBindsList);
             outApplyVO.setApplyno(djOutapplyAkp.getApplyno());
-            outApplyVO.setMtlCode(FCBCodeHandler.fcbCodeHandler(searchOutLiberaryVO.getCuttingtollBusinessCode()));
+            outApplyVO.setMtlCode(searchOutLiberaryVO.getCuttingtollBusinessCode());
 
             String jsonStr = objectToJson(outApplyVO);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);

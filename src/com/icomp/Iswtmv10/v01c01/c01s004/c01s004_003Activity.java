@@ -403,7 +403,7 @@ public class c01s004_003Activity extends CommonActivity {
             }
 
             outApplyVO.setApplyno(djOutapplyAkp.getApplyno());//单号
-            outApplyVO.setMtlCode(FCBCodeHandler.fcbCodeHandler(searchOutLiberaryVO.getCuttingtollBusinessCode()));//物料号
+            outApplyVO.setMtlCode(searchOutLiberaryVO.getCuttingtollBusinessCode());//物料号
 
 
             String jsonStr = objectToJson(outApplyVO);
