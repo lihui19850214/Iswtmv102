@@ -35,7 +35,7 @@ import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
-import com.icomp.Iswtmv10.v01c01.c01s011.C01S011_001Activity;
+import com.icomp.Iswtmv10.v01c01.c01s025.C01S025_001Activity;
 import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.utils.CardRead;
 import com.icomp.common.utils.RfidRead;
@@ -396,7 +396,7 @@ public class C00S000_000Activity extends CommonActivity {
 
                 // 打开登录页面
                 Intent intent = new Intent();
-                intent.setClass(C00S000_000Activity.this, C01S011_001Activity.class);
+                intent.setClass(C00S000_000Activity.this, C00S000_001Activity.class);
                 // intent.putExtra("Name", "feng88724");
                 startActivity(intent);
                 finish();
