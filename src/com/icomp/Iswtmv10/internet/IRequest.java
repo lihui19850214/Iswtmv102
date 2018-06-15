@@ -34,7 +34,7 @@ public interface IRequest {
      * @param json 请求数据
      * @return json格式数据
      */
-    @POST("/qiMing/getOrders")
+    @POST("/library/getOrders")
     Call<String> getOrders(@Body RequestBody json);
 
     /**
@@ -42,7 +42,7 @@ public interface IRequest {
      * @param json 请求数据
      * @return json格式数据
      */
-    @POST("/qiMing/outApply")
+    @POST("/library/outApply")
     Call<String> outApply(@Body RequestBody json);
     // --------------刀具出库结束--------------
 
@@ -154,7 +154,7 @@ public interface IRequest {
 
     // --------------刀具换装、刀具拆分、刀具组装公用方法开始--------------未完成
     /**
-     * 扫码查询合成刀信息
+     * 根据刀身码或者rfid标签查询合成刀组装信息接口地址
      * @param json 请求数据
      * @param headers 请求头
      * @return json格式数据
@@ -172,6 +172,14 @@ public interface IRequest {
      */
     @POST("/cuttingToolBind/search")
     Call<String> searchCuttingToolBind(@Body RequestBody json);
+
+    /**
+     * 扫描标签查询钻头类刀具信息接口地址
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/cuttingToolBusiness/queryBindInfo")
+    Call<String> queryBindInfo(@Body RequestBody json);
 
     /**
      * 换装
@@ -227,6 +235,14 @@ public interface IRequest {
     @POST("/productlineBusiness/querySynthesisCuttingTool")
     Call<String> querySynthesisCuttingTool(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
+    /**
+     * 根据合成刀标签或者刀身码查询信息接口地址
+     * @param json 请求数据
+     * @param headers 请求头
+     * @return json格式数据
+     */
+    @POST("/productlineBusiness/queryForInstall")
+    Call<String> queryForInstall(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
     /**
      * 查询设备和轴号
@@ -245,6 +261,22 @@ public interface IRequest {
      */
     @POST("/productLineEquipment/search")
     Call<String> searchProductLineEquipment(@Body RequestBody json);
+
+    /**
+     * 扫描获取刃磨设备信息接口地址
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/inFactoryBusiness/queryGrindingEquipmentsByRFID")
+    Call<String> queryGrindingEquipmentsByRFID(@Body RequestBody json);
+
+    /**
+     * 获取刃磨设备列表接口地址
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/inFactoryBusiness/queryGrindingEquipments")
+    Call<String> queryGrindingEquipments(@Body RequestBody json);
 
     /**
      * 按上设备
@@ -297,6 +329,15 @@ public interface IRequest {
     Call<String> getInCuttingToolBind(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
     /**
+     * 根据RFID获取材料刀信息
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/cuttingToolBusiness/queryCuttingToolBind")
+    Call<String> queryCuttingToolBind(@Body RequestBody json);
+
+
+    /**
      * 根据材料号获取材料刀
      * @param json 请求数据
      * @return json格式数据
@@ -328,6 +369,15 @@ public interface IRequest {
      */
     @POST("/inFactoryBusiness/addInsideFactory")
     Call<String> addInsideFactory(@Body RequestBody json, @HeaderMap Map<String, String> headers);
+
+    /**
+     * 场内刃磨接口地址
+     * @param json 请求数据
+     * @param headers 请求头
+     * @return json格式数据
+     */
+    @POST("/inFactoryBusiness/insideGrinding")
+    Call<String> insideGrinding(@Body RequestBody json, @HeaderMap Map<String, String> headers);
     // --------------场内刃磨结束--------------
 
 
@@ -348,6 +398,14 @@ public interface IRequest {
      */
     @POST("/outFactoryBusiness/getCuttingTool")
     Call<String> getOutCuttingTool(@Body RequestBody json);
+
+    /**
+     * 输入合成刀T号，查询材料刀具信息接口地址
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/outFactoryBusiness/getCuttingToolByTCode")
+    Call<String> getCuttingToolByTCode(@Body RequestBody json);
 
     /**
      * 获取刃磨记录
@@ -479,5 +537,15 @@ public interface IRequest {
     @POST("/RFID/fastQuery")
     Call<String> fastQuery(@Body RequestBody json);
     // --------------快速查询结束--------------
+
+    // --------------材料刀刀身码绑定开始--------------
+    /**
+     * 添加材料刀刀身码接口地址
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/cuttingToolBusiness/bindBlade")
+    Call<String> bindBlade(@Body RequestBody json);
+    // --------------材料刀刀身码绑定结束--------------
 
 }
