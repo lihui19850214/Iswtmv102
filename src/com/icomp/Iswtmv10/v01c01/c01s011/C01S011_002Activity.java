@@ -100,6 +100,7 @@ public class C01S011_002Activity extends CommonActivity {
         synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap.get("synthesisCuttingToolBind");
         bladeCode = (String) paramMap.get("bladeCode");
 
+        et00.setText(synthesisCuttingToolBind.getSynthesisCode()    );
     }
 
     /**
