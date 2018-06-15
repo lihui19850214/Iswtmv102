@@ -135,6 +135,16 @@
                 android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         </activity>
         <activity
+                android:name=".v01c01.c01s004.c01s004_003_1Activity"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+        </activity>
+        <activity
+                android:name=".v01c01.c01s004.c01s004_003_2Activity"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+        </activity>
+        <activity
                 android:name=".v01c01.c01s004.c01s004_004Activity"
                 android:screenOrientation="portrait"
                 android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
@@ -143,6 +153,18 @@
         <!-- 刀具打码 -->
         <activity
                 android:name=".v01c01.c01s007.C01S007_001Activity"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+        </activity>
+        <activity
+                android:name=".v01c01.c01s007.C01S007_002Activity"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+        </activity>
+
+        <!-- 合成刀打码 -->
+        <activity
+                android:name=".v01c01.c01s025.C01S025_001Activity"
                 android:screenOrientation="portrait"
                 android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
         </activity>
@@ -158,6 +180,11 @@
                 android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
 
         <!-- 刀具换装 -->
+        <activity
+                android:name=".v01c01.c01s010.c01s010_001Activity"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+        </activity>
         <activity
                 android:name=".v01c01.c01s010.c01s010_002Activity"
                 android:screenOrientation="portrait"
@@ -207,7 +234,6 @@
         </activity>
 
         <!-- 安上设备 -->
-
         <activity
                 android:name=".v01c01.c01s011.C01S011_001Activity"
                 android:screenOrientation="portrait"
@@ -373,6 +399,16 @@
                 android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
         <activity
                 android:name=".v01c03.c03s005.C03S005_003Activity"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
+
+        <!-- 流转刀具初始化 -->
+        <activity
+                android:name=".v01c03.c03s006.C03S006_001Activity"
+                android:screenOrientation="portrait"
+                android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
+        <activity
+                android:name=".v01c03.c03s006.C03S006_002Activity"
                 android:screenOrientation="portrait"
                 android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
         <!-- 新需求结束 -->
