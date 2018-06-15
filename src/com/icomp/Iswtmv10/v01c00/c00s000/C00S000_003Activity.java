@@ -192,7 +192,7 @@ public class C00S000_003Activity extends CommonActivity {
         tool_outgoing = new Vgrantlist();
         tool_outgoing.setCapabilityID("8");
         tool_outgoing.setCapabilityName("安上设备");
-        tool_outgoing.setCapabilityUrl("v01c01.c01s011.C01S011_002Activity");
+        tool_outgoing.setCapabilityUrl("v01c01.c01s011.C01S011_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s011"));
         menuMap.put("SynthesisCuttingTool_Install", tool_outgoing);
 
