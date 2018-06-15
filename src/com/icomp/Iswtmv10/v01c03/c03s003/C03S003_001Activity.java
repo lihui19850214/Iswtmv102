@@ -20,7 +20,9 @@ import android.widget.Toast;
 import com.apiclient.pojo.ProductLineAssemblyline;
 import com.apiclient.pojo.ProductLineEquipment;
 import com.apiclient.pojo.RfidContainer;
+import com.apiclient.vo.ProductLineEquipmentVO;
 import com.apiclient.vo.ProductLineVO;
+import com.apiclient.vo.RfidContainerVO;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -59,7 +61,7 @@ public class C03S003_001Activity extends CommonActivity {
     private List<ProductLineAssemblyline> lineList = new ArrayList<>();
     //设备列表
     private List<ProductLineEquipment> equipmentEntityList = new ArrayList<>();
-    // 设备 TODO 需要修改为 productLineEquipmentVO
+    // 设备
     ProductLineEquipment productLineEquipment = new ProductLineEquipment();
     //扫描线程
     private scanThread scanThread;
@@ -384,13 +386,15 @@ public class C03S003_001Activity extends CommonActivity {
                 });
 
                 try {
-                    //TODO 需要修改为 RfidContainerVO
-                    RfidContainer rfidContainer = new RfidContainer();
+                    RfidContainerVO rfidContainer = new RfidContainerVO();
                     rfidContainer.setLaserCode(rfidString);
 
-                    productLineEquipment.setRfidContainer(rfidContainer);
+                    ProductLineEquipmentVO productLineEquipmentVO = new ProductLineEquipmentVO();
+                    productLineEquipmentVO.setCode(productLineEquipment.getCode());
+                    productLineEquipmentVO.setRfidContainerVO(rfidContainer);
 
-                    String jsonStr = objectToJson(productLineEquipment);
+
+                    String jsonStr = objectToJson(productLineEquipmentVO);
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
                     IRequest iRequest = retrofit.create(IRequest.class);
