@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="@dimen/table_height"
+android:orientation="horizontal"
+xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/table_height"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+        <LinearLayout
+                android:background="@drawable/table_border_c"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+            <TextView
+                    android:id="@+id/tvWuliaohao"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/table_height"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:textColor="@color/baseColor"
+                    android:gravity="center"/>
+            <ImageView
+                    android:layout_width="1dp"
+                    android:layout_height="@dimen/table_height"
+                    android:background="@color/baseColor"/>
+
+            <TextView
+                    android:id="@+id/tvBladeCode"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/table_height"
+                    android:layout_weight="1.5"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:textColor="@color/baseColor"
+                    android:gravity="center"
+                    android:singleLine="true"/>
+            <ImageView
+                    android:layout_width="1dp"
+                    android:layout_height="@dimen/table_height"
+                    android:background="@color/baseColor"/>
+
+            <TextView
+                    android:id="@+id/tvRfidContain"
+                    android:visibility="gone"
+                    android:layout_width="0dp"
+                    android:layout_gravity="center"
+                    android:layout_height="@dimen/table_height"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:background="@null"
+                    android:gravity="center"/>
+
+        </LinearLayout>
+        <ImageView
+                android:id="@+id/tvRemove"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.2"
+                android:src="@drawable/cancel"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:background="@null"
+                android:padding="10dp"/>
+
+    </LinearLayout>
+</LinearLayout>

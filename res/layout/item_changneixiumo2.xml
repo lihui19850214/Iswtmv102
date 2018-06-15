@@ -18,7 +18,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
                     android:id="@+id/tvCailiao"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/table_height"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
                     android:background="@null"
                     android:layout_gravity="center"
                     android:textColor="@color/baseColor"
@@ -32,7 +32,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
                     android:id="@+id/tvsingleProductCode"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/table_height"
-                    android:layout_weight="1.5"
+                    android:layout_weight="1"
                     android:background="@null"
                     android:layout_gravity="center"
                     android:textColor="@color/baseColor"
@@ -42,7 +42,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
                     android:layout_height="@dimen/table_height"
                     android:background="@color/baseColor"/>
 
-            <TextView
+            <!--TextView
                     android:id="@+id/tvNum"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/table_height"
@@ -54,7 +54,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
             <ImageView
                     android:layout_width="1dp"
                     android:layout_height="@dimen/table_height"
-                    android:background="@color/baseColor"/>
+                    android:background="@color/baseColor"/-->
 
         </LinearLayout>
 </LinearLayout>

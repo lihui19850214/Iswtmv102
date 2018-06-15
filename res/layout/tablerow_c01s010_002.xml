@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/table_height"
+            android:orientation="horizontal"
+            xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <TableRow
+            android:id="@+id/tableRow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/table_border_c">
+
+        <TextView
+                android:id="@+id/cailiaohao"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:layout_weight="1.2"
+                android:textColor="@color/baseColor"/>
+
+        <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/baseColor"/>
+
+        <TextView
+                android:id="@+id/daojuleixing"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:layout_weight="1.2"
+                android:textColor="@color/baseColor"/>
+
+        <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/baseColor"/>
+
+        <TextView
+                android:id="@+id/zongshuliang"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:layout_weight="0.8"
+                android:textColor="@color/baseColor"/>
+
+        <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/baseColor"/>
+
+        <EditText
+                android:id="@+id/huanzhuangshuliang"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:layout_weight="0.8"
+                android:textColor="@color/baseColor"
+                android:textSize="15sp"
+                android:inputType="number"
+                android:maxLength="6"
+                android:textCursorDrawable="@drawable/text_cursor_shape"/>
+
+        <ImageView
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/baseColor"/>
+
+        <EditText
+                android:id="@+id/diudaoshuliang"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:layout_weight="0.8"
+                android:textColor="@color/baseColor"
+                android:textSize="15sp"
+                android:inputType="number"
+                android:maxLength="6"
+                android:textCursorDrawable="@drawable/text_cursor_shape"/>
+    </TableRow>
+
+</LinearLayout>

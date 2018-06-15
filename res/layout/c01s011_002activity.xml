@@ -11,13 +11,12 @@
         <TextView
                 android:id="@+id/tv_desc"
                 android:layout_weight="1"
-                android:text="请扫描要安上设备的合成刀具"
+                android:text="请扫描设备标签"
                 style="@style/MiddleTextPromptStule"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.5"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginTop="10dp">
             <TextView
@@ -26,12 +25,13 @@
                     android:layout_weight="1"
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/text_content_size"
-                    android:gravity="center"
-                    android:text="合成刀具标签"/>
+                    android:gravity="right|center"
+                    android:paddingRight="10dp"
+                    android:text="合成刀"/>
 
             <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:layout_height="match_parent">
                 <TextView
                         android:id="@+id/et_00"
@@ -44,45 +44,33 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView
-                android:id="@+id/tvScan"
-                android:layout_width="130dp"
-                android:layout_height="40dp"
-                android:background="@drawable/border_c"
-                android:text="@string/scan"
-                android:textColor="@color/baseColor"
-                android:gravity="center"
-                android:layout_marginBottom="20dp"
-                android:textSize="@dimen/button_textsize"
-                android:textStyle="bold"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"/>
+        <View style="@style/View_1" />
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:orientation="vertical"
                 android:layout_marginTop="10dp">
 
             <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/text_content_size"
                     android:gravity="left|center"
-                    android:text="设备名称"/>
+                    android:text="请选择设备"/>
 
             <LinearLayout
                     android:id="@+id/ll_01"
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_height="0dp"
                     android:background="@drawable/border"
                     android:clickable="true"
                     android:onClick="dropdown"
-                    android:orientation="horizontal" >
+                    android:orientation="horizontal" android:layout_marginTop="10dp">
 
                 <TextView
                         android:id="@+id/tv_01"
@@ -96,48 +84,12 @@
         </LinearLayout>
 
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp">
-            <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:textColor="@color/baseColor"
-                    android:textSize="@dimen/text_content_size"
-                    android:gravity="left|center"
-                    android:text="轴号"/>
-
-
-            <LinearLayout
-                    android:id="@+id/ll_02"
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/border"
-                    android:clickable="true"
-                    android:onClick="dropdown1"
-                    android:orientation="horizontal">
-
-                <TextView
-                        android:id="@+id/tv_02"
-                        style="@style/SpinnerViewStyle" />
-
-                <ImageView
-                        android:src="@drawable/arrow"
-                        style="@style/SpinnerImageViewStyle" />
-            </LinearLayout>
-        </LinearLayout>
-
         <TextView
                 android:id="@+id/btn_scan"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
                 android:background="@drawable/border_c"
-                android:text="扫描设备"
+                android:text="扫描"
                 android:textColor="@color/baseColor"
                 android:gravity="center"
                 android:layout_marginTop="20dp"
@@ -146,25 +98,13 @@
                 android:layout_gravity="center_horizontal"/>
 
         <View style="@style/View_1" />
-        <View style="@style/View_1" />
-        <View style="@style/View_1" />
     </LinearLayout>
 
     <LinearLayout style="@style/BottomLinerLayoutStyle">
-
-        <Button
-                android:id="@+id/btn_return"
-                android:onClick="appReturn"
-                android:text="返回"
-                style="@style/BottomButtonStyle"/>
+        <Button android:id="@+id/btn_return" android:onClick="appReturn" android:text="返回" style="@style/BottomButtonStyle"/>
 
         <View style="@style/BottomLittlePartingLineStyle" />
 
-        <Button
-                android:id="@+id/btn_next"
-                android:onClick="appNext"
-                android:text="安上"
-                style="@style/BottomButtonStyle"/>
-
+        <Button android:id="@+id/btn_next" android:onClick="appNext" android:text="安上" style="@style/BottomButtonStyle"/>
     </LinearLayout>
 </LinearLayout>

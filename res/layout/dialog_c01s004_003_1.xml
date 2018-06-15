@@ -23,7 +23,7 @@ android:background="@color/backgroundcolor">
 
 
                 <EditText
-                        android:id="@+id/knifeBodyCode"
+                        android:id="@+id/et_bladeCode"
                         android:layout_marginTop="20dp"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"

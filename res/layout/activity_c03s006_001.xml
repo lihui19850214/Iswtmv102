@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools" style="@style/OverallSituationLinerLayoutStyle">
+
+    <TextView
+        android:text="@string/c03s006_006_001"
+        style="@style/FunctionalTitleTextViewStyle" />
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="right|center"
+                    android:paddingRight="10dp"
+                    android:text="合成刀"/>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent">
+                <EditText
+                        android:id="@+id/syntheticKnife"
+                        android:layout_height="match_parent"
+                        style="@style/MiddleEditTextStyle"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/tvSerach"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:background="@drawable/border_c"
+                android:text="@string/search"
+                android:textColor="@color/baseColor"
+                android:gravity="center"
+                android:layout_marginBottom="20dp"
+                android:textSize="@dimen/button_textsize"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="right|center"
+                    android:paddingRight="10dp"
+                    android:text="物料号"/>
+
+            <LinearLayout
+                    android:id="@+id/ll_01"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border"
+                    android:clickable="true"
+                    android:onClick="dropdown"
+                    android:orientation="horizontal" >
+
+                <TextView
+                        android:id="@+id/tv_01"
+                        style="@style/SpinnerViewStyle" />
+
+                <ImageView
+                        android:src="@drawable/arrow"
+                        style="@style/SpinnerImageViewStyle" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="right|center"
+                    android:paddingRight="10dp"
+                    android:text="刀身码"/>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent">
+                <EditText
+                        android:id="@+id/et_bladeCode"
+                        android:layout_height="match_parent"
+                        style="@style/MiddleEditTextStyle"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="right|center"
+                    android:paddingRight="10dp"
+                    android:text="刀具状态"/>
+
+
+            <LinearLayout
+                    android:id="@+id/ll_02"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border"
+                    android:clickable="true"
+                    android:onClick="dropdown1"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:id="@+id/tv_02"
+                        style="@style/SpinnerViewStyle" />
+
+                <ImageView
+                        android:src="@drawable/arrow"
+                        style="@style/SpinnerImageViewStyle" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+                android:id="@+id/btn_scan"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:background="@drawable/border_c"
+                android:text="扫描"
+                android:textColor="@color/baseColor"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:textSize="@dimen/button_textsize"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"/>
+
+        <View style="@style/View_1" />
+        <View style="@style/View_1" />
+        <View style="@style/View_1" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button android:text="@string/returnBy" android:id="@+id/btnReturn" android:onClick="btnReturn" style="@style/BottomButtonStyle" />
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button android:text="@string/confirm" android:id="@+id/btnConfirm" android:onClick="btnConfirm" style="@style/BottomButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

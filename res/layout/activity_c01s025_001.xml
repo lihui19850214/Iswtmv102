@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools" style="@style/OverallSituationLinerLayoutStyle">
+
+    <TextView android:text="@string/C01S025" style="@style/FunctionalTitleTextViewStyle" />
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp" tools:ignore="Suspicious0dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="center"
+                    android:text="合成刀"/>
+
+
+            <EditText
+                    android:id="@+id/et_t"
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border"
+                    android:digits="@string/onlyAllowInputNumbers"
+                    android:singleLine="true"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/daoju_all"
+                    android:textCursorDrawable="@drawable/text_cursor_shape"/>
+        </LinearLayout>
+
+        <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="7"
+                android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
+            <LinearLayout
+                    android:id="@+id/llContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button android:id="@+id/btnReturn" android:text="@string/returnBy" android:onClick="btnReturn" style="@style/BottomButtonStyle" />
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button android:id="@+id/btnSearch" android:text="@string/search" android:onClick="btnSearch" style="@style/BottomButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>

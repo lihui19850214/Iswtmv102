@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.icomp.Iswtmv10.v01c01.c01s005.c01s005_002_4Activity">
+
+    <TextView android:text="@string/C01S007" style="@style/FunctionalTitleTextViewStyle"/>
+
+    <LinearLayout style="@style/MiddleLinerLayoutStyle" android:gravity="center_vertical">
+        <TextView
+                android:text="@string/C01S007"
+                android:drawableTop="@drawable/success"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="25sp"
+                android:textColor="@color/baseColor"
+                android:gravity="center"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/itemtextColor"
+                    android:textSize="@dimen/text_title_size"
+                    android:gravity="right|center"
+                    android:text="物料号:"/>
+
+            <TextView
+                    android:id="@+id/tv_00"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/itemtextColor"
+                    android:textSize="@dimen/text_title_size"
+                    android:gravity="left|center"
+                    android:singleLine="true"/>
+        </LinearLayout>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/itemtextColor"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_marginTop="20dp"
+                android:text="请将刀身码打到刀具上"/>
+    </LinearLayout>
+
+    <LinearLayout style="@style/BottomLinerLayoutStyle">
+
+        <Button android:id="@+id/btnComplete" android:text="@string/complete" style="@style/BottomButtonStyle"/>
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button android:id="@+id/btnGoOn" android:text="@string/keepOn" style="@style/BottomButtonStyle"/>
+
+    </LinearLayout>
+</LinearLayout>

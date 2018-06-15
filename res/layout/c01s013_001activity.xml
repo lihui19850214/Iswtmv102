@@ -8,106 +8,47 @@
 
     <LinearLayout style="@style/MiddleLinerLayoutStyle">
         <TextView
-                android:text="请扫描要卸下设备的合成刀具标签"
-                android:layout_weight="2"
-                style="@style/MiddleTextPromptStule" />
+                android:layout_height="wrap_content"
+                android:text="请扫描要安上设备的合成刀具标签或者输入要安上的合成刀具刀身码"
+                style="@style/MiddleTextPromptStule"/>
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingTop="20dp">
             <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1.5"
+                    android:layout_weight="1"
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/text_content_size"
-                    android:gravity="left"
-                    android:text="合成刀具编码"/>
+                    android:gravity="center"
+                    android:text="合成刀具刀身码:"/>
 
-
-            <TextView
-                    android:id="@+id/tv_01"
+            <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_content_size"
-                    android:background="@drawable/textview_border2"/>
-        </LinearLayout>
+                    android:layout_weight="1"
+                    android:layout_height="match_parent">
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.2"
-                android:orientation="horizontal">
-            <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5"
-                    android:textColor="@color/baseColor"
-                    android:textSize="@dimen/text_content_size"
-                    android:gravity="left"
-                    android:text="对应设备名称"/>
-
-
-            <TextView
-                    android:id="@+id/tv_02"
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_content_size"
-                    android:background="@drawable/textview_border2"/>
+                <EditText
+                        android:id="@+id/et_00"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_no_radius"
+                        android:digits="@string/onlyAllowInputNumbers"
+                        android:textColor="@color/baseColor"
+                        android:textSize="20sp"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/text_cursor_shape"/>
+            </LinearLayout>
 
         </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-            <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5"
-                    android:textColor="@color/baseColor"
-                    android:textSize="@dimen/text_content_size"
-                    android:gravity="left"
-                    android:text="对应轴号"/>
-
-
-            <TextView
-                    android:id="@+id/tv_03"
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_content_size"
-                    android:background="@drawable/textview_border2"/>
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-            <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5"
-                    android:textColor="@color/baseColor"
-                    android:textSize="@dimen/text_content_size"
-                    android:gravity="left"
-                    android:text="对应工序"/>
-
-
-            <TextView
-                    android:id="@+id/tv_04"
-                    android:layout_width="0dp"
-                    android:layout_weight="2"
-                    android:layout_height="wrap_content"
-                    android:textSize="@dimen/text_content_size"
-                    android:background="@drawable/textview_border2"/>
-        </LinearLayout>
+        <View style="@style/View_1"/>
+        <View style="@style/View_1"/>
+        <View style="@style/View_1"/>
 
 
         <TextView
@@ -131,7 +72,7 @@
 
         <View style="@style/BottomLittlePartingLineStyle" />
 
-        <Button android:id="@+id/btn_confirm" android:text="@string/confirm" style="@style/BottomButtonStyle" />
+        <Button android:id="@+id/btn_confirm" android:text="@string/next" style="@style/BottomButtonStyle" />
 
     </LinearLayout>
 

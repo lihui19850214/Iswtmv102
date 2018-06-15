@@ -24,13 +24,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:orientation="horizontal">
-                    <ImageView
+                    <!--ImageView
                             android:id="@+id/ivAdd"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="0.1"
                             android:src="@drawable/add"
-                            android:padding="5dp"/>
+                            android:padding="5dp"/-->
                     <LinearLayout
                             android:background="@drawable/table_border_c"
                             android:layout_width="0dp"
@@ -40,7 +40,7 @@
                         <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
+                                android:layout_weight="1.5"
                                 android:textColor="@color/baseColor"
                                 android:text="材料号"
                                 android:gravity="center"/>
@@ -52,7 +52,7 @@
                         <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1.5"
+                                android:layout_weight="1"
                                 android:textColor="@color/baseColor"
                                 android:text="刀身码"
                                 android:gravity="center"/>
@@ -62,7 +62,7 @@
                                 android:layout_height="match_parent"
                                 android:background="@color/baseColor"/>
 
-                        <TextView
+                        <!--TextView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
@@ -73,7 +73,7 @@
                         <ImageView
                                 android:layout_width="1dp"
                                 android:layout_height="match_parent"
-                                android:background="@color/baseColor"/>
+                                android:background="@color/baseColor"/-->
 
                         <TextView
                                 android:id="@+id/textView4"

@@ -9,6 +9,11 @@
 
     <LinearLayout style="@style/MiddleLinerLayoutStyle">
 
+        <TextView
+                android:text="请扫描刀盒上的标签，并将刀具放入刀盒"
+                style="@style/MiddleTextPromptStule"
+                android:layout_height="wrap_content"/>
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -17,7 +22,7 @@
                 android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
             <TextView
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/text_content_size"
@@ -28,52 +33,34 @@
                     android:id="@+id/tv_01"
                     android:layout_width="0dp"
                     android:layout_weight="0.5"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="left|center"/>
 
             <TextView
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1.5"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/text_content_size"
                     android:gravity="right|center"
-                    android:text="输入刀身码数量："/>
+                    android:text="已扫描："/>
 
             <TextView
                     android:id="@+id/tv_02"
                     android:layout_width="0dp"
                     android:layout_weight="0.5"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="left|center"/>
         </LinearLayout>
 
-        <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="8"
-                android:layout_marginTop="10dp" tools:ignore="Suspicious0dp">
-            <LinearLayout
-                    android:layout_below="@id/tvTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
 
-                <LinearLayout
-                        android:id="@+id/llContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"/>
-
-            </LinearLayout>
-        </ScrollView>
 
         <TextView
                 android:id="@+id/tvScan"
                 android:layout_width="240dp"
                 android:layout_height="40dp"
                 android:background="@drawable/border_c"
-                android:text="@string/toolBind"
+                android:text="@string/scan"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textSize="@dimen/button_textsize"

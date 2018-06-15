@@ -7,11 +7,81 @@
     <LinearLayout style="@style/MiddleLinerLayoutStyle">
 
         <TextView
-            android:text="请选择要打码刀具的订单号"
+            android:text="扫描刀具盒标签"
             style="@style/MiddleTextPromptStule"
             android:layout_height="wrap_content"/>
 
         <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="center"
+                    android:text="物料号:"/>
+
+            <TextView
+                    android:id="@+id/tv_00"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="@drawable/textview_border2"
+                    android:textColor="@color/baseColor"
+                    android:textSize="20sp"
+                    android:singleLine="true"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="center"
+                    android:text="刀身码:"/>
+
+            <TextView
+                    android:id="@+id/tv_01"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="@drawable/textview_border2"
+                    android:textColor="@color/baseColor"
+                    android:textSize="20sp"
+                    android:singleLine="true"/>
+        </LinearLayout>
+
+        <View style="@style/View_1" />
+        <View style="@style/View_1" />
+        <View style="@style/View_1" />
+
+        <TextView
+                android:id="@+id/tvScan"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:background="@drawable/border_c"
+                android:text="@string/scan"
+                android:textColor="@color/baseColor"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="40dp"
+                android:textSize="@dimen/button_textsize"
+                android:textStyle="bold"
+                android:layout_gravity="center_horizontal"/>
+
+        <!--LinearLayout
                 android:id="@+id/ll_01"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
@@ -24,9 +94,9 @@
             <ImageView
                     android:src="@drawable/arrow"
                     style="@style/SpinnerImageViewStyle" />
-        </LinearLayout>
+        </LinearLayout-->
 
-        <ListView
+        <!--ListView
                 android:id="@+id/listview"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -35,17 +105,17 @@
                 android:visibility="invisible"
                 android:scrollbars="vertical">
 
-        </ListView>
+        </ListView-->
 
     </LinearLayout>
 
     <LinearLayout style="@style/BottomLinerLayoutStyle">
 
-        <Button android:text="@string/returnBy" android:onClick="btnReturn" style="@style/BottomButtonStyle" />
+        <Button android:id="@+id/btnReturn" android:text="@string/returnBy" android:onClick="btnReturn" style="@style/BottomButtonStyle" />
 
         <View style="@style/BottomLittlePartingLineStyle" />
 
-        <Button android:text="@string/search" android:onClick="btnSearch" style="@style/BottomButtonStyle" />
+        <Button android:id="@+id/btnCode" android:text="@string/code" android:onClick="btnCode" style="@style/BottomButtonStyle" />
 
     </LinearLayout>
 
