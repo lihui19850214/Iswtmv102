@@ -19,7 +19,7 @@ public class C03S005_003Activity extends CommonActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c03s005_003);
-        
+
     }
 
     //继续按钮处理--跳转到员工卡初始化页面1
