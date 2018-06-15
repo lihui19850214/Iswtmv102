@@ -25,6 +25,7 @@
     <string name="C01S024">快速查询</string>
     <string name="C02S001">屏幕亮度</string>
     <string name="C02S002">读头信号</string>
+    <string name="C01S025">合成刀打码</string>
     <string name="c01s001_002_001">请输入入库数量</string>
     <string name="c01s002_001_001">请选择要清空标签的种类</string>
     <string name="c01s002_002_001">请扫描要清空的RFID标签</string>
@@ -113,12 +114,14 @@
     <string name="c03s000_000_002">员工卡初始化</string>
     <string name="c03s000_000_003">设备初始化</string>
     <string name="c03s000_001_001">合成刀具初始化</string>
+    <string name="c03s006_006_001">流转刀具初始化</string>
     <string name="c03s000_001_002">库位标签初始化</string>
     <string name="c03s000_001_003">筒刀初始化</string>
     <string name="c03s000_002_001">设备初始化</string>
     <string name="c03s000_002_002">修磨设备初始化</string>
     <string name="c03s001_001_001">请输入合成刀具编码后点击查询按钮，或扫描已初始化好的合成刀具标签</string>
     <string name="c03s001_001_002">请输入合成刀具编码</string>
+    <string name="c03s006_006_003">请输入合成刀</string>
     <string name="c03s001_002_001">可刃磨钻头</string>
     <string name="c03s001_002_002">可刃磨刀片</string>
     <string name="c03s001_002_003">一次性刀片</string>
@@ -130,6 +133,7 @@
     <string name="c03s001_003_003">返回后所有初始化数据将会清空</string>
     <string name="c03s001_003_006">扫描数量不能为0，请点击扫描按钮，完成初始化动作</string>
     <string name="c03s001_004_001">合成刀具初始化完成</string>
+    <string name="c03s006_006_002">流转刀具初始化完成</string>
     <string name="c03s002_001_001">请输入要初始化的库位标签的材料号</string>
     <string name="c03s002_001_002">请输入材料号</string>
     <string name="c03s002_002_001">该材料号对应的库位已经初始化，是否重新初始化？</string>
@@ -187,6 +191,7 @@
     <string name="materialNumber">材料号</string>
     <string name="knifeBodyCode">刀身码</string>
     <string name="singleProductCode">单品编码</string>
+    <string name="syntheticToolT">合成刀</string>
     <string name="syntheticTool">合成刀具</string>
     <string name="syntheticToolCoding">合成刀具编码</string>
     <string name="tubeKnifeCoding">筒刀编码</string>
@@ -229,6 +234,7 @@
     <string name="password">密码</string>
     <string name="register">注册</string>
     <string name="scan">扫描</string>
+    <string name="toolBind">绑定刀具</string>
     <string name="stop">停止</string>
     <string name="search">查询</string>
     <string name="cancel">取消</string>
@@ -240,6 +246,7 @@
     <string name="disboard">卸下</string>
     <string name="submit">提交</string>
     <string name="confirm">确定</string>
+    <string name="code">打码</string>
     <string name="codeCompletion">打码完成</string>
     <string name="splitFinish">拆分结束</string>
     <string name="assembleFinish">组装结束</string>
