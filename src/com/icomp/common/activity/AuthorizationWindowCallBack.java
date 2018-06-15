@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AuthorizationWindowCallBack {
 
-    public void success(List<AuthCustomer> authorizationList);
+    public void success(AuthCustomer authCustomer);
 
     public void fail();
 }

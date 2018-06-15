@@ -31,6 +31,7 @@ import android.widget.*;
 import com.apiclient.pojo.AuthCustomer;
 import com.apiclient.vo.AuthCustomerVO;
 import com.apiclient.vo.RfidContainerVO;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
@@ -894,29 +895,28 @@ public abstract class CommonActivity extends Activity {
     // 网络访问API
     private Retrofit retrofit = RetrofitSingle.newInstance();
 
-    //授权人ID
-    private List<AuthCustomer> authorizationList = new ArrayList<>();
-    // 授权后显示的名称
-    TextView tvAuthorizationName;
-    // 授权人数，默认是 1 人
-    private int authorizedPeopleNumber = 1;
-
     // 是否需要授权 true为需要授权；false为不需要授权
     public static boolean is_need_authorization = false;
+
+    // 标题
+    String authorizedTitle = "授权签收";
 
     // 授权登陆回调方法
     AuthorizationWindowCallBack authorizationWindowCallBack = null;
 
-    public void authorizationWindow(int authorizedPeopleNumber, AuthorizationWindowCallBack callBack){
-        authorizationList = new ArrayList<>();
+    public void authorizationWindow(AuthorizationWindowCallBack callBack){
+        authorizationWindow(null, callBack);
+    }
+
+    public void authorizationWindow(String title, AuthorizationWindowCallBack callBack){
         authorizationWindowCallBack = callBack;
+
+        if (title != null && !"".equals(title)) {
+            authorizedTitle = title;
+        }
 
         // 需要授权
         if (is_need_authorization) {
-            if (authorizedPeopleNumber > 0) {
-                this.authorizedPeopleNumber = authorizedPeopleNumber;
-            }
-
             showAuthorizationWindow();
         } else {
             // 不需要授权传 null
@@ -931,6 +931,9 @@ public abstract class CommonActivity extends Activity {
         View view = layoutInflater.inflate(R.layout.authorization, null);
         popupWindowAuthorization = new PopupWindow(view, (int) (0.8 * screenWidth), (int) (0.6 * screenHeight), true);
         popupWindowAuthorization.showAtLocation(view, Gravity.CENTER_VERTICAL, 0, 0);
+
+        TextView tv_title = (TextView) view.findViewById(R.id.tv_title);
+        tv_title.setText(authorizedTitle);
 
         //输入授权按钮处理
         btnInputAuthorization = (Button) view.findViewById(R.id.btnInputAuthorization);
@@ -1059,7 +1062,6 @@ public abstract class CommonActivity extends Activity {
             });
 
             IRequest iRequest = retrofit.create(IRequest.class);
-            ObjectMapper mapper = new ObjectMapper();
 
             AuthCustomerVO authCustomerVO = new AuthCustomerVO();
             authCustomerVO.setAccount(userName);
@@ -1086,7 +1088,7 @@ public abstract class CommonActivity extends Activity {
                 Response<String> response = loganForPDA.execute();
 
                 if (response.raw().code() == 200) {
-                    AuthCustomer authCustomer = mapper.readValue(response.body(), AuthCustomer.class);
+                    AuthCustomer authCustomer = jsonToObject(response.body(), AuthCustomer.class);
                     if (authCustomer != null) {
                         message.what = 0;
                         message.obj = authCustomer;
@@ -1134,31 +1136,21 @@ public abstract class CommonActivity extends Activity {
             if (what == 0) {
                 // 授权信息
                 AuthCustomer authCustomer = (AuthCustomer) msg.obj;
-                // 授权人列表
-                authorizationList.add(authCustomer);
 
                 Toast.makeText(getApplicationContext(), getString(R.string.authorizationSuccess), Toast.LENGTH_SHORT).show();
 
-                // 判断是否已达到授权人数
-                if (authorizationList.size() == authorizedPeopleNumber) {
-                    // 成功
-                    authorizationWindowCallBack.success(authorizationList);
-                    if (popupWindowInput != null && popupWindowInput.isShowing()) {
-                        //输入授权弹框消失，显示授权弹框
-                        popupWindowInput.dismiss();
-                    }
-
-                    // 授权完成后，如果是扫描登陆需要关闭授权框
-                    if (null != popupWindowAuthorization && popupWindowAuthorization.isShowing()) {
-                        popupWindowAuthorization.dismiss();
-                    }
-                } else {
-                    if (popupWindowInput != null && popupWindowInput.isShowing()) {
-                        //输入授权弹框消失，显示授权弹框
-                        popupWindowInput.dismiss();
-                        showAuthorizationWindow();
-                    }
+                if (popupWindowInput != null && popupWindowInput.isShowing()) {
+                    //输入授权弹框消失，显示授权弹框
+                    popupWindowInput.dismiss();
                 }
+
+                // 授权完成后，如果是扫描登陆需要关闭授权框
+                if (null != popupWindowAuthorization && popupWindowAuthorization.isShowing()) {
+                    popupWindowAuthorization.dismiss();
+                }
+
+                // 成功
+                authorizationWindowCallBack.success(authCustomer);
             }
             // 返回错误信息
             else if (what == 1) {
@@ -1245,8 +1237,14 @@ public abstract class CommonActivity extends Activity {
                     Response<String> response = loganForPDA.execute();
 
                     if (response.raw().code() == 200) {
-                        message.what = 0;
-                        message.obj = mapper.readValue(response.body(), AuthCustomer.class);;
+                        AuthCustomer authCustomer = jsonToObject(response.body(), AuthCustomer.class);
+                        if (authCustomer != null) {
+                            message.what = 0;
+                            message.obj = authCustomer;
+                        } else {
+                            message.what = 1;
+                            message.obj = "扫描授权错误";
+                        }
                     } else {
                         message.what = 1;
                         message.obj = response.errorBody().string();
@@ -1407,6 +1405,7 @@ public abstract class CommonActivity extends Activity {
      * @throws JsonProcessingException
      */
     public String objectToJson(Object value) throws JsonProcessingException {
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         return mapper.writeValueAsString(value);
     }
 
@@ -1439,6 +1438,39 @@ public abstract class CommonActivity extends Activity {
             isCanScan = true;
             stopScan();
         }
+    }
+
+    /**
+     * 显示确认数据
+     */
+    public void showDialogAlertContent(String content, final DialogAlertCallBack callBack) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialog2);
+        final AlertDialog dialog = builder.create();
+        View view = View.inflate(this, R.layout.dialog_alert, null);
+        Button btnConfirm = (Button) view.findViewById(R.id.btn_confirm);
+        Button btnCancel = (Button) view.findViewById(R.id.btn_cancel);
+        TextView tvContent = (TextView) view.findViewById(R.id.tvContent);
+        tvContent.setText(content);
+
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                callBack.confirm();
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+                callBack.cancel();
+            }
+        });
+
+        dialog.show();
+        dialog.setContentView(view);
+        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
     }
 
 }
