@@ -39,7 +39,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/border_no_radius"
-                        android:digits="@string/onlyAllowInputNumbers"
                         android:textColor="@color/baseColor"
                         android:textSize="20sp"
                         android:singleLine="true"
@@ -79,7 +78,6 @@
 
         <Button
                 android:id="@+id/btn_next"
-                android:onClick="appNext"
                 android:text="下一步"
                 style="@style/BottomButtonStyle"/>
 
