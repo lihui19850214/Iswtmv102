@@ -58,10 +58,16 @@ public class SynthesisCuttingToolBind implements Serializable{
     private String synthesisCode;
     /**
      * @fieldName bladeCode
-    * @fieldType  Integer
+    * @fieldType  String
     * @Description  刀身码
      */
     private String bladeCode;
+    /**
+     * @fieldName status
+    * @fieldType  String
+    * @Description  刀具状态
+     */
+    private String status;
 
     /**
      * @fieldName rfidContainerCode
@@ -137,6 +143,13 @@ public class SynthesisCuttingToolBind implements Serializable{
 
     public void setBladeCode(String bladeCode) {
         this.bladeCode = bladeCode;
+    }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public RfidContainer getRfidContainer() {
