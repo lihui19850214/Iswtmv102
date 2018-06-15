@@ -7,7 +7,7 @@ import java.io.Serializable;
 * Automated Build
 * 实体 CuttingToolBind 
 */
-public class CuttingToolBind implements Serializable {
+public class CuttingToolBind implements Serializable{
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -108,6 +108,12 @@ public class CuttingToolBind implements Serializable {
     * @Description  后加的刀具唯一码
      */
     private String uninCode;
+    /**
+     * @fieldName inUser
+    * @fieldType  String
+    * @Description  是否使用 1是 0 否
+     */
+    private String inUser;
 
     /**
      * @fieldName cuttingToolCode
@@ -196,6 +202,7 @@ public class CuttingToolBind implements Serializable {
     public void setSharpenTimes(Integer sharpenTimes) {
         this.sharpenTimes = sharpenTimes;
     }
+
     public Integer getQimingSharpenTimes() {
         return qimingSharpenTimes;
     }
@@ -203,6 +210,7 @@ public class CuttingToolBind implements Serializable {
     public void setQimingSharpenTimes(Integer qimingSharpenTimes) {
         this.qimingSharpenTimes = qimingSharpenTimes;
     }
+
     public String getScapCase() {
         return scapCase;
     }
@@ -237,6 +245,13 @@ public class CuttingToolBind implements Serializable {
 
     public void setUninCode(String uninCode) {
         this.uninCode = uninCode;
+    }
+    public String getInUser() {
+        return inUser;
+    }
+
+    public void setInUser(String inUser) {
+        this.inUser = inUser;
     }
 
     public CuttingTool getCuttingTool() {
