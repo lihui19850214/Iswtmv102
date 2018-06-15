@@ -20,6 +20,7 @@
                 android:id="@+id/ll_02"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
+                android:layout_weight="1.5"
                 style="@style/SpinnerLinerLayoutStyle">
 
             <TextView
@@ -45,15 +46,9 @@
                 </TableRow>
 
                 <TableRow style="@style/tableRowTextView">
-                    <TextView android:text="材料号" style="@style/TableRowTextViewStyle"/>
+                    <TextView android:text="刀具号" style="@style/TableRowTextViewStyle"/>
 
-                    <TextView android:id="@+id/cailiaohao" style="@style/TableRowTextViewStyle" android:layout_weight="2"/>
-                </TableRow>
-
-                <TableRow style="@style/tableRowTextView">
-                    <TextView android:text="型号规格" style="@style/TableRowTextViewStyle"/>
-
-                    <TextView android:id="@+id/xinghaoguige" style="@style/TableRowTextViewStyle" android:layout_weight="2"/>
+                    <TextView android:id="@+id/djCode" style="@style/TableRowTextViewStyle" android:layout_weight="2"/>
                 </TableRow>
 
                 <TableRow style="@style/tableRowTextView">
