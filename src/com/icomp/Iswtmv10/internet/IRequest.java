@@ -309,6 +309,15 @@ public interface IRequest {
     Call<String> searchProductLine(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
     /**
+     * 根据合成刀标签或者刀身码查询信息接口地址
+     * @param json 请求数据
+     * @param headers 请求头
+     * @return json格式数据
+     */
+    @POST("/productlineBusiness/queryForUnInstall")
+    Call<String> queryForUnInstall(@Body RequestBody json, @HeaderMap Map<String, String> headers);
+
+    /**
      * 卸下
      * @param json 请求数据
      * @param headers 请求头
@@ -316,6 +325,15 @@ public interface IRequest {
      */
     @POST("/synthesisCuttingToolBusiness/unBindEquipment")
     Call<String> unBindEquipment(@Body RequestBody json, @HeaderMap Map<String, String> headers);
+
+    /**
+     * 卸下设备接口地址
+     * @param json 请求数据
+     * @param headers 请求头
+     * @return json格式数据
+     */
+    @POST("/productlineBusiness/unInstall")
+    Call<String> unInstall(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
     /**
      * 卸下
