@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.apiclient.constants.CuttingToolConsumeTypeEnum;
 import com.apiclient.constants.CuttingToolTypeEnum;
 import com.apiclient.pojo.CuttingTool;
+import com.apiclient.pojo.ProductLineEquipment;
 import com.apiclient.pojo.SynthesisCuttingToolConfig;
 import com.apiclient.pojo.SynthesisCuttingToolLocationConfig;
 import com.icomp.Iswtmv10.R;
@@ -23,6 +24,7 @@ import com.icomp.common.utils.GetItemHeight;
 import com.icomp.common.utils.SysApplication;
 
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,7 +40,7 @@ public class C03S001_002Activity extends CommonActivity {
     ListView lv01;
 
     //合成刀具初始化参数类
-    private SynthesisCuttingToolConfig params = new SynthesisCuttingToolConfig();
+    private SynthesisCuttingToolConfig synthesisCuttingToolConfig = new SynthesisCuttingToolConfig();
     private List<SynthesisCuttingToolLocationConfig> synthesisCuttingToolLocationConfigList;
 
     @Override
@@ -46,13 +48,13 @@ public class C03S001_002Activity extends CommonActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c03s001_002);
         ButterKnife.bind(this);
-        //创建Activity时，添加到List进行管理
-        SysApplication.getInstance().addActivity(this);
-        //接受上一个页面传递过来的参数
-        params = (SynthesisCuttingToolConfig) getIntent().getSerializableExtra(PARAM);
+
+        Map<String, Object> paramMap = PARAM_MAP.get(1);
+        synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap.get("synthesisCuttingToolConfig");
+
         //将传递过来的合成刀具编码显示在TextView上
-        tv01.setText(exChangeBig(params.getSynthesisCuttingTool().getSynthesisCode().trim()));
-        synthesisCuttingToolLocationConfigList = params.getSynthesisCuttingToolLocationConfigList();
+        tv01.setText(exChangeBig(synthesisCuttingToolConfig.getSynthesisCuttingTool().getSynthesisCode()));
+        synthesisCuttingToolLocationConfigList = synthesisCuttingToolConfig.getSynthesisCuttingToolLocationConfigList();
     }
 
     @Override
@@ -92,8 +94,8 @@ public class C03S001_002Activity extends CommonActivity {
     //返回按钮处理--返回上一页面
     public void btnReturn(View view) {
         Intent intent = new Intent(this, C03S001_001Activity.class);
-        //合成刀具编码返回上一页面
-        intent.putExtra(PARAM1, params.getSynthesisCuttingTool().getSynthesisCode());
+        // 不清空页面之间传递的值
+        intent.putExtra("isClearParamMap", false);
         startActivity(intent);
         finish();
     }
@@ -101,7 +103,8 @@ public class C03S001_002Activity extends CommonActivity {
     //下一步按钮处理--跳转到下一页面
     public void btnNext(View view) {
         Intent intent = new Intent(this, C03S001_003Activity.class);
-        intent.putExtra(PARAM, params);
+        // 不清空页面之间传递的值
+        intent.putExtra("isClearParamMap", false);
         startActivity(intent);
         finish();
     }

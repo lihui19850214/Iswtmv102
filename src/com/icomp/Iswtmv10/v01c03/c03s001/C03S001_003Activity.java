@@ -1,60 +1,56 @@
 package com.icomp.Iswtmv10.v01c03.c03s001;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
 import android.widget.Toast;
-
-import com.apiclient.pojo.*;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import com.apiclient.pojo.SynthesisCuttingToolConfig;
+import com.apiclient.vo.RfidContainerVO;
+import com.apiclient.vo.SynthesisCuttingToolBindVO;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.utils.SysApplication;
-
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 合成刀具初始化页面3
  */
 public class C03S001_003Activity extends CommonActivity {
 
-    @BindView(R.id.tv_01)
-    TextView tv01;
+    @BindView(R.id.et_01)
+    EditText tv01;
     @BindView(R.id.btnScan)
     Button btnScan;
-    @BindView(R.id.btnStop)
-    Button btnStop;
-    @BindView(R.id.btnSubmit)
-    Button btnSubmit;
+    @BindView(R.id.btnReturn)
+    Button btnReturn;
+    @BindView(R.id.btnNext)
+    Button btnNext;
 
-    //扫描数量
-    public String scanNumber;
-    //群扫存放rfidString的List
-    public List<String> rfidList = new ArrayList<>();
+
     //扫描线程
-    private scanThread scanThread;
+    private ScanThread scanThread;
 
     //合成刀具初始化参数类
-    private SynthesisCuttingToolConfig params = new SynthesisCuttingToolConfig();
+    private SynthesisCuttingToolConfig synthesisCuttingToolConfig = new SynthesisCuttingToolConfig();
     //调用接口
     private Retrofit retrofit;
 
@@ -63,66 +59,24 @@ public class C03S001_003Activity extends CommonActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c03s001_003);
         ButterKnife.bind(this);
-        //创建Activity时，添加到List进行管理
-        SysApplication.getInstance().addActivity(this);
+
         //调用接口
         retrofit = RetrofitSingle.newInstance();
-        //接受上一页面传递的参数
-        params = (SynthesisCuttingToolConfig) getIntent().getSerializableExtra(PARAM);
-        //显示扫描数量
-        scanNumber = ZERO;
-        tv01.setText(getResources().getString(R.string.c03s001_003_002) + scanNumber);
+
+        Map<String, Object> paramMap = PARAM_MAP.get(1);
+        synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap.get("synthesisCuttingToolConfig");
     }
 
     //返回按钮处理--返回到合成刀具初始化页面1
     public void btnReturn(View view) {
-        Message message = new Message();
-        returnHandler.sendMessage(message);
+        Intent intent = new Intent(this, C03S001_002Activity.class);
+        // 不清空页面之间传递的值
+        intent.putExtra("isClearParamMap", false);
+        startActivity(intent);
+        finish();
     }
 
-    //提交按钮处理--调用接口，提交初始化合成刀具RFIDCodeList
-    public void btnSubmit(View view) {
-        if (!isCanScan) {
-            stop_scan();
-        }
-
-        if (0 == Integer.parseInt(scanNumber)) {
-            createAlertDialog(this, getString(R.string.c03s001_003_006), Toast.LENGTH_LONG);
-        } else {
-            //点击提交按钮处理方法
-            next();
-        }
-    }
-
-    //返回Handler
-    @SuppressLint("HandlerLeak")
-    Handler returnHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (!isCanScan) {
-                stop_scan();
-            }
-            new AlertDialog.Builder(C03S001_003Activity.this).
-                    setTitle(R.string.prompt).
-                    setMessage(R.string.c03s001_003_003).
-                    setPositiveButton(getString(R.string.confirm), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            Intent intent = new Intent(C03S001_003Activity.this, C03S001_001Activity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }).setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-            }).show();
-        }
-    };
-
-    @OnClick({R.id.btnScan, R.id.btnStop})
+    @OnClick({R.id.btnScan})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             //扫描按钮处理
@@ -130,39 +84,22 @@ public class C03S001_003Activity extends CommonActivity {
                 //扫描方法
                 scan();
                 break;
-            //停止按钮处理
-            case R.id.btnStop:
-                stop_scan();
-                break;
             default:
         }
     }
 
-    private void stop_scan() {
-        scanOrNot = false;
-        isCanScan = true;
-        close();
-        btnScan.setClickable(true);
-        btnScan.setText(getString(R.string.scan));
-        btnScan.setBackgroundResource(R.drawable.border);
-    }
-
-    //扫描方法
+    /**
+     * 扫描方法
+     */
     private void scan() {
         if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
             isCanScan = false;
-            btnScan.setText("扫描中");
-            btnScan.setClickable(false);
-            btnScan.setBackgroundResource(R.color.hintcolor);
-
-            //设置扫描或停止条件为true
-            scanOrNot = true;
-
-            // 重复扫描
-            Toast.makeText(getApplicationContext(), "开始扫描", Toast.LENGTH_SHORT).show();
-
-            //启动扫描线程
-            scanThread = new scanThread();
+            btnReturn.setClickable(false);
+            btnNext.setClickable(false);
+            //显示扫描弹框的方法
+            scanPopupWindow();
+            //扫描线程
+            scanThread = new ScanThread();
             scanThread.start();
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
@@ -170,96 +107,81 @@ public class C03S001_003Activity extends CommonActivity {
     }
 
     //扫描线程
-    private class scanThread extends Thread{
+    private class ScanThread extends Thread {
         @Override
         public void run() {
             super.run();
-            //需每次置rfidString为null
-            rfidString = null;
-
-            while (null == rfidString && scanOrNot) {
-                rfidString = alwaysScan();
-            }
-
-            if (null != rfidString) {
+            //单扫方法
+            rfidString = singleScan();//TODO 生产环境需要打开
+            if ("close".equals(rfidString)) {
+                btnReturn.setClickable(true);
+                btnNext.setClickable(true);
+                isCanScan = true;
                 Message message = new Message();
-                message.obj = rfidString;
-                scanHandler.sendMessage(message);
+                overtimeHandler.sendMessage(message);
+            } else if (null != rfidString && !"close".equals(rfidString)) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        btnReturn.setClickable(true);
+                        btnNext.setClickable(true);
+                        isCanScan = true;
+
+                        if (null != popupWindow && popupWindow.isShowing()) {
+                            popupWindow.dismiss();
+                        }
+                    }
+                });
+
+                //提交按钮处理方法
+                requestData(null, rfidString);
             }
         }
     }
 
-    //扫描Handler
-    @SuppressLint("HandlerLeak")
-    Handler scanHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            String rfidStr = msg.obj.toString();
-
-            if (null == rfidList) {
-                rfidList = new ArrayList<>();
-            }
-
-            if (!rfidList.contains(rfidStr)) {
-                rfidList.add(rfidStr);
-                //扫描数量params.scanNumber+1
-                scanNumber = String.valueOf(Integer.parseInt(scanNumber) + 1);
-                //显示当前初始化数量
-                tv01.setText(getResources().getString(R.string.c03s001_003_002) + scanNumber);
-            } else {
-                // 重复扫描
-//                Toast.makeText(getApplicationContext(), "重复扫描", Toast.LENGTH_SHORT).show();
-            }
-
-            //重新启动扫描线程
-            scanThread = new scanThread();
-            scanThread.start();
-        }
-    };
 
     //点击提交按钮处理方法
-    private void next() {
+    public void next(View view) {
+        if (tv01.getText() == null || "".equals(tv01.getText().toString().trim())) {
+            createAlertDialog(C03S001_003Activity.this, "请输入合成刀刀身码", Toast.LENGTH_LONG);
+        } else {
+            requestData(tv01.getText().toString().trim(), null);
+        }
+    }
+
+    private void requestData(String bladeCode, String rfid) {
         try {
-            loading.show();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loading.show();
+                }
+            });
+
+
+            RfidContainerVO rfidContainerVO = new RfidContainerVO();
+            if (bladeCode != null) {
+                rfidContainerVO.setSynthesisBladeCode(bladeCode);
+            }
+            if (rfid != null) {
+                rfidContainerVO.setLaserCode(rfid);
+            }
+
+            SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
+            synthesisCuttingToolBindVO.setSynthesisCode(synthesisCuttingToolConfig.getSynthesisCuttingTool().getSynthesisCode());
+            synthesisCuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
+
+            List<SynthesisCuttingToolBindVO> list = new ArrayList<>();
+            list.add(synthesisCuttingToolBindVO);
+
+
+            String jsonStr = objectToJson(list);
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             //调用接口，提交初始化合成刀具RFIDCodeList
             IRequest iRequest = retrofit.create(IRequest.class);
-
-            List<SynthesisCuttingToolBind> list = new ArrayList<>();
-            for (int i = 0; i < rfidList.size(); i++) {
-                String rfid = rfidList.get(i);
-
-                RfidContainer rfidContainer = new RfidContainer();
-                rfidContainer.setLaserCode(rfid);
-
-                List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList = new ArrayList<>();
-
-                for (SynthesisCuttingToolLocationConfig stlc : params.getSynthesisCuttingToolLocationConfigList()) {
-                    SynthesisCuttingToolLocation synthesisCuttingToolLocation = new SynthesisCuttingToolLocation();
-                    synthesisCuttingToolLocation.setSynthesisCuttingToolCode(stlc.getSynthesisCuttingToolConfig().getSynthesisCuttingToolCode());
-                    synthesisCuttingToolLocation.setLocation(stlc.getSynthesisCuttingToolConfig().getLocation());
-                    synthesisCuttingToolLocation.setCount(stlc.getSynthesisCuttingToolConfig().getCount());
-                    synthesisCuttingToolLocation.setCuttingToolCode(stlc.getCuttingToolCode());
-                    synthesisCuttingToolLocation.setCount(stlc.getCount());
-
-                    synthesisCuttingToolLocationList.add(synthesisCuttingToolLocation);
-                }
-
-
-                SynthesisCuttingToolBind synthesisCuttingToolBind = new SynthesisCuttingToolBind();
-                synthesisCuttingToolBind.setSynthesisCuttingToolCode(params.getSynthesisCuttingToolCode());
-                synthesisCuttingToolBind.setRfidContainer(rfidContainer);
-                synthesisCuttingToolBind.setSynthesisCode(params.getSynthesisCuttingTool().getSynthesisCode());
-                synthesisCuttingToolBind.setSynthesisCuttingToolLocationList(synthesisCuttingToolLocationList);
-
-                list.add(synthesisCuttingToolBind);
-            }
-
-            String jsonStr = objectToJson(list);
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
             Call<String> submitFInitSynthesis = iRequest.synthesisCuttingInit(body);
+
             submitFInitSynthesis.enqueue(new MyCallBack<String>() {
                 @Override
                 public void _onResponse(Response response) {
@@ -287,10 +209,15 @@ public class C03S001_003Activity extends CommonActivity {
             });
         } catch (Exception e) {
             e.printStackTrace();
-            if (null != loading && loading.isShowing()) {
-                loading.dismiss();
-            }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            runOnUiThread(new Runnable() {
+                  @Override
+                  public void run() {
+                    if (null != loading && loading.isShowing()) {
+                        loading.dismiss();
+                    }
+                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                  }
+            });
         }
     }
 

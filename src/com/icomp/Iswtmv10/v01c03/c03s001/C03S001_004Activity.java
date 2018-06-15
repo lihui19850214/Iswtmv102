@@ -6,11 +6,9 @@ import android.view.View;
 
 import com.icomp.Iswtmv10.R;
 import com.icomp.common.activity.CommonActivity;
-import com.icomp.common.utils.SysApplication;
 
 /**
  * 合成刀具初始化页面4
- * Created by FanLL on 2017/6/15.
  */
 
 public class C03S001_004Activity extends CommonActivity {
@@ -19,13 +17,13 @@ public class C03S001_004Activity extends CommonActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c03s001_004);
-        //创建Activity时，添加到List进行管理
-        SysApplication.getInstance().addActivity(this);
     }
 
     //继续按钮处理--跳转到合成刀具初始化页面1
     public void btnKeepOn(View view) {
-        Intent intent = new Intent(this, C03S001_001Activity.class);
+        Intent intent = new Intent(this, C03S001_003Activity.class);
+        // 不清空页面之间传递的值
+        intent.putExtra("isClearParamMap", false);
         startActivity(intent);
         finish();
     }

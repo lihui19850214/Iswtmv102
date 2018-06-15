@@ -10,21 +10,26 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.SynthesisCuttingToolConfig;
 import com.apiclient.vo.RfidContainerVO;
+import com.apiclient.vo.SynthesisCuttingToolBindVO;
 import com.apiclient.vo.SynthesisCuttingToolInitVO;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
+import com.icomp.common.activity.ExceptionProcessCallBack;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 合成刀具初始化页面1
@@ -43,8 +48,9 @@ public class C03S001_001Activity extends CommonActivity {
     //扫描线程
     private scanThread scanThread;
 
+    SynthesisCuttingToolConfig synthesisCuttingToolConfig = new SynthesisCuttingToolConfig();
     //合成刀具初始化参数类
-    private SynthesisCuttingToolInitVO params = new SynthesisCuttingToolInitVO();
+    private SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
     //调用接口
     private Retrofit retrofit;
 
@@ -58,12 +64,13 @@ public class C03S001_001Activity extends CommonActivity {
         retrofit = RetrofitSingle.newInstance();
 
         //接受上一个页面返回的参数
-        params.setSynthesisCode(getIntent().getStringExtra(PARAM1));
+        synthesisCuttingToolBindVO.setSynthesisCode(getIntent().getStringExtra(PARAM1));
+
         //将输入的材料号自动转化为大写
         et01.setTransformationMethod(new AllCapTransformationMethod());
         //如果材料号不为空，显示在页面上
-        if (null != params.getSynthesisCode()) {
-            et01.setText(exChangeBig(params.getSynthesisCode()));
+        if (null != synthesisCuttingToolBindVO.getSynthesisCode()) {
+            et01.setText(exChangeBig(synthesisCuttingToolBindVO.getSynthesisCode()));
         } else {
             et01.setText("T");
         }
@@ -85,13 +92,13 @@ public class C03S001_001Activity extends CommonActivity {
                 break;
             //查询按钮处理
             case R.id.btnSearch:
-                params = new SynthesisCuttingToolInitVO();
-                params.setSynthesisCode(et01.getText().toString().trim());
-                if ("".equals(params.getSynthesisCode())) {
+                synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
+                synthesisCuttingToolBindVO.setSynthesisCode(et01.getText().toString().trim());
+                if ("".equals(synthesisCuttingToolBindVO.getSynthesisCode())) {
                     createAlertDialog(C03S001_001Activity.this, getString(R.string.c03s001_001_002), Toast.LENGTH_LONG);
                 } else {
                     //根据材料号查询合成刀具组成信息
-                    search();
+                    getSynthesisCuttingConfig();
                 }
                 break;
         }
@@ -140,111 +147,35 @@ public class C03S001_001Activity extends CommonActivity {
                         if (null != popupWindow && popupWindow.isShowing()) {
                             popupWindow.dismiss();
                         }
-
-                        loading.show();
                     }
                 });
 
-                try {
+                RfidContainerVO rfidContainerVO = new RfidContainerVO();
+                rfidContainerVO.setLaserCode(rfidString);
 
-                    RfidContainerVO rfidContainerVO = new RfidContainerVO();
-                    rfidContainerVO.setLaserCode(rfidString);
-                    // TODO 参数需要改为 RfidContainerVO
-                    params = new SynthesisCuttingToolInitVO();
-                    params.setRfidCode(rfidString);
+                synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
+                synthesisCuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
 
-                    String jsonStr = objectToJson(params);
-                    RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
-                    //调用接口，查询合成刀具组成信息
-                    IRequest iRequest = retrofit.create(IRequest.class);
-                    Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
-                    getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
-                        @Override
-                        public void _onResponse(Response<String> response) {
-                            try {
-                                if (response.raw().code() == 200) {
-                                    SynthesisCuttingToolConfig synthesisCuttingTool = jsonToObject(response.body(), SynthesisCuttingToolConfig.class);
-                                    if (synthesisCuttingTool != null) {
-                                        //跳转到库存盘点刀具信息详细页面
-                                        Intent intent = new Intent(C03S001_001Activity.this, C03S001_002Activity.class);
-                                        intent.putExtra(PARAM, synthesisCuttingTool);
-                                        startActivity(intent);
-                                        finish();
-                                    } else {
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
-                                } else {
-                                    final String errorStr = response.errorBody().string();
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            createAlertDialog(C03S001_001Activity.this, errorStr, Toast.LENGTH_LONG);
-                                        }
-                                    });
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            } finally {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (null != loading && loading.isShowing()) {
-                                            loading.dismiss();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-
-                        @Override
-                        public void _onFailure(Throwable t) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (null != loading && loading.isShowing()) {
-                                        loading.dismiss();
-                                    }
-                                    createAlertDialog(C03S001_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                                }
-                            });
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (null != loading && loading.isShowing()) {
-                                loading.dismiss();
-                            }
-                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+                getSynthesisCuttingConfig();
             }
         }
     }
 
     //根据材料号查询合成刀具组成信息
-    private void search() {
+    private void getSynthesisCuttingConfig() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loading.show();
+            }
+        });
+
         try {
-            loading.show();
-
-
-            String jsonStr = objectToJson(params);
+            String jsonStr = objectToJson(synthesisCuttingToolBindVO);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+            Map<String, String> headsMap = new HashMap<>();
+            headsMap.put("impower", OperationEnum.SynthesisCuttingTool_Init.getKey().toString());
 
             IRequest iRequest = retrofit.create(IRequest.class);
             Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
@@ -253,13 +184,10 @@ public class C03S001_001Activity extends CommonActivity {
                 public void _onResponse(Response<String> response) {
                     try {
                         if (response.raw().code() == 200) {
-                            SynthesisCuttingToolConfig synthesisCuttingTool = jsonToObject(response.body(), SynthesisCuttingToolConfig.class);
-                            if (synthesisCuttingTool != null) {
-                                //跳转到库存盘点刀具信息详细页面
-                                Intent intent = new Intent(C03S001_001Activity.this, C03S001_002Activity.class);
-                                intent.putExtra(PARAM, synthesisCuttingTool);
-                                startActivity(intent);
-                                finish();
+                            synthesisCuttingToolConfig = jsonToObject(response.body(), SynthesisCuttingToolConfig.class);
+                            if (synthesisCuttingToolConfig != null) {
+                                String inpower = response.headers().get("impower");
+                                inpowerHandler(inpower);
                             } else {
                                 Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
                             }
@@ -287,6 +215,59 @@ public class C03S001_001Activity extends CommonActivity {
             }
             Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void inpowerHandler(String inpower) throws IOException {
+        Map<String, String> inpowerMap = jsonToObject(inpower, Map.class);
+
+        // 判断是否显示提示框
+        if ("1".equals(inpowerMap.get("type"))) {
+            // 是否需要授权 true为需要授权；false为不需要授权
+            is_need_authorization = false;
+
+            jumpPage();
+        } else if ("2".equals(inpowerMap.get("type"))) {
+            is_need_authorization = true;
+            exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                @Override
+                public void confirm() {
+                    jumpPage();
+                }
+
+                @Override
+                public void cancel() {
+                    // 不做任何操作
+                }
+            });
+        } else if ("3".equals(inpowerMap.get("type"))) {
+            is_need_authorization = false;
+            stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                @Override
+                public void confirm() {
+                    jumpPage();
+                }
+
+                @Override
+                public void cancel() {
+                    // 实际上没有用
+                    finish();
+                }
+            });
+        }
+    }
+
+    public void jumpPage() {
+        // 用于页面之间传值，新方法
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("synthesisCuttingToolConfig", synthesisCuttingToolConfig);
+        paramMap.put("synthesisCuttingToolBindVO", synthesisCuttingToolBindVO);
+        PARAM_MAP.put(1, paramMap);
+
+        Intent intent = new Intent(C03S001_001Activity.this, C03S001_002Activity.class);
+        // 不清空页面之间传递的值
+        intent.putExtra("isClearParamMap", false);
+        startActivity(intent);
+        finish();
     }
 
 //    //重写键盘上扫描按键的方法
