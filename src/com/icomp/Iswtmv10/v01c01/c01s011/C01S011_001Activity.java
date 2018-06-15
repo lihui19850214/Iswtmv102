@@ -285,13 +285,33 @@ public class C01S011_001Activity extends CommonActivity {
             // 是否需要授权 true为需要授权；false为不需要授权
             is_need_authorization = false;
 
-            showDialog();
+            boolean isEmpty = false;
+            for (String bus : businessCodeList) {
+                SynthesisCuttingToolLocation location = configToBindMap.get(bus);
+                if (location.getCuttingTool().getBusinessCode() == null || "".equals(location.getCuttingTool().getBusinessCode())) {
+                    isEmpty = true;
+                }
+            }
+
+            if (isEmpty) {
+                showDialog();
+            }
         } else if ("2".equals(inpowerMap.get("type"))) {
             is_need_authorization = true;
             exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
                 @Override
                 public void confirm() {
-                    showDialog();
+                    boolean isEmpty = false;
+                    for (String bus : businessCodeList) {
+                        SynthesisCuttingToolLocation location = configToBindMap.get(bus);
+                        if (location.getCuttingTool().getBusinessCode() == null || "".equals(location.getCuttingTool().getBusinessCode())) {
+                            isEmpty = true;
+                        }
+                    }
+
+                    if (isEmpty) {
+                        showDialog();
+                    }
                 }
 
                 @Override
