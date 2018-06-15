@@ -279,6 +279,15 @@ public interface IRequest {
     Call<String> queryGrindingEquipments(@Body RequestBody json);
 
     /**
+     * 安上设备接口地址
+     * @param json 请求数据
+     * @param headers 请求头
+     * @return json格式数据
+     */
+    @POST("/productlineBusiness/install")
+    Call<String> install(@Body RequestBody json, @HeaderMap Map<String, String> headers);
+
+    /**
      * 按上设备
      * @param json 请求数据
      * @param headers 请求头
