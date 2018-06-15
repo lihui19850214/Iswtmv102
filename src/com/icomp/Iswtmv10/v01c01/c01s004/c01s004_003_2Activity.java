@@ -166,8 +166,8 @@ public class c01s004_003_2Activity extends CommonActivity {
                 AuthCustomerVO llAuthCustomerVO = new AuthCustomerVO();
                 AuthCustomerVO kzAuthCustomerVO = new AuthCustomerVO();
 
-                llAuthCustomerVO.setCode(llAuthCustomerVO.getCode());
-                kzAuthCustomerVO.setCode(kzAuthCustomerVO.getCode());
+                llAuthCustomerVO.setCode(authCustomerLingliao.getCode());
+                kzAuthCustomerVO.setCode(authCustomerKezhang.getCode());
                 // 领料
                 outApplyVO.setLlAuthCustomerVO(llAuthCustomerVO);
                 // 科长
