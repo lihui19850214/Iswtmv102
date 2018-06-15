@@ -76,6 +76,8 @@ public class c01s004_003_1Activity extends CommonActivity {
     // 授权信息: lingliao:领料签收；kezhang:科长签收；
     Map<String, AuthCustomer> authCustomerMap = new HashMap<>();
 
+    private Handler mHandler = new Handler();
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,14 +95,19 @@ public class c01s004_003_1Activity extends CommonActivity {
             tv01.setText(djOutapplyAkp.getUnitqty());
             tv02.setText(bladeCodeNum+"");
 
-            showDialog();
+            mHandler.postDelayed(mRunnable, 500);
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
-
     }
 
+    private Runnable mRunnable = new Runnable() {
+        public void run() {
+            // 弹出PopupWindow的具体代码
+            showDialog();
+        }
+    };
 
     @OnClick({R.id.btnReturn, R.id.btnNext, R.id.tvScan})
     public void onViewClicked(View view) {
