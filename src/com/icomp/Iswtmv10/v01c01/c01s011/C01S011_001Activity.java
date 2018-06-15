@@ -88,8 +88,6 @@ public class C01S011_001Activity extends CommonActivity {
                 //如果材料号不为空，显示在页面上
                 if (null != bladeCode && !"".equals(bladeCode)) {
                     et00.setText(exChangeBig(bladeCode));
-                } else {
-                    et00.setText("T");
                 }
                 //将光标设置在最后
                 et00.setSelection(et00.getText().length());
@@ -110,6 +108,7 @@ public class C01S011_001Activity extends CommonActivity {
                 break;
             case R.id.btn_next:
                 if (et00.getText() != null && !"".equals(et00.getText().toString().trim())) {
+                    bladeCode = et00.getText().toString().trim();
                     RfidContainerVO rfidContainerVO = new RfidContainerVO();
                     rfidContainerVO.setSynthesisBladeCode(et00.getText().toString().trim());
 
