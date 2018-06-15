@@ -83,12 +83,17 @@ public class C01S009_002Activity extends CommonActivity {
 
         retrofit = RetrofitSingle.newInstance();
 
-        Map<String, Object> paramMap = PARAM_MAP.get(1);
-        synthesisCuttingToolConfigRFID = (String) paramMap.get("synthesisCuttingToolConfigRFID");
-        synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap.get("synthesisCuttingToolConfig");
-        synthesisCode = (String) paramMap.get("synthesisCode");
+        try {
+            Map<String, Object> paramMap = PARAM_MAP.get(1);
+            synthesisCuttingToolConfigRFID = (String) paramMap.get("synthesisCuttingToolConfigRFID");
+            synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap.get("synthesisCuttingToolConfig");
+            synthesisCode = (String) paramMap.get("synthesisCode");
 
-        setValue();
+            setValue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+        }
     }
 
     @OnClick({R.id.btnCancel, R.id.btnNext, R.id.tvScan})
@@ -111,10 +116,10 @@ public class C01S009_002Activity extends CommonActivity {
                     return;
                 }
 
-                authorizationWindow(1, new AuthorizationWindowCallBack() {
+                authorizationWindow(new AuthorizationWindowCallBack() {
                     @Override
-                    public void success(List<AuthCustomer> authorizationList) {
-                        requestData(authorizationList);
+                    public void success(AuthCustomer authCustomer) {
+                        requestData(authCustomer);
                     }
 
                     @Override
@@ -641,18 +646,40 @@ public class C01S009_002Activity extends CommonActivity {
         // 内部table3
         TableLayout tableLayout3 = new TableLayout(this);
         tableLayout3.setLayoutParams(param2);
-        tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO.getUpCount()), isZuanTou, synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode(), outsideRowNumber , 0));
+        TableRow zuzhuangNumRow = null;
+
+        if (isZuanTou) {
+            zuzhuangNumRow = getRow(tvZuzhuangNum, String.valueOf(upCuttingToolVO.getUpCount()));
+        } else {
+            zuzhuangNumRow = getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO.getUpCount()), synthesisCuttingToolLocationConfig.getCuttingTool().getBusinessCode(), outsideRowNumber, 0);
+        }
+        tableLayout3.addView(zuzhuangNumRow);
 
         if (cuttingTool1 != null) {
-            tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO1.getUpCount()), isZuanTou, cuttingTool1.getBusinessCode(), outsideRowNumber, 1));
+            if (isZuanTou) {
+                zuzhuangNumRow = getRow(tvZuzhuangNum, String.valueOf(upCuttingToolVO1.getUpCount()));
+            } else {
+                zuzhuangNumRow = getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO1.getUpCount()), cuttingTool1.getBusinessCode(), outsideRowNumber, 1);
+            }
+            tableLayout3.addView(zuzhuangNumRow);
         }
 
         if (cuttingTool2 != null) {
-            tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO2.getUpCount()), isZuanTou, cuttingTool2.getBusinessCode(), outsideRowNumber, 2));
+            if (isZuanTou) {
+                zuzhuangNumRow = getRow(tvZuzhuangNum, String.valueOf(upCuttingToolVO2.getUpCount()));
+            } else {
+                zuzhuangNumRow = getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO2.getUpCount()), cuttingTool2.getBusinessCode(), outsideRowNumber, 2);
+            }
+            tableLayout3.addView(zuzhuangNumRow);
         }
 
         if (cuttingTool3 != null) {
-            tableLayout3.addView(getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO3.getUpCount()), isZuanTou, cuttingTool3.getBusinessCode(), outsideRowNumber, 3));
+            if (isZuanTou) {
+                zuzhuangNumRow = getRow(tvZuzhuangNum, String.valueOf(upCuttingToolVO3.getUpCount()));
+            } else {
+                zuzhuangNumRow = getRowEdit(tvZuzhuangNum, String.valueOf(upCuttingToolVO3.getUpCount()), cuttingTool3.getBusinessCode(), outsideRowNumber, 3);
+            }
+            tableLayout3.addView(zuzhuangNumRow);
         }
 
         // 添加到行中
@@ -694,13 +721,12 @@ public class C01S009_002Activity extends CommonActivity {
      *
      * @param id 组件 ID
      * @param text 显示内容
-     * @param isZuanTou 是否是钻头
      * @param cailiao 材料号
      * @param outsideRowNumber 外部行号
      * @param insideRowNumber 内部行号
      * @return
      */
-    private TableRow getRowEdit(final int id, String text, boolean isZuanTou, final String cailiao, final int outsideRowNumber, final int insideRowNumber) {
+    private TableRow getRowEdit(final int id, String text, final String cailiao, final int outsideRowNumber, final int insideRowNumber) {
         TableRow.LayoutParams param = new TableRow.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -721,35 +747,32 @@ public class C01S009_002Activity extends CommonActivity {
         et1.setId(id);
         et1.setText(text);
         et1.setInputType(InputType.TYPE_CLASS_NUMBER);
-        if (isZuanTou) {
-            et1.setFocusable(false);
-            et1.setFocusableInTouchMode(false);
-        } else {
-            et1.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    //输入文本之前的状态
-                }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    //输入文字中的状态，count是输入字符数
-                }
+        et1.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //输入文本之前的状态
+            }
 
-                @Override
-                public void afterTextChanged(Editable editable) {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //输入文字中的状态，count是输入字符数
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
 //                    Log.i("ceshi", et1.getText().toString()+"=="+editable.toString());
-                    String num = et1.getText().toString();
-                    //输入文字后的状态
-                    if (num == null || "".equals(num)) {
-                        num = "0";
-                    }
-
-                    // 组装数量
-                    addZuzhuangData(cailiao, Integer.parseInt(num), outsideRowNumber, insideRowNumber);
+                String num = et1.getText().toString();
+                //输入文字后的状态
+                if (num == null || "".equals(num)) {
+                    num = "0";
                 }
-            });
-        }
+
+                // 组装数量
+                addZuzhuangData(cailiao, Integer.parseInt(num), outsideRowNumber, insideRowNumber);
+            }
+        });
+
 
         tableRow.addView(et1);
 
@@ -838,7 +861,7 @@ public class C01S009_002Activity extends CommonActivity {
     }
 
 
-    private void requestData(List<AuthCustomer> authorizationList) {
+    private void requestData(AuthCustomer authCustomer) {
         try {
             loading.show();
 
@@ -851,19 +874,19 @@ public class C01S009_002Activity extends CommonActivity {
 
             try {
                 // 需要授权信息
-                if (is_need_authorization && authorizationList != null) {
+                if (is_need_authorization && authCustomer != null) {
                     //设定用户访问信息
                     @SuppressLint("WrongConstant")
                     SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
                     String userInfoJson = sharedPreferences.getString("loginInfo", null);
 
-                    AuthCustomer authCustomer = jsonToObject(userInfoJson, AuthCustomer.class);
+                    AuthCustomer customer = jsonToObject(userInfoJson, AuthCustomer.class);
 
                     // ------------ 授权信息 ------------
                     impowerRecorder.setToolCode(synthesisCuttingToolConfig.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
                     impowerRecorder.setRfidLasercode(synthesisCuttingToolConfigRFID);// rfid标签
-                    impowerRecorder.setOperatorUserCode(authCustomer.getCode());//操作者code
-                    impowerRecorder.setImpowerUser(authorizationList.get(0).getCode());//授权人code
+                    impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
+                    impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
                     impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_Config.getKey().toString());//操作key
 
 //                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
