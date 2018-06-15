@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.v01c01.c01s005.c01s005_002_2Activity;
@@ -20,6 +21,7 @@ public class C03S001_004Activity extends CommonActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c03s001_004);
+        ButterKnife.bind(this);
     }
 
     @OnClick({R.id.btnKeepOn, R.id.btnComplete})
