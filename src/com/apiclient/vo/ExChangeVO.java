@@ -1,7 +1,5 @@
 package com.apiclient.vo;
 
-import com.apiclient.pojo.SynthesisCuttingToolBind;
-import com.apiclient.pojo.SynthesisCuttingToolExchange;
 
 import java.util.List;
 
@@ -10,9 +8,7 @@ import java.util.List;
  */
 public class ExChangeVO {
 
-    private SynthesisCuttingToolBind synthesisCuttingToolBind;
-
-    private SynthesisCuttingToolExchange synthesisCuttingToolExchange;
+    private SynthesisCuttingToolBindVO synthesisCuttingToolBindVO;
 
     private List<DownCuttingToolVO> downCuttingToolVOS;
 
@@ -26,20 +22,12 @@ public class ExChangeVO {
         this.upCuttingToolVOS = upCuttingToolVOS;
     }
 
-    public SynthesisCuttingToolBind getSynthesisCuttingToolBind() {
-        return synthesisCuttingToolBind;
+    public SynthesisCuttingToolBindVO getSynthesisCuttingToolBindVO() {
+        return synthesisCuttingToolBindVO;
     }
 
-    public void setSynthesisCuttingToolBind(SynthesisCuttingToolBind synthesisCuttingToolBind) {
-        this.synthesisCuttingToolBind = synthesisCuttingToolBind;
-    }
-
-    public SynthesisCuttingToolExchange getSynthesisCuttingToolExchange() {
-        return synthesisCuttingToolExchange;
-    }
-
-    public void setSynthesisCuttingToolExchange(SynthesisCuttingToolExchange synthesisCuttingToolExchange) {
-        this.synthesisCuttingToolExchange = synthesisCuttingToolExchange;
+    public void setSynthesisCuttingToolBindVO(SynthesisCuttingToolBindVO synthesisCuttingToolBindVO) {
+        this.synthesisCuttingToolBindVO = synthesisCuttingToolBindVO;
     }
 
     public List<DownCuttingToolVO> getDownCuttingToolVOS() {

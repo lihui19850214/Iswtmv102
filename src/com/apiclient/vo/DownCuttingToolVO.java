@@ -11,11 +11,11 @@ public class DownCuttingToolVO {
 
     private Integer downLostCount;
 
-    private String downRfidCode;
+    private String downRfidLaserCode;
 
     private String bladeCode;
 
-    private Integer lost;
+    private Integer needBind;
 
     public String getBladeCode() {
         return bladeCode;
@@ -25,20 +25,20 @@ public class DownCuttingToolVO {
         this.bladeCode = bladeCode;
     }
 
-    public Integer getLost() {
-        return lost;
+    public Integer getNeedBind() {
+        return needBind;
     }
 
-    public void setLost(Integer lost) {
-        this.lost = lost;
+    public void setNeedBind(Integer needBind) {
+        this.needBind = needBind;
     }
 
-    public String getDownRfidCode() {
-        return downRfidCode;
+    public String getDownRfidLaserCode() {
+        return downRfidLaserCode;
     }
 
-    public void setDownRfidCode(String downRfidCode) {
-        this.downRfidCode = downRfidCode;
+    public void setDownRfidLaserCode(String downRfidLaserCode) {
+        this.downRfidLaserCode = downRfidLaserCode;
     }
 
     public Integer getDownLostCount() {

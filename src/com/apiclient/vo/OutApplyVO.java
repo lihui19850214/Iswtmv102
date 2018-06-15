@@ -1,16 +1,21 @@
 package com.apiclient.vo;
 
-import com.apiclient.pojo.CuttingToolBind;
+
+import com.apiclient.pojo.AuthCustomer;
 import com.apiclient.pojo.DjCircleKanbanAkp;
 import com.apiclient.pojo.DjMtlAkp;
 import com.apiclient.pojo.DjOutapplyAkp;
 
-import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 
 /**
  * Created by logan on 2018/5/7.
  */
 public class OutApplyVO extends  WriteBaseVO{
+
+    private String applyno;
 
     private DjOutapplyAkp djOutapplyAkp;
 
@@ -18,17 +23,80 @@ public class OutApplyVO extends  WriteBaseVO{
 
     private DjMtlAkp djMtlAkp;
 
-    private Integer susr20;
-
-    private Integer unitqty;
+    private Integer batchNo;
     //当前登陆
     private String kuguanOperatorCode;
-    //刷卡
-    private String linglOperatorRfidCode;
 
-    private String kezhangRfidCode;
+    private AuthCustomerVO kzAuthCustomerVO;
 
-    private List<CuttingToolBind> cuttingToolBinds;
+    private AuthCustomerVO llAuthCustomerVO;
+
+    private AuthCustomer loginUser;
+
+    private AuthCustomer llAuthCustomer;
+
+    private AuthCustomer kzAuthCustomer;
+
+    private String mtlCode;
+
+    public String getApplyno() {
+        return applyno;
+    }
+
+    public void setApplyno(String applyno) {
+        this.applyno = applyno;
+    }
+
+    public AuthCustomer getLlAuthCustomer() {
+        return llAuthCustomer;
+    }
+
+    public void setLlAuthCustomer(AuthCustomer llAuthCustomer) {
+        this.llAuthCustomer = llAuthCustomer;
+    }
+
+    public AuthCustomer getKzAuthCustomer() {
+        return kzAuthCustomer;
+    }
+
+    public void setKzAuthCustomer(AuthCustomer kzAuthCustomer) {
+        this.kzAuthCustomer = kzAuthCustomer;
+    }
+
+    @Override
+    public Integer getBatchNo() {
+        return batchNo;
+    }
+
+    @Override
+    public void setBatchNo(Integer batchNo) {
+        this.batchNo = batchNo;
+    }
+
+    public AuthCustomerVO getKzAuthCustomerVO() {
+        return kzAuthCustomerVO;
+    }
+
+    public void setKzAuthCustomerVO(AuthCustomerVO kzAuthCustomerVO) {
+        this.kzAuthCustomerVO = kzAuthCustomerVO;
+    }
+
+    public AuthCustomerVO getLlAuthCustomerVO() {
+        return llAuthCustomerVO;
+    }
+
+    public void setLlAuthCustomerVO(AuthCustomerVO llAuthCustomerVO) {
+        this.llAuthCustomerVO = llAuthCustomerVO;
+    }
+
+
+    public AuthCustomer getLoginUser() {
+        return loginUser;
+    }
+
+    public void setLoginUser(AuthCustomer loginUser) {
+        this.loginUser = loginUser;
+    }
 
     public String getKuguanOperatorCode() {
         return kuguanOperatorCode;
@@ -36,22 +104,6 @@ public class OutApplyVO extends  WriteBaseVO{
 
     public void setKuguanOperatorCode(String kuguanOperatorCode) {
         this.kuguanOperatorCode = kuguanOperatorCode;
-    }
-
-    public String getLinglOperatorRfidCode() {
-        return linglOperatorRfidCode;
-    }
-
-    public void setLinglOperatorRfidCode(String linglOperatorRfidCode) {
-        this.linglOperatorRfidCode = linglOperatorRfidCode;
-    }
-
-    public String getKezhangRfidCode() {
-        return kezhangRfidCode;
-    }
-
-    public void setKezhangRfidCode(String kezhangRfidCode) {
-        this.kezhangRfidCode = kezhangRfidCode;
     }
 
     public DjOutapplyAkp getDjOutapplyAkp() {
@@ -78,29 +130,12 @@ public class OutApplyVO extends  WriteBaseVO{
         this.djMtlAkp = djMtlAkp;
     }
 
-    public Integer getSusr20() {
-        return susr20;
+    public String getMtlCode() {
+        return mtlCode;
     }
 
-    public void setSusr20(Integer susr20) {
-        this.susr20 = susr20;
+    public void setMtlCode(String mtlCode) {
+        this.mtlCode = mtlCode;
     }
 
-    public Integer getUnitqty() {
-        return unitqty;
-    }
-
-    public void setUnitqty(Integer unitqty) {
-        this.unitqty = unitqty;
-    }
-
-    @Override
-    public List<CuttingToolBind> getCuttingToolBinds() {
-        return cuttingToolBinds;
-    }
-
-    @Override
-    public void setCuttingToolBinds(List<CuttingToolBind> cuttingToolBinds) {
-        this.cuttingToolBinds = cuttingToolBinds;
-    }
 }

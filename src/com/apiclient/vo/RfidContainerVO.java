@@ -1,6 +1,7 @@
 package com.apiclient.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
 * Automated Build
 * 实体 RfidContainerVO 
 */
-public class RfidContainerVO implements Serializable {
+public class RfidContainerVO implements Serializable{
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -64,10 +65,10 @@ public class RfidContainerVO implements Serializable {
 
     /**
      * @fieldName operatorCode
-    * @fieldType  Integer
+    * @fieldType  String
     * @Description  操作人
      */
-    private Integer operatorCode;
+    private String operatorCode;
 
     /**
      * @fieldName prevOperation
@@ -96,6 +97,32 @@ public class RfidContainerVO implements Serializable {
     * @Description  操作人姓名
      */
     private String operatorName;
+
+    /**
+     * @fieldName operatorTime
+    * @fieldType  Timestamp
+    * @Description  最后操作时间 开始时间
+     */
+    private Timestamp operatorTimeBegin;
+    /**
+     * @fieldName operatorTime
+    * @fieldType  Timestamp
+    * @Description  最后操作时间 结束时间
+     */
+    private Timestamp operatorTimeEnd;
+    /**
+     * @fieldName operatorTime
+    * @fieldType  Timestamp
+    * @Description  最后操作时间
+     */
+    private Timestamp operatorTime;
+
+    /**
+     * @fieldName synthesisBladeCode
+    * @fieldType  String
+    * @Description  合成刀刀身码
+     */
+    private String synthesisBladeCode;
 
 
     private List<AuthCustomerVO> authCustomerVOList;
@@ -190,11 +217,11 @@ public class RfidContainerVO implements Serializable {
     public void setIsDel(Integer isDel) {
         this.isDel = isDel;
     }
-    public Integer getOperatorCode() {
+    public String getOperatorCode() {
         return operatorCode;
     }
 
-    public void setOperatorCode(Integer operatorCode) {
+    public void setOperatorCode(String operatorCode) {
         this.operatorCode = operatorCode;
     }
     public String getPrevOperation() {
@@ -224,6 +251,35 @@ public class RfidContainerVO implements Serializable {
 
     public void setOperatorName(String operatorName) {
         this.operatorName = operatorName;
+    }
+    public Timestamp getOperatorTimeBegin() {
+        return operatorTimeBegin;
+    }
+
+    public void setOperatorTimeBegin(Timestamp operatorTimeBegin) {
+        this.operatorTimeBegin = operatorTimeBegin;
+    }
+
+    public Timestamp getOperatorTimeEnd() {
+        return operatorTimeEnd;
+    }
+
+    public void setOperatorTimeEnd(Timestamp operatorTimeEnd) {
+        this.operatorTimeEnd = operatorTimeEnd;
+    }
+    public Timestamp getOperatorTime() {
+        return operatorTime;
+    }
+
+    public void setOperatorTime(Timestamp operatorTime) {
+        this.operatorTime = operatorTime;
+    }
+    public String getSynthesisBladeCode() {
+        return synthesisBladeCode;
+    }
+
+    public void setSynthesisBladeCode(String synthesisBladeCode) {
+        this.synthesisBladeCode = synthesisBladeCode;
     }
 
 

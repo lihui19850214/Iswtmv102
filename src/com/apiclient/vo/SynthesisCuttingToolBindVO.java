@@ -9,7 +9,7 @@ import java.util.List;
 * Automated Build
 * 实体 SynthesisCuttingToolBindVO 
 */
-public class SynthesisCuttingToolBindVO implements Serializable {
+public class SynthesisCuttingToolBindVO implements Serializable{
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -76,6 +76,13 @@ public class SynthesisCuttingToolBindVO implements Serializable {
     private String synthesisCode;
 
     /**
+     * @fieldName bladeCode
+    * @fieldType  Integer
+    * @Description  刀身码
+     */
+    private String bladeCode;
+
+    /**
      * @fieldName rfidContainerCode
     * @fieldType  
     * @Description  RFID标签
@@ -88,6 +95,7 @@ public class SynthesisCuttingToolBindVO implements Serializable {
      */
     private SynthesisCuttingToolVO synthesisCuttingToolVO;
 
+    private List<SynthesisCuttingToolBindleRecordsVO> synthesisCuttingToolBindleRecordsVOList;
     private List<SynthesisCuttingToolLocationVO> synthesisCuttingToolLocationVOList;
 
     /**
@@ -192,6 +200,13 @@ public class SynthesisCuttingToolBindVO implements Serializable {
     public void setSynthesisCode(String synthesisCode) {
         this.synthesisCode = synthesisCode;
     }
+    public String getBladeCode() {
+        return bladeCode;
+    }
+
+    public void setBladeCode(String bladeCode) {
+        this.bladeCode = bladeCode;
+    }
 
     public RfidContainerVO getRfidContainerVO() {
         return rfidContainerVO;
@@ -208,6 +223,13 @@ public class SynthesisCuttingToolBindVO implements Serializable {
         this.synthesisCuttingToolVO = synthesisCuttingToolVO;
     }
 
+    public List<SynthesisCuttingToolBindleRecordsVO> getSynthesisCuttingToolBindleRecordsVOList() {
+        return synthesisCuttingToolBindleRecordsVOList;
+    }
+
+    public void setSynthesisCuttingToolBindleRecordsVOList(List<SynthesisCuttingToolBindleRecordsVO> synthesisCuttingToolBindleRecordsVOList) {
+        this.synthesisCuttingToolBindleRecordsVOList = synthesisCuttingToolBindleRecordsVOList;
+    }
     public List<SynthesisCuttingToolLocationVO> getSynthesisCuttingToolLocationVOList() {
         return synthesisCuttingToolLocationVOList;
     }
