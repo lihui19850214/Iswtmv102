@@ -20,7 +20,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:textColor="@color/baseColor"
-                    android:textSize="@dimen/text_content_size"
+                    android:textSize="@dimen/text_edittext"
                     android:gravity="right|center"
                     android:text="出库数量："/>
 
@@ -36,7 +36,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1.5"
                     android:textColor="@color/baseColor"
-                    android:textSize="@dimen/text_content_size"
+                    android:textSize="@dimen/text_edittext"
                     android:gravity="right|center"
                     android:text="输入刀身码数量："/>
 
