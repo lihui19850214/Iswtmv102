@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
+import com.icomp.Iswtmv10.v01c01.c01s025.C01S025_001Activity;
 import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.adapter.C00S000_003Adapter;
 import com.icomp.common.adapter.C00S000_003ViewPageAdapter;
@@ -147,34 +148,41 @@ public class C00S000_003Activity extends CommonActivity {
 
         tool_outgoing = new Vgrantlist();
         tool_outgoing.setCapabilityID("3");
+        tool_outgoing.setCapabilityName("合成刀打码");
+        tool_outgoing.setCapabilityUrl("v01c01.c01s025.C01S025_001Activity");
+        tool_outgoing.setCapabilityImg(getResource("a0c01s001"));//没有找到图标
+        menuMap.put("合成刀打码", tool_outgoing);
+
+        tool_outgoing = new Vgrantlist();
+        tool_outgoing.setCapabilityID("4");
         tool_outgoing.setCapabilityName("刀具绑定");
         tool_outgoing.setCapabilityUrl("v01c01.c01s015.C01S015_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s015"));
         menuMap.put("Cutting_tool_Bind", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("4");
+        tool_outgoing.setCapabilityID("5");
         tool_outgoing.setCapabilityName("刀具换装");
         tool_outgoing.setCapabilityUrl("v01c01.c01s010.c01s010_002Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s010"));
         menuMap.put("SynthesisCuttingTool_Exchange", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("5");
+        tool_outgoing.setCapabilityID("6");
         tool_outgoing.setCapabilityName("厂内修磨");
         tool_outgoing.setCapabilityUrl("v01c01.c01s018.C01S018_002Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s018"));
         menuMap.put("Cutting_tool_Inside", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("6");
+        tool_outgoing.setCapabilityID("7");
         tool_outgoing.setCapabilityName("厂外修磨");
         tool_outgoing.setCapabilityUrl("v01c01.c01s019.C01S019_000Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s019"));
         menuMap.put("Cutting_tool_OutSide", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("6");
+        tool_outgoing.setCapabilityID("7");
         tool_outgoing.setCapabilityName("厂外修磨");
         tool_outgoing.setCapabilityUrl("v01c01.c01s019.C01S019_000Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s019"));
@@ -182,84 +190,84 @@ public class C00S000_003Activity extends CommonActivity {
 
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("7");
+        tool_outgoing.setCapabilityID("8");
         tool_outgoing.setCapabilityName("安上设备");
         tool_outgoing.setCapabilityUrl("v01c01.c01s011.C01S011_002Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s011"));
         menuMap.put("SynthesisCuttingTool_Install", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("8");
+        tool_outgoing.setCapabilityID("9");
         tool_outgoing.setCapabilityName("卸下设备");
         tool_outgoing.setCapabilityUrl("v01c01.c01s013.C01S013_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s013"));
         menuMap.put("SynthesisCuttingTool_UnInstall", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("9");
+        tool_outgoing.setCapabilityID("10");
         tool_outgoing.setCapabilityName("刀具报废");
         tool_outgoing.setCapabilityUrl("v01c01.c01s005.c01s005_002_2Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s005"));
         menuMap.put("Cutting_tool_scap", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("10");
+        tool_outgoing.setCapabilityID("11");
         tool_outgoing.setCapabilityName("刀具拆分");
         tool_outgoing.setCapabilityUrl("v01c01.c01s008.C01S008_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s008"));
         menuMap.put("SynthesisCuttingTool_UnConfig", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("11");
+        tool_outgoing.setCapabilityID("12");
         tool_outgoing.setCapabilityName("刀具组装");
         tool_outgoing.setCapabilityUrl("v01c01.c01s009.C01S009_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s009"));
         menuMap.put("SynthesisCuttingTool_Config", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("12");
+        tool_outgoing.setCapabilityID("13");
         tool_outgoing.setCapabilityName("标签置换");
         tool_outgoing.setCapabilityUrl("v01c01.c01s012.C01S012_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s014"));//没有找到图标
         menuMap.put("RFID_Change", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("13");
+        tool_outgoing.setCapabilityID("14");
         tool_outgoing.setCapabilityName("快速查询");
         tool_outgoing.setCapabilityUrl("v01c01.c01s024.C01S024_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s024"));
         menuMap.put("Fast_Query", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("14");
+        tool_outgoing.setCapabilityID("15");
         tool_outgoing.setCapabilityName("清空RFID标签");
         tool_outgoing.setCapabilityUrl("v01c01.c01s002.c01s002_002Activity");
         tool_outgoing.setCapabilityImg(getResource("a4c01s005"));
         menuMap.put("RFID_Clear", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("15");
+        tool_outgoing.setCapabilityID("16");
         tool_outgoing.setCapabilityName("射频设置");
         tool_outgoing.setCapabilityUrl("v01c02.c02s005.C02S005_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c02s005"));
         menuMap.put("Setting_RFID", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("16");
+        tool_outgoing.setCapabilityID("17");
         tool_outgoing.setCapabilityName("合成刀具初始化");
         tool_outgoing.setCapabilityUrl("v01c03.c03s001.C03S001_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s001"));//没有找到图标
         menuMap.put("SynthesisCuttingTool_Init", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("17");
+        tool_outgoing.setCapabilityID("18");
         tool_outgoing.setCapabilityName("设备初始化");
         tool_outgoing.setCapabilityUrl("v01c03.c03s003.C03S003_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s001"));//没有找到图标
         menuMap.put("Equipment_Init", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("18");
+        tool_outgoing.setCapabilityID("19");
         tool_outgoing.setCapabilityName("员工初始化");
         tool_outgoing.setCapabilityUrl("v01c03.c03s005.C03S005_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s001"));//没有找到图标
