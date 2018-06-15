@@ -152,7 +152,7 @@ public class C03S001_002Activity extends CommonActivity {
                 viewholder.tv02 = (TextView) view.findViewById(R.id.tv_02);
                 viewholder.tv03 = (TextView) view.findViewById(R.id.tv_03);
                 //设置每条信息所占屏幕百分比
-                AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (GetItemHeight.getScreenHeight(context)*0.07));
+                AbsListView.LayoutParams layoutParams = new AbsListView.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (GetItemHeight.getScreenHeight(context)*0.09));
                 view.setLayoutParams(layoutParams);
                 view.setTag(viewholder);
             } else {

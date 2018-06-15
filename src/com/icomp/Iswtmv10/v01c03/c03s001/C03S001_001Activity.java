@@ -97,8 +97,9 @@ public class C03S001_001Activity extends CommonActivity {
                 if ("".equals(synthesisCuttingToolBindVO.getSynthesisCode())) {
                     createAlertDialog(C03S001_001Activity.this, getString(R.string.c03s001_001_002), Toast.LENGTH_LONG);
                 } else {
-                    //根据材料号查询合成刀具组成信息
-                    getSynthesisCuttingConfig();
+                    //扫描线程
+                    scanThread2 scanThread2 = new scanThread2();
+                    scanThread2.start();
                 }
                 break;
         }
@@ -161,6 +162,16 @@ public class C03S001_001Activity extends CommonActivity {
         }
     }
 
+    //扫描线程
+    private class scanThread2 extends Thread {
+        @Override
+        public void run() {
+            super.run();
+            getSynthesisCuttingConfig();
+
+        }
+    }
+
     //根据材料号查询合成刀具组成信息
     private void getSynthesisCuttingConfig() {
         runOnUiThread(new Runnable() {
@@ -174,9 +185,6 @@ public class C03S001_001Activity extends CommonActivity {
             String jsonStr = objectToJson(synthesisCuttingToolBindVO);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-            Map<String, String> headsMap = new HashMap<>();
-            headsMap.put("impower", OperationEnum.SynthesisCuttingTool_Init.getKey().toString());
-
             IRequest iRequest = retrofit.create(IRequest.class);
             Call<String> getSynthesisCuttingConfig = iRequest.getSynthesisCuttingConfig(body, new HashMap<String, String>());
             getSynthesisCuttingConfig.enqueue(new MyCallBack<String>() {
@@ -186,8 +194,17 @@ public class C03S001_001Activity extends CommonActivity {
                         if (response.raw().code() == 200) {
                             synthesisCuttingToolConfig = jsonToObject(response.body(), SynthesisCuttingToolConfig.class);
                             if (synthesisCuttingToolConfig != null) {
-                                String inpower = response.headers().get("impower");
-                                inpowerHandler(inpower);
+                                // 用于页面之间传值，新方法
+                                Map<String, Object> paramMap = new HashMap<>();
+                                paramMap.put("synthesisCuttingToolConfig", synthesisCuttingToolConfig);
+                                paramMap.put("synthesisCuttingToolBindVO", synthesisCuttingToolBindVO);
+                                PARAM_MAP.put(1, paramMap);
+
+                                Intent intent = new Intent(C03S001_001Activity.this, C03S001_002Activity.class);
+                                // 不清空页面之间传递的值
+                                intent.putExtra("isClearParamMap", false);
+                                startActivity(intent);
+                                finish();
                             } else {
                                 Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
                             }
@@ -217,58 +234,6 @@ public class C03S001_001Activity extends CommonActivity {
         }
     }
 
-    private void inpowerHandler(String inpower) throws IOException {
-        Map<String, String> inpowerMap = jsonToObject(inpower, Map.class);
-
-        // 判断是否显示提示框
-        if ("1".equals(inpowerMap.get("type"))) {
-            // 是否需要授权 true为需要授权；false为不需要授权
-            is_need_authorization = false;
-
-            jumpPage();
-        } else if ("2".equals(inpowerMap.get("type"))) {
-            is_need_authorization = true;
-            exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                @Override
-                public void confirm() {
-                    jumpPage();
-                }
-
-                @Override
-                public void cancel() {
-                    // 不做任何操作
-                }
-            });
-        } else if ("3".equals(inpowerMap.get("type"))) {
-            is_need_authorization = false;
-            stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                @Override
-                public void confirm() {
-                    jumpPage();
-                }
-
-                @Override
-                public void cancel() {
-                    // 实际上没有用
-                    finish();
-                }
-            });
-        }
-    }
-
-    public void jumpPage() {
-        // 用于页面之间传值，新方法
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("synthesisCuttingToolConfig", synthesisCuttingToolConfig);
-        paramMap.put("synthesisCuttingToolBindVO", synthesisCuttingToolBindVO);
-        PARAM_MAP.put(1, paramMap);
-
-        Intent intent = new Intent(C03S001_001Activity.this, C03S001_002Activity.class);
-        // 不清空页面之间传递的值
-        intent.putExtra("isClearParamMap", false);
-        startActivity(intent);
-        finish();
-    }
 
 //    //重写键盘上扫描按键的方法
 //    @Override
