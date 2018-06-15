@@ -17,9 +17,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.constants.UnInstallReasonEnum;
+import com.apiclient.dto.LineDTO;
 import com.apiclient.pojo.*;
-import com.apiclient.vo.ProductLineVO;
-import com.apiclient.vo.UnBindEquipmentVO;
+import com.apiclient.vo.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
@@ -61,6 +61,12 @@ public class C01S013_002Activity extends CommonActivity {
     Button btnReturn;
     @BindView(R.id.btn_confirm)
     Button btnConfirm;
+    @BindView(R.id.tv_0_0)
+    TextView tv00;
+    @BindView(R.id.tv_1_0)
+    TextView tv10;
+    @BindView(R.id.tv_1_1)
+    TextView tv11;
 
 
     private List<UnInstallReasonEnum> removeReasonList = new ArrayList<>();//保存所有卸下原因
@@ -70,9 +76,16 @@ public class C01S013_002Activity extends CommonActivity {
     UnInstallReasonEnum unInstallReasonEnum;
     ProductLine productLine;
 
-    private SynthesisCuttingToolBindleRecords synthesisCuttingToolBindleRecords;
     // 合成刀标签
-    String synthesisCuttingToolBindleRecordsRFID = "";
+    String queryVORFID = "";
+    // 刀身码
+    String bladeCode = "";
+
+    SynthesisCuttingToolBind synthesisCuttingToolBind;
+    ProductLineAssemblyline assemblyline;
+    ProductLineProcess process;
+    ProductLineEquipment equipment;
+
 
     //调用接口
     private Retrofit retrofit;
@@ -88,78 +101,29 @@ public class C01S013_002Activity extends CommonActivity {
 
         try {
             Map<String, Object> paramMap = PARAM_MAP.get(1);
-            synthesisCuttingToolBindleRecords = (SynthesisCuttingToolBindleRecords) paramMap.get("synthesisCuttingToolBindleRecords");
-            synthesisCuttingToolBindleRecordsRFID = (String) paramMap.get("synthesisCuttingToolBindleRecordsRFID");
+            synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap.get("synthesisCuttingToolBind");
+            queryVORFID = (String) paramMap.get("queryVORFID");
+            assemblyline = (ProductLineAssemblyline) paramMap.get("assemblyline");
+            process = (ProductLineProcess) paramMap.get("process");
+            equipment = (ProductLineEquipment) paramMap.get("equipment");
+            productLineList = (List<ProductLine>) paramMap.get("productLineList");
+            bladeCode = (String) paramMap.get("bladeCode");
 
-//            //TODO 需要检查是否正确
-//            tv01.setText(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());// 合成刀具编码
-//            tv02.setText(synthesisCuttingToolBindleRecords.getProductLineEquipment().getName());// 设备名称
-//            tv03.setText(synthesisCuttingToolBindleRecords.getProductLineAxle().getCode());// 轴号
-//            tv04.setText(synthesisCuttingToolBindleRecords.getProductLineProcess().getName());//对应工序，不知道是哪个字段
+            tv00.setText(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());
+            tv10.setText(process.getName());
+            tv11.setText(equipment.getName());
 
             for (UnInstallReasonEnum unInstallReasonEnum : UnInstallReasonEnum.values()) {
                 removeReasonList.add(unInstallReasonEnum);
             }
 
-            //查询加工零部件
-            getParts();
+
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void getParts() {
-        try {
-            loading.show();
-            IRequest iRequest = retrofit.create(IRequest.class);
-
-
-            ProductLineVO productLineVO = new ProductLineVO();
-            productLineVO.setSynthesisCuttingToolCode(synthesisCuttingToolBindleRecords.getSynthesisCuttingToolCode());//合成刀
-            productLineVO.setAxleCode(synthesisCuttingToolBindleRecords.getProductLineAxleCode());//轴ID
-            productLineVO.setEquipmentCode(synthesisCuttingToolBindleRecords.getProductLineEquipmentCode());//设备
-            productLineVO.setProcessCode(synthesisCuttingToolBindleRecords.getProductLineProcessCode());//工序
-
-
-            String jsonStr = objectToJson(productLineVO);
-            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
-            Call<String> getParts = iRequest.getParts(body);
-            getParts.enqueue(new MyCallBack<String>() {
-                @Override
-                public void _onResponse(Response<String> response) {
-                    try {
-                        if (response.raw().code() == 200) {
-                            productLineList = jsonToObject(response.body(), List.class, ProductLine.class);//丢刀
-                            if (productLineList == null || productLineList.size() == 0) {
-                                productLineList = new ArrayList<>();
-                            }
-                        } else {
-                            createAlertDialog(C01S013_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        loading.dismiss();
-                    }
-                }
-
-                @Override
-                public void _onFailure(Throwable t) {
-                    loading.dismiss();
-                    createAlertDialog(C01S013_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            if (null != loading && loading.isShowing()) {
-                loading.dismiss();
-            }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-        }
-    }
 
     @OnClick({R.id.ll_01, R.id.ll_02})
     public void onViewClicked(View view) {
@@ -263,6 +227,7 @@ public class C01S013_002Activity extends CommonActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 tv02.setText(productLineList.get(i).getProductLineParts().getName());
                 productLine = productLineList.get(i);
+                et01.setText(productLineList.get(i).getToolDurable());
                 popupWindow.dismiss();
             }
         });
@@ -379,15 +344,11 @@ public class C01S013_002Activity extends CommonActivity {
                     AuthCustomer customer = jsonToObject(userInfoJson, AuthCustomer.class);
 
                     // ------------ 授权信息 ------------
-                    impowerRecorder.setToolCode(synthesisCuttingToolBindleRecords.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
-                    impowerRecorder.setRfidLasercode(synthesisCuttingToolBindleRecordsRFID);// rfid标签
+                    impowerRecorder.setToolCode(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
+                    impowerRecorder.setRfidLasercode(queryVORFID);// rfid标签
                     impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
                     impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
                     impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_UnInstall.getKey().toString());//操作key
-
-//                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
-//                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
-//                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
 
                     impowerRecorderList.add(impowerRecorder);
                 }
@@ -403,25 +364,44 @@ public class C01S013_002Activity extends CommonActivity {
                 Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
             }
 
-            IRequest iRequest = retrofit.create(IRequest.class);
+
+            RfidContainerVO RfidContainerVO = new RfidContainerVO();
+            if (queryVORFID != null) {
+                RfidContainerVO.setLaserCode(queryVORFID);
+            }
+            if (bladeCode != null) {
+                RfidContainerVO.setSynthesisBladeCode(bladeCode);
+            }
+
+            SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
+            synthesisCuttingToolBindVO.setRfidContainerVO(RfidContainerVO);
+
+            LineDTO lineDTO = new LineDTO();
+            lineDTO.setSynthesisCuttingToolBindVO(synthesisCuttingToolBindVO);
+            lineDTO.setUnBindReason(unInstallReasonEnum.getName());
 
 
-            UnBindEquipmentVO unBindEquipmentVO = new UnBindEquipmentVO();
-            ProductLineVO productLineVO = new ProductLineVO();
-            productLineVO.setSynthesisCuttingToolCode(synthesisCuttingToolBindleRecords.getSynthesisCuttingToolCode());
-            unBindEquipmentVO.setProductLineVO(productLineVO);
-            unBindEquipmentVO.setBindRfid(synthesisCuttingToolBindleRecords.getBindRfid());
-            unBindEquipmentVO.setParts(productLine.getProductLineParts());//加工零部件
-            unBindEquipmentVO.setUnBindReason(unInstallReasonEnum.getKey());//卸下原因
-            unBindEquipmentVO.setCount(Integer.valueOf(et01.getText().toString().trim()));//加工数量
+            ProductLinePartsVO productLinePartsVO = new ProductLinePartsVO();
+            productLinePartsVO.setCode(productLine.getProductLineParts().getCode());
 
-            String jsonStr = objectToJson(unBindEquipmentVO);
+            lineDTO.setPartsVO(productLinePartsVO);
 
+            lineDTO.setProcessingCount(Integer.valueOf(et01.getText().toString().trim()));
+
+            ProductLineEquipmentVO productLineEquipmentVO = new ProductLineEquipmentVO();
+            productLineEquipmentVO.setCode(equipment.getCode());
+
+            lineDTO.setEquipmentVO(productLineEquipmentVO);
+
+
+
+            String jsonStr = objectToJson(lineDTO);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-            Call<String> unBindEquipment = iRequest.unBindEquipment(body, headsMap);
+            IRequest iRequest = retrofit.create(IRequest.class);
+            Call<String> unInstall = iRequest.unInstall(body, headsMap);
 
-            unBindEquipment.enqueue(new MyCallBack<String>() {
+            unInstall.enqueue(new MyCallBack<String>() {
                 @Override
                 public void _onResponse(Response<String> response) {
                     try {
