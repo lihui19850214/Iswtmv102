@@ -163,7 +163,7 @@ public class C00S000_003Activity extends CommonActivity {
         tool_outgoing = new Vgrantlist();
         tool_outgoing.setCapabilityID("5");
         tool_outgoing.setCapabilityName("刀具换装");
-        tool_outgoing.setCapabilityUrl("v01c01.c01s010.c01s010_002Activity");
+        tool_outgoing.setCapabilityUrl("v01c01.c01s010.c01s010_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s010"));
         menuMap.put("SynthesisCuttingTool_Exchange", tool_outgoing);
 
