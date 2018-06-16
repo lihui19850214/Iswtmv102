@@ -11,9 +11,12 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.apiclient.dto.InFactoryDTO;
 import com.apiclient.pojo.DjOwnerAkp;
 import com.apiclient.pojo.OutsideFactoryMode;
+import com.apiclient.vo.InOutQueryVO;
 import com.apiclient.vo.OutSideVO;
+import com.apiclient.vo.QueryVO;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -31,9 +34,7 @@ import java.util.Map;
 
 /**
  * 厂外修磨页面1
- * Created by FanLL on 2017/7/4.
  */
-
 public class C01S019_000Activity extends CommonActivity {
 
     @BindView(R.id.btn_return)
@@ -67,10 +68,10 @@ public class C01S019_000Activity extends CommonActivity {
     private List<DjOwnerAkp> sharpenProviderList = new ArrayList<>();
     private DjOwnerAkp sharpenProvider = null;
     // 外委方式列表
-    private List<OutsideFactoryMode> outsideFactoryModeList = new ArrayList<>();
-    private OutsideFactoryMode outsideFactoryMode = null;
+    private List<String> outsideFactoryModeList = new ArrayList<>();
+    private String outsideFactoryMode = null;
 
-    OutSideVO outSideVO = new OutSideVO();
+    InFactoryDTO inFactoryDTO = new InFactoryDTO();
 
 
     @Override
@@ -82,119 +83,86 @@ public class C01S019_000Activity extends CommonActivity {
         //调用接口
         retrofit = RetrofitSingle.newInstance();
 
-        // 外委方式列表
-        for (OutsideFactoryMode outsideFactoryMode : OutsideFactoryMode.values()){
-            outsideFactoryModeList.add(outsideFactoryMode);
-        }
-
         // 外委厂家列表
         getSharpenProvider();
     }
 
-    private void setViewData(OutSideVO outSideVO) {
-        et01.setText(outSideVO.getZcCode());//资材单号
-        et02.setText(outSideVO.getOrderNum());//外委单号,出厂单号
-        et03.setText(outSideVO.getHandlers());//经手人
-        et04.setText(outSideVO.getSender());//邮寄人
+    private void setViewData(InFactoryDTO inFactoryDTO) {
+        et01.setText(inFactoryDTO.getZcCode());//资材单号
+        et02.setText(inFactoryDTO.getOrderNum());//外委单号,出厂单号
+        et03.setText(inFactoryDTO.getHandlers());//经手人
+        et04.setText(inFactoryDTO.getSender());//邮寄人
 
 
         //外委方式
-        for (OutsideFactoryMode ofm : outsideFactoryModeList) {
-            if (ofm.equals(outSideVO.getOutWay())) {
+        for (String ofm : outsideFactoryModeList) {
+            if (ofm.equals(inFactoryDTO.getOutWay())) {
                 outsideFactoryMode = ofm;
-                tv02.setText(outsideFactoryMode.getName());
+                tv02.setText(outsideFactoryMode);
             }
         }
 
         for (DjOwnerAkp doa : sharpenProviderList) {
-            if (doa.getOwnerCode().equals(outSideVO.getSharpenProviderCode())) {
+            if (doa.getOwnerCode().equals(inFactoryDTO.getSharpenProviderCode())) {
                 sharpenProvider = doa;
                 tv01.setText(sharpenProvider.getName());
             }
         }
-
-//        outSideVO.setZcCode(et01.getText().toString().trim());//资材单号
-//        outSideVO.setOrderNum(et02.getText().toString().trim());//外委单号,出厂单号
-//        outSideVO.setHandlers(et03.getText().toString().trim());//经手人
-//        outSideVO.setSender(et04.getText().toString().trim());//邮寄人
-
-//        outSideVO.setOutWay(outsideFactoryMode.getKey());//外委方式
-
-//        outSideVO.setSharpenProviderCode(sharpenProvider.getOwnerCode());//外委商,外委厂家
-//        outSideVO.setQmSharpenProviderCode(sharpenProvider.getOwnerCode());// 外委厂家code
-//        outSideVO.setQmSharpenProviderName(sharpenProvider.getName());// 外委厂家name
     }
 
     /**
-     * 查询外委厂家
+     * 查询外委厂家和方式
      */
     private void getSharpenProvider() {
         try {
             loading.show();
-            IRequest iRequest = retrofit.create(IRequest.class);
 
             String jsonStr = "{}";
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-            Call<String> getSharpenProvider = iRequest.getSharpenProvider(body);
+            IRequest iRequest = retrofit.create(IRequest.class);
+            Call<String> queryForOutGrinding = iRequest.queryForOutGrinding(body);
 
-            getSharpenProvider.enqueue(new MyCallBack<String>() {
+            queryForOutGrinding.enqueue(new MyCallBack<String>() {
                 @Override
                 public void _onResponse(Response<String> response) {
                     try {
                         if (response.raw().code() == 200) {
-                            sharpenProviderList = jsonToObject(response.body(), List.class, DjOwnerAkp.class);
+
+                            InOutQueryVO InOutQueryVO = jsonToObject(response.body(), InOutQueryVO.class);
+
+                            InOutQueryVO.getWwcode();
+                            sharpenProviderList = InOutQueryVO.getDjOwnerAkps();
 
                             if (sharpenProviderList == null && sharpenProviderList.size() == 0) {
                                 sharpenProviderList = new ArrayList<>();
                             }
 
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    // 上一个页面传过来的参数
-                                    Map<String, Object> paramMap = PARAM_MAP.get(1);
-                                    if (paramMap != null) {
-                                        outSideVO = (OutSideVO) paramMap.get("outSideVO");
-                                        setViewData(outSideVO);
-                                    }
-                                }
-                            });
+                            // 上一个页面传过来的参数
+                            Map<String, Object> paramMap = PARAM_MAP.get(1);
+                            if (paramMap != null) {
+                                inFactoryDTO = (InFactoryDTO) paramMap.get("inFactoryDTO");
+                                setViewData(inFactoryDTO);
+                            }
                         } else {
-                            final String errorStr = response.errorBody().string();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    createAlertDialog(C01S019_000Activity.this, errorStr, Toast.LENGTH_LONG);
-                                }
-                            });
+                            createAlertDialog(C01S019_000Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                     } finally {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (null != loading && loading.isShowing()) {
-                                    loading.dismiss();
-                                }
-                            }
-                        });
+                        if (null != loading && loading.isShowing()) {
+                            loading.dismiss();
+                        }
                     }
                 }
 
                 @Override
                 public void _onFailure(Throwable t) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (null != loading && loading.isShowing()) {
-                                loading.dismiss();
-                            }
-                            createAlertDialog(C01S019_000Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                        }
-                    });
+                    if (null != loading && loading.isShowing()) {
+                        loading.dismiss();
+                    }
+                    createAlertDialog(C01S019_000Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
                 }
             });
         } catch (Exception e) {
@@ -234,21 +202,20 @@ public class C01S019_000Activity extends CommonActivity {
                 } else if (outsideFactoryMode == null) {
                     createAlertDialog(C01S019_000Activity.this, "请选择外委方式", Toast.LENGTH_LONG);
                 } else {
-                    outSideVO.setZcCode(et01.getText().toString().trim());//资材单号
-                    outSideVO.setOrderNum(et02.getText().toString().trim());//外委单号,出厂单号
-                    outSideVO.setHandlers(et03.getText().toString().trim());//经手人
-                    outSideVO.setSender(et04.getText().toString().trim());//邮寄人
+                    inFactoryDTO.setZcCode(et01.getText().toString().trim());//资材单号
+                    inFactoryDTO.setOrderNum(et02.getText().toString().trim());//外委单号
+                    inFactoryDTO.setHandlers(et03.getText().toString().trim());//经手人
+                    inFactoryDTO.setSender(et04.getText().toString().trim());//邮寄人
 
-                    outSideVO.setSharpenProviderCode(sharpenProvider.getOwnerCode());//外委商,外委厂家
-                    outSideVO.setQmSharpenProviderCode(sharpenProvider.getOwnerCode());// 外委厂家code
-                    outSideVO.setQmSharpenProviderName(sharpenProvider.getName());// 外委厂家name
+                    inFactoryDTO.setQmSharpenProviderCode(sharpenProvider.getOwnerCode());//启明外委供应商编码
+                    inFactoryDTO.setQmSharpenProviderName(sharpenProvider.getName());//启明外委供应商名称
 
-                    outSideVO.setOutWay(outsideFactoryMode.getKey());//外委方式
+                    inFactoryDTO.setOutWay(outsideFactoryMode);//外委方式
 
 
                     // 用于页面之间传值，新方法
                     Map<String, Object> paramMap = new HashMap<>();
-                    paramMap.put("outSideVO", outSideVO);
+                    paramMap.put("inFactoryDTO", inFactoryDTO);
                     PARAM_MAP.put(1, paramMap);
 
 
@@ -359,7 +326,7 @@ public class C01S019_000Activity extends CommonActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                tv02.setText(outsideFactoryModeList.get(i).getName());
+                tv02.setText(outsideFactoryModeList.get(i));
                 //TODO 选择轴下拉列表显示选中名字
                 popupWindow.dismiss();
 
@@ -391,7 +358,7 @@ public class C01S019_000Activity extends CommonActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             View view1 = LayoutInflater.from(C01S019_000Activity.this).inflate(R.layout.item_c03s004_001, null);
             TextView textView = (TextView) view1.findViewById(R.id.tv_01);
-            textView.setText(outsideFactoryModeList.get(i).getName());
+            textView.setText(outsideFactoryModeList.get(i));
             return view1;
         }
 
