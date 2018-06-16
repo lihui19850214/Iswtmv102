@@ -276,6 +276,22 @@ public class C01S011_001Activity extends CommonActivity {
         }
     }
 
+    /**
+     * 检查钻头是否没有刀身码
+     * @return true为没有刀身码；false为有刀身码；
+     */
+    private boolean bladeCodeIsEmpty() {
+        boolean isEmpty = false;
+
+        for (String bus : businessCodeList) {
+            SynthesisCuttingToolLocation location = configToBindMap.get(bus);
+            if (location.getCuttingToolBladeCode() == null || "".equals(location.getCuttingToolBladeCode())) {
+                isEmpty = true;
+            }
+        }
+
+        return isEmpty;
+    }
 
     private void setTextViewHandler(String inpower) throws IOException {
         Map<String, String> inpowerMap = jsonToObject(inpower, Map.class);
@@ -284,36 +300,22 @@ public class C01S011_001Activity extends CommonActivity {
         if ("1".equals(inpowerMap.get("type"))) {
             // 是否需要授权 true为需要授权；false为不需要授权
             is_need_authorization = false;
-
-            boolean isEmpty = false;
-            for (String bus : businessCodeList) {
-                SynthesisCuttingToolLocation location = configToBindMap.get(bus);
-                if (location.getCuttingToolBladeCode() == null || "".equals(location.getCuttingToolBladeCode())) {
-                    isEmpty = true;
-                }
-            }
-
-            if (isEmpty) {
+            // 如果刀身码为空，需要填写刀身码
+            if (bladeCodeIsEmpty()) {
                 showDialog();
+            } else {
+                jumpPage();
             }
         } else if ("2".equals(inpowerMap.get("type"))) {
             is_need_authorization = true;
             exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
                 @Override
                 public void confirm() {
-                    boolean isEmpty = false;
-                    for (String bus : businessCodeList) {
-                        SynthesisCuttingToolLocation location = configToBindMap.get(bus);
-                        if (!location.getCuttingTool().getConsumeType().equals(CuttingToolConsumeTypeEnum.griding_zt.getKey())){
-                            continue;
-                        }
-                        if (location.getCuttingTool().getBusinessCode() == null || "".equals(location.getCuttingTool().getBusinessCode())) {
-                            isEmpty = true;
-                        }
-                    }
-
-                    if (isEmpty) {
+                    // 如果刀身码为空，需要填写刀身码
+                    if (bladeCodeIsEmpty()) {
                         showDialog();
+                    } else {
+                        jumpPage();
                     }
                 }
 
@@ -378,7 +380,7 @@ public class C01S011_001Activity extends CommonActivity {
 //        scan();
 //    }
 
-    // 物料号下拉列表
+    // 只有转头的物料号下拉列表
     List<String> businessCodeList = new ArrayList<>();
     // 物料号选项
     String selectBusinessCode = "";
@@ -582,6 +584,12 @@ public class C01S011_001Activity extends CommonActivity {
                     createAlertDialog(C01S011_001Activity.this, "请选择物料号", Toast.LENGTH_LONG);
                 } else {
                     try {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                loading.show();
+                            }
+                        });
                         // TODO 确认是否不需要修改 bind
                         SynthesisCuttingToolLocation location = configToBindMap.get(tv01.getText());
 
