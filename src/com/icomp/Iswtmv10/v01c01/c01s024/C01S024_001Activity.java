@@ -289,9 +289,9 @@ public class C01S024_001Activity extends CommonActivity {
         cailiaoInfo.setVisibility(View.VISIBLE);
 
         tvCailiaoInfoMaterialNumber.setText(cuttingToolBind.getCuttingTool().getBusinessCode());//材料号
-        tvCailiaoInfoFinalExecution.setText(cuttingToolBind.getRfidContainer().getOperatorName());//最后执行操作
+        tvCailiaoInfoFinalExecution.setText(cuttingToolBind.getRfidContainer().getPrevOperation());//最后执行操作
 
-        tvCailiaoInfoOperator.setText("");//操作者
+        tvCailiaoInfoOperator.setText(cuttingToolBind.getRfidContainer().getOperatorName());//操作者
 
         try {
             SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
@@ -302,7 +302,7 @@ public class C01S024_001Activity extends CommonActivity {
         }
 
         tvCailiaoInfoGrindingTimes.setText(cuttingToolBind.getSharpenTimes());//修磨次数
-        tvCailiaoInfoCumulativeAmountOfProcessing.setText("");//累计加工量
+        tvCailiaoInfoCumulativeAmountOfProcessing.setText(cuttingToolBind.getProcessingCount());//累计加工量
     }
 
     /**
@@ -316,8 +316,8 @@ public class C01S024_001Activity extends CommonActivity {
 
 
         tvHechengInfoSyntheticToolCode.setText(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());//合成刀具编码
-        tvHechengInfoFinalExecution.setText(synthesisCuttingToolBind.getRfidContainer().getOperatorName());//最后执行操作
-        tvHechengInfoOperator.setText("");//操作者
+        tvHechengInfoFinalExecution.setText(synthesisCuttingToolBind.getRfidContainer().getPrevOperation());//最后执行操作
+        tvHechengInfoOperator.setText(synthesisCuttingToolBind.getRfidContainer().getOperatorName());//操作者
 
         try {
             SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
@@ -326,8 +326,8 @@ public class C01S024_001Activity extends CommonActivity {
         } catch (Exception e) {
             e.printStackTrace();;
         }
-        tvHechengInfoGrindingTimes.setText("");//修磨次数
-        tvHechengInfoCumulativeAmountOfProcessing.setText("");//累计加工量
+//        tvHechengInfoGrindingTimes.setText(synthesisCuttingToolBind.);//修磨次数
+        tvHechengInfoCumulativeAmountOfProcessing.setText(synthesisCuttingToolBind.getProcessingCount());//累计加工量
     }
 
     /**
