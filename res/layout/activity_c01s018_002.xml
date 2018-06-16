@@ -7,7 +7,7 @@
     <LinearLayout style="@style/MiddleLinerLayoutStyle">
         <TextView
                 style="@style/MiddleTextPromptStule"
-                android:text="请扫描要修磨钻头的刀具盒标签或点击加号输入要修磨刀片的材料号"
+                android:text="请扫描刀具盒标签"
                 android:layout_height="wrap_content"/>
 
         <ScrollView
