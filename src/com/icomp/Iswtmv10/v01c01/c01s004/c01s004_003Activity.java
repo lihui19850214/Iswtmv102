@@ -188,7 +188,7 @@ public class c01s004_003Activity extends CommonActivity {
                     // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
                     // 如果是钻头需要走另一个流程
                     if (CuttingToolTypeEnum.dj.getKey().equals(searchOutLiberaryVO.getCuttingToolType()) && CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(searchOutLiberaryVO.getCuttingToolConsumeType())) {
-                        char endChar = searchOutLiberaryVO.getCuttingtollBusinessCode().charAt(searchOutLiberaryVO.getCuttingtollBusinessCode().length()-1);
+                        char endChar = searchOutLiberaryVO.getMtlno().charAt(searchOutLiberaryVO.getMtlno().length()-1);
 
                         Intent intent = null;
 
@@ -323,7 +323,7 @@ public class c01s004_003Activity extends CommonActivity {
 
             // 不等于 null 再赋值
             if (searchOutLiberaryVO != null) {
-                wuliaohao.setText(searchOutLiberaryVO.getCuttingtollBusinessCode());
+                wuliaohao.setText(searchOutLiberaryVO.getDjOutapplyAkp().getMtlno());
                 djCode.setText(searchOutLiberaryVO.getDjOutapplyAkp().getDjcode());
                 wuliaomingcheng.setText(searchOutLiberaryVO.getName());
                 shengchanxian.setText(searchOutLiberaryVO.getProductline());

@@ -296,6 +296,7 @@ public class C01S011_001Activity extends CommonActivity {
             if (isEmpty) {
                 showDialog();
             }
+            jumpPage();
         } else if ("2".equals(inpowerMap.get("type"))) {
             is_need_authorization = true;
             exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {

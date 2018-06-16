@@ -380,7 +380,7 @@ public class C01S013_002Activity extends CommonActivity {
 
             LineDTO lineDTO = new LineDTO();
             lineDTO.setSynthesisCuttingToolBindVO(synthesisCuttingToolBindVO);
-            lineDTO.setUnBindReason(unInstallReasonEnum.getName());
+            lineDTO.setUnBindReason(unInstallReasonEnum.getKey());
 
 
             ProductLinePartsVO productLinePartsVO = new ProductLinePartsVO();
