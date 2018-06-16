@@ -74,7 +74,7 @@ public class CuttingToolBind implements Serializable{
     private Integer sharpenTimes;
     /**
      * @fieldName qimingSharpenTimes
-    * @fieldType  String
+    * @fieldType  Integer
     * @Description  启明刃磨次数 两次 场外涂层 
      */
     private Integer qimingSharpenTimes;
@@ -114,6 +114,12 @@ public class CuttingToolBind implements Serializable{
     * @Description  是否使用 1是 0 否
      */
     private String inUser;
+    /**
+     * @fieldName processingCount
+    * @fieldType  Integer
+    * @Description  累计加工量
+     */
+    private Integer processingCount;
 
     /**
      * @fieldName cuttingToolCode
@@ -202,7 +208,6 @@ public class CuttingToolBind implements Serializable{
     public void setSharpenTimes(Integer sharpenTimes) {
         this.sharpenTimes = sharpenTimes;
     }
-
     public Integer getQimingSharpenTimes() {
         return qimingSharpenTimes;
     }
@@ -210,7 +215,6 @@ public class CuttingToolBind implements Serializable{
     public void setQimingSharpenTimes(Integer qimingSharpenTimes) {
         this.qimingSharpenTimes = qimingSharpenTimes;
     }
-
     public String getScapCase() {
         return scapCase;
     }
@@ -252,6 +256,13 @@ public class CuttingToolBind implements Serializable{
 
     public void setInUser(String inUser) {
         this.inUser = inUser;
+    }
+    public Integer getProcessingCount() {
+        return processingCount;
+    }
+
+    public void setProcessingCount(Integer processingCount) {
+        this.processingCount = processingCount;
     }
 
     public CuttingTool getCuttingTool() {

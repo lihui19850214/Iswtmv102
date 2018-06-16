@@ -57,6 +57,13 @@ public class SynthesisCuttingToolBind implements Serializable{
      */
     private String synthesisCode;
     /**
+     * @fieldName processingCount
+    * @fieldType  Integer
+    * @Description  累计加工量
+
+     */
+    private Integer processingCount;
+    /**
      * @fieldName bladeCode
     * @fieldType  String
     * @Description  刀身码
@@ -65,22 +72,22 @@ public class SynthesisCuttingToolBind implements Serializable{
     /**
      * @fieldName status
     * @fieldType  String
-    * @Description  刀具状态
+    * @Description  状态
      */
     private String status;
 
-    /**
-     * @fieldName rfidContainerCode
-    * @fieldType  
-    * @Description  RFID标签
-     */
-    private RfidContainer rfidContainer;
     /**
      * @fieldName synthesisCuttingToolCode
     * @fieldType  
     * @Description  合成刀编码
      */
     private SynthesisCuttingTool synthesisCuttingTool;
+    /**
+     * @fieldName rfidContainerCode
+    * @fieldType  
+    * @Description  RFID标签
+     */
+    private RfidContainer rfidContainer;
 
     private List<SynthesisCuttingToolBindleRecords> synthesisCuttingToolBindleRecordsList;
     private List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList;
@@ -137,6 +144,13 @@ public class SynthesisCuttingToolBind implements Serializable{
     public void setSynthesisCode(String synthesisCode) {
         this.synthesisCode = synthesisCode;
     }
+    public Integer getProcessingCount() {
+        return processingCount;
+    }
+
+    public void setProcessingCount(Integer processingCount) {
+        this.processingCount = processingCount;
+    }
     public String getBladeCode() {
         return bladeCode;
     }
@@ -152,19 +166,19 @@ public class SynthesisCuttingToolBind implements Serializable{
         this.status = status;
     }
 
-    public RfidContainer getRfidContainer() {
-        return rfidContainer;
-    }
-
-    public void setRfidContainer(RfidContainer rfidContainer) {
-        this.rfidContainer = rfidContainer;
-    }
     public SynthesisCuttingTool getSynthesisCuttingTool() {
         return synthesisCuttingTool;
     }
 
     public void setSynthesisCuttingTool(SynthesisCuttingTool synthesisCuttingTool) {
         this.synthesisCuttingTool = synthesisCuttingTool;
+    }
+    public RfidContainer getRfidContainer() {
+        return rfidContainer;
+    }
+
+    public void setRfidContainer(RfidContainer rfidContainer) {
+        this.rfidContainer = rfidContainer;
     }
 
     public List<SynthesisCuttingToolBindleRecords> getSynthesisCuttingToolBindleRecordsList() {
