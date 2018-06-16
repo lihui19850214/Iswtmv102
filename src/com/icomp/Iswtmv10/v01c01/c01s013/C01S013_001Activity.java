@@ -168,8 +168,6 @@ public class C01S013_001Activity extends CommonActivity {
                         if (null != popupWindow && popupWindow.isShowing()) {
                             popupWindow.dismiss();
                         }
-
-                        loading.show();
                     }
                 });
 
@@ -186,6 +184,12 @@ public class C01S013_001Activity extends CommonActivity {
 
     private void queryForUnInstall(SynthesisCuttingToolBindVO synthesisCuttingToolBindVO) {
         try {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    loading.show();
+                }
+            });
             String jsonStr = objectToJson(synthesisCuttingToolBindVO);
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
