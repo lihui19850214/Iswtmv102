@@ -468,7 +468,7 @@ public interface IRequest {
      * @param headers 请求头
      * @return
      */
-    @POST("/queryForOutGrinding/outsideGrinding")
+    @POST("/outFactoryBusiness/outsideGrinding")
     Call<String> outsideGrinding(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
     /**
