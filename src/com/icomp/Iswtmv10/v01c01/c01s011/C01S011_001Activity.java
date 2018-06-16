@@ -396,6 +396,17 @@ public class C01S011_001Activity extends CommonActivity {
      * 生成物料号下拉列表项
      */
     private void generateBusinessCodeList() {
+        // 只有转头的物料号下拉列表
+        businessCodeList = new ArrayList<>();
+        // 物料号选项
+        selectBusinessCode = "";
+        // 物料号对应 config 信息中CuttingTool的code字段
+        configMap = new HashMap<>();
+        // bind 中的物料号
+        realMap = new HashMap<>();
+
+        // config 的物料号对应 location 的物料号(真实数据)
+        configToBindMap = new HashMap<>();
         try {
             if (synthesisCuttingToolBind.getSynthesisCuttingToolLocationList() != null) {
                 List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList = synthesisCuttingToolBind.getSynthesisCuttingToolLocationList();
@@ -655,7 +666,7 @@ public class C01S011_001Activity extends CommonActivity {
 
         dialog.show();
         dialog.setContentView(view);
-        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.4));
+        dialog.getWindow().setLayout((int) (screenWidth * 1), (int) (screenHeight * 0.4));
 
     }
 
