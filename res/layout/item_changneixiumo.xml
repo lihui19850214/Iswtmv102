@@ -80,7 +80,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
                     android:gravity="center"
                     android:src="@drawable/cancel"
                     android:padding="10dp" />
-            <TextView
+            <!--TextView
                     android:id="@+id/tvRfidContain"
                     android:visibility="gone"
                     android:layout_width="0dp"
@@ -89,7 +89,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
                     android:layout_weight="1"
                     android:textColor="@color/baseColor"
                     android:background="@null"
-                    android:gravity="center"/>
+                    android:gravity="center"/-->
 
         </LinearLayout>
     </LinearLayout>
