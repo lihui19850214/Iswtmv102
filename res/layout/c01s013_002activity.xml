@@ -33,8 +33,7 @@
                     android:layout_weight="1"
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/text_content_size"
-                    android:gravity="center"
-                    android:text="A40(工序)"/>
+                    android:gravity="center"/>
 
             <TextView
                     android:id="@+id/tv_1_1"
@@ -58,7 +57,8 @@
                     android:layout_weight="1"
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/text_content_size"
-                    android:gravity="left|center"/>
+                    android:gravity="left|center"
+                    android:text="卸下原因"/>
 
 
             <LinearLayout
