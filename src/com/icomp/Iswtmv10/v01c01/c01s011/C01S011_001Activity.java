@@ -288,7 +288,7 @@ public class C01S011_001Activity extends CommonActivity {
             boolean isEmpty = false;
             for (String bus : businessCodeList) {
                 SynthesisCuttingToolLocation location = configToBindMap.get(bus);
-                if (location.getCuttingTool().getBusinessCode() == null || "".equals(location.getCuttingTool().getBusinessCode())) {
+                if (location.getCuttingToolBladeCode() == null || "".equals(location.getCuttingToolBladeCode())) {
                     isEmpty = true;
                 }
             }
