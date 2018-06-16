@@ -429,6 +429,7 @@ public class C01S018_002Activity extends CommonActivity {
         grindingVO.setGrindingCount(1);
 
         CuttingTool ct = new CuttingTool();
+        ct.setBusinessCode(cuttingToolBind.getCuttingTool().getBusinessCode());
         ct.setCode(cuttingToolBind.getCuttingTool().getCode());
         grindingVO.setCuttingTool(ct);
 
