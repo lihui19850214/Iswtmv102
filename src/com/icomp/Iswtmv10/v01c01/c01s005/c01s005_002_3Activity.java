@@ -335,7 +335,7 @@ public class c01s005_002_3Activity extends CommonActivity {
 
                         // ------------ 授权信息 ------------
                         impowerRecorder.setToolCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 合成刀编码
-                        impowerRecorder.setRfidLasercode(rfid);// rfid标签
+                        impowerRecorder.setRfidLasercode(authCustomer.getRfidContainer().getLaserCode());// rfid标签
                         impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
                         impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
                         // TODO 缺少报废，暂时先不报错
