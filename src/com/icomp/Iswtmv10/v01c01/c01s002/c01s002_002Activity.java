@@ -23,6 +23,7 @@ import com.icomp.common.activity.CommonActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -124,7 +125,6 @@ public class c01s002_002Activity extends CommonActivity {
             //设置扫描或停止条件为true
             scanOrNot = true;
             isCanScan = false;
-
             //启动扫描线程
             scanThread = new scanThread();
             scanThread.start();
@@ -141,7 +141,7 @@ public class c01s002_002Activity extends CommonActivity {
             //需每次置rfidString为null
             rfidString = null;
 
-            while (null == rfidString && scanOrStop) {
+            while (null == rfidString && scanOrNot) {
                 rfidString = alwaysScan();
             }
 
