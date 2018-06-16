@@ -361,7 +361,7 @@ public interface IRequest {
      * @return json格式数据
      */
     @POST("/cuttingToolBusiness/queryCuttingToolBind")
-    Call<String> queryCuttingToolBind(@Body RequestBody json);
+    Call<String> queryCuttingToolBind(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
 
     /**
@@ -460,6 +460,17 @@ public interface IRequest {
     @POST("/outFactoryBusiness/addOutsideFactory")
     Call<String> addOutsideFactory(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
+
+    /**
+     * 厂外刃磨接口地址
+     * @param json 请求数据
+     * @param headers 请求头
+     * @param headers 请求头
+     * @return
+     */
+    @POST("/queryForOutGrinding/outsideGrinding")
+    Call<String> outsideGrinding(@Body RequestBody json, @HeaderMap Map<String, String> headers);
+
     /**
      * 添加场外刃磨服务商
      * @param json 请求数据
@@ -467,6 +478,16 @@ public interface IRequest {
      */
     @POST("/outFactoryBusiness/getSharpenProvider")
     Call<String> getSharpenProvider(@Body RequestBody json);
+
+
+
+    /**
+     * 添加场外刃磨服务商
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/outFactoryBusiness/queryForOutGrinding")
+    Call<String> queryForOutGrinding(@Body RequestBody json);
     // --------------场外刃磨结束--------------
 
 
