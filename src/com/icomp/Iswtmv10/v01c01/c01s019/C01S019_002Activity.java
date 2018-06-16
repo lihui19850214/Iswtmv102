@@ -9,7 +9,9 @@ import android.view.View;
 import android.widget.*;
 
 import com.apiclient.constants.OperationEnum;
+import com.apiclient.dto.InFactoryDTO;
 import com.apiclient.pojo.*;
+import com.apiclient.vo.GrindingVO;
 import com.apiclient.vo.OutSideVO;
 import com.apiclient.vo.SharpenVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -34,9 +36,7 @@ import retrofit2.Retrofit;
 
 /**
  * 厂外修磨页面2
- * Created by FanLL on 2017/7/4.
  */
-
 public class C01S019_002Activity extends CommonActivity {
 
     @BindView(R.id.tvTitle)
@@ -51,9 +51,13 @@ public class C01S019_002Activity extends CommonActivity {
 
     private Retrofit retrofit;
 
-    OutSideVO outSideVO = new OutSideVO();
+    InFactoryDTO inFactoryDTO = new InFactoryDTO();
     // 根据 rfid 查询的数据
     private Map<String, CuttingToolBind> rfidToMap = new HashMap<>();
+
+    private List<GrindingVO> sharpenVOList = new ArrayList<>();
+    // 根据物料号对应刀身码
+    private Map<String, String> businessCodeToBladeCodeMap = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,11 +71,22 @@ public class C01S019_002Activity extends CommonActivity {
         try {
             Map<String, Object> paramMap2 = PARAM_MAP.get(2);
             if (paramMap2 != null) {
-                outSideVO = (OutSideVO) paramMap2.get("outSideVO");
+                inFactoryDTO = (InFactoryDTO) paramMap2.get("inFactoryDTO");
                 rfidToMap = (Map<String, CuttingToolBind>) paramMap2.get("rfidToMap");
+                sharpenVOList = (List<GrindingVO>) paramMap2.get("sharpenVOList");
+                businessCodeToBladeCodeMap = (Map<String, String>) paramMap2.get("businessCodeToBladeCodeMap");
 
-                for (SharpenVO sharpenVO : outSideVO.getSharpenVOS()) {
-                    addLayout(sharpenVO.getCuttingToolBusinessCode(), sharpenVO.getCuttingToolBladeCode(), sharpenVO.getCount().toString());
+                for (GrindingVO grindingVO : sharpenVOList) {
+                    String bl = businessCodeToBladeCodeMap.get(grindingVO.getCuttingTool().getBusinessCode());
+                    if (bl == null || "".equals(bl)) {
+                        bl = "-";
+                    }
+                    String num = grindingVO.getGrindingCount().toString();
+                    if ("0".equals(num)) {
+                        num = "-";
+                    }
+
+                    addLayout(grindingVO.getCuttingTool().getBusinessCode(), bl, num);
                 }
             }
         } catch (Exception e) {
@@ -121,13 +136,8 @@ public class C01S019_002Activity extends CommonActivity {
         TextView tvNum = (TextView) mLinearLayout.findViewById(R.id.tvNum);
 
         tvCaiLiao.setText(cailiao);
-        if (laserCode == null || "".equals(laserCode)) {
-            tvsingleProductCode.setText("-");
-            tvNum.setText(num);
-        } else {
-            tvsingleProductCode.setText(laserCode);
-            tvNum.setText("-");
-        }
+        tvsingleProductCode.setText(laserCode);
+        tvNum.setText(num);
 
         mLlContainer.addView(mLinearLayout);
     }
@@ -198,22 +208,24 @@ public class C01S019_002Activity extends CommonActivity {
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                return;
             } catch (IOException e) {
                 e.printStackTrace();
                 createAlertDialog(C01S019_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                return;
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            IRequest iRequest = retrofit.create(IRequest.class);
-
-            String jsonStr = objectToJson(outSideVO);
+            String jsonStr = objectToJson(inFactoryDTO);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-            Call<String> addOutsideFactory = iRequest.addOutsideFactory(body, headsMap);
+            IRequest iRequest = retrofit.create(IRequest.class);
+            Call<String> outsideGrinding = iRequest.outsideGrinding(body, headsMap);
 
-            addOutsideFactory.enqueue(new MyCallBack<String>() {
+            outsideGrinding.enqueue(new MyCallBack<String>() {
                 @Override
                 public void _onResponse(Response<String> response) {
                     try {

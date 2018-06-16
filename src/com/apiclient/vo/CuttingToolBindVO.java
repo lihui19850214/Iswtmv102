@@ -7,7 +7,7 @@ import java.io.Serializable;
 * Automated Build
 * 实体 CuttingToolBindVO 
 */
-public class CuttingToolBindVO implements Serializable {
+public class CuttingToolBindVO implements Serializable{
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
