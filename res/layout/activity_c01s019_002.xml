@@ -46,7 +46,7 @@
                         <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1.5"
+                                android:layout_weight="1"
                                 android:textColor="@color/baseColor"
                                 android:text="刀身码"
                                 android:gravity="center"/>
@@ -59,7 +59,7 @@
                         <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
+                                android:layout_weight="0.5"
                                 android:textColor="@color/baseColor"
                                 android:text="数量"
                                 android:gravity="center"/>
