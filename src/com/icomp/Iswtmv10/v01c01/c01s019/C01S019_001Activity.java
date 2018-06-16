@@ -227,7 +227,9 @@ public class C01S019_001Activity extends CommonActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_c01s018_001, null);
         final AlertDialog dialog = new AlertDialog.Builder(this, R.style.MyDialog).create();
-//        dialog.setView((this).getLayoutInflater().inflate(R.layout.dialog_c01s018_001, null));
+        dialog.setView((this).getLayoutInflater().inflate(R.layout.dialog_c01s018_001, null));
+        dialog.show();
+        dialog.getWindow().setContentView(view);
 
 
         final EditText et_t = (EditText) view.findViewById(R.id.et_t);
@@ -344,7 +346,7 @@ public class C01S019_001Activity extends CommonActivity {
         dialog.show();
         dialog.setContentView(view);
 //        dialog.getWindow().setContentView(view);
-        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
+        dialog.getWindow().setLayout((int) (screenWidth * 1), (int) (screenHeight * 0.6));
 
     }
 
