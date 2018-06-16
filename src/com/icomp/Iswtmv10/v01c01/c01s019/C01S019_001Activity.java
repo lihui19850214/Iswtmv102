@@ -233,6 +233,11 @@ public class C01S019_001Activity extends CommonActivity {
 
 
         final EditText et_t = (EditText) view.findViewById(R.id.et_t);
+        //将输入的材料号自动转化为大写
+        et_t.setTransformationMethod(new AllCapTransformationMethod());
+        //将光标设置在最后
+        et_t.setSelection(et_t.getText().length());
+
         final EditText etgrindingQuantity = (EditText) view.findViewById(R.id.etgrindingQuantity);
 
         final LinearLayout ll01 = (LinearLayout) view.findViewById(R.id.ll_01);
@@ -328,6 +333,7 @@ public class C01S019_001Activity extends CommonActivity {
                         grindingVO.setGrindingCount(Integer.parseInt(num));
 
                         CuttingTool ct = new CuttingTool();
+                        ct.setBusinessCode(cuttingTool.getBusinessCode());
                         ct.setCode(cuttingTool.getCode());
 
                         grindingVO.setCuttingTool(ct);
@@ -689,6 +695,7 @@ public class C01S019_001Activity extends CommonActivity {
         grindingVO.setGrindingCount(1);
 
         CuttingTool ct = new CuttingTool();
+        ct.setBusinessCode(cuttingToolBind.getCuttingTool().getBusinessCode());
         ct.setCode(cuttingToolBind.getCuttingTool().getCode());
         grindingVO.setCuttingTool(ct);
 
