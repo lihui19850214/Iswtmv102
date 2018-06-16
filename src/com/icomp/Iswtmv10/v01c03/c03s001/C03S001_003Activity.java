@@ -188,6 +188,8 @@ public class C03S001_003Activity extends CommonActivity {
                     try {
                         if (response.raw().code() == 200) {
                             Intent intent = new Intent(C03S001_003Activity.this, C03S001_004Activity.class);
+                            // 不清空页面之间传递的值
+                            intent.putExtra("isClearParamMap", false);
                             startActivity(intent);
                             finish();
                         } else {
