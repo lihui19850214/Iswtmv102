@@ -1,6 +1,8 @@
 package com.icomp.Iswtmv10.v01c01.c01s019;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,12 +13,13 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.apiclient.constants.OperationEnum;
 import com.apiclient.dto.InFactoryDTO;
-import com.apiclient.pojo.DjOwnerAkp;
-import com.apiclient.pojo.OutsideFactoryMode;
+import com.apiclient.pojo.*;
 import com.apiclient.vo.InOutQueryVO;
 import com.apiclient.vo.OutSideVO;
 import com.apiclient.vo.QueryVO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -27,10 +30,8 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * 厂外修磨页面1
@@ -68,8 +69,8 @@ public class C01S019_000Activity extends CommonActivity {
     private List<DjOwnerAkp> sharpenProviderList = new ArrayList<>();
     private DjOwnerAkp sharpenProvider = null;
     // 外委方式列表
-    private List<String> outsideFactoryModeList = new ArrayList<>();
-    private String outsideFactoryMode = null;
+    private List<OutsideFactoryMode> outsideFactoryModeList = new ArrayList<>();
+    private OutsideFactoryMode outsideFactoryMode = null;
 
     InFactoryDTO inFactoryDTO = new InFactoryDTO();
 
@@ -83,6 +84,10 @@ public class C01S019_000Activity extends CommonActivity {
         //调用接口
         retrofit = RetrofitSingle.newInstance();
 
+        // 外委方式列表
+        for (OutsideFactoryMode outsideFactoryMode : OutsideFactoryMode.values()){
+            outsideFactoryModeList.add(outsideFactoryMode);
+        }
         // 外委厂家列表
         getSharpenProvider();
     }
@@ -93,19 +98,19 @@ public class C01S019_000Activity extends CommonActivity {
         et03.setText(inFactoryDTO.getHandlers());//经手人
         et04.setText(inFactoryDTO.getSender());//邮寄人
 
-
-        //外委方式
-        for (String ofm : outsideFactoryModeList) {
-            if (ofm.equals(inFactoryDTO.getOutWay())) {
-                outsideFactoryMode = ofm;
-                tv02.setText(outsideFactoryMode);
+        //外委厂家
+        for (DjOwnerAkp doa : sharpenProviderList) {
+            if (doa.getOwnerCode().equals(inFactoryDTO.getQmSharpenProviderCode())) {
+                sharpenProvider = doa;
+                tv01.setText(sharpenProvider.getName());
             }
         }
 
-        for (DjOwnerAkp doa : sharpenProviderList) {
-            if (doa.getOwnerCode().equals(inFactoryDTO.getSharpenProviderCode())) {
-                sharpenProvider = doa;
-                tv01.setText(sharpenProvider.getName());
+        //外委方式
+        for (OutsideFactoryMode ofm : outsideFactoryModeList) {
+            if (ofm.getKey().equals(inFactoryDTO.getOutWay())) {
+                outsideFactoryMode = ofm;
+                tv02.setText(outsideFactoryMode.getName());
             }
         }
     }
@@ -131,10 +136,9 @@ public class C01S019_000Activity extends CommonActivity {
 
                             InOutQueryVO InOutQueryVO = jsonToObject(response.body(), InOutQueryVO.class);
 
-                            InOutQueryVO.getWwcode();
                             sharpenProviderList = InOutQueryVO.getDjOwnerAkps();
 
-                            if (sharpenProviderList == null && sharpenProviderList.size() == 0) {
+                            if (sharpenProviderList == null) {
                                 sharpenProviderList = new ArrayList<>();
                             }
 
@@ -143,6 +147,42 @@ public class C01S019_000Activity extends CommonActivity {
                             if (paramMap != null) {
                                 inFactoryDTO = (InFactoryDTO) paramMap.get("inFactoryDTO");
                                 setViewData(inFactoryDTO);
+                            } else {
+                                //外委单号,出厂单号
+                                et02.setText(InOutQueryVO.getWwcode());
+                                // 外委厂家列表
+                                if (sharpenProviderList.size() > 0) {
+                                    tv01.setText(sharpenProviderList.get(0).getName());
+                                    sharpenProvider = sharpenProviderList.get(0);
+                                }
+                                // 外委方式列表
+                                if (outsideFactoryModeList.size() > 0) {
+                                    tv02.setText(outsideFactoryModeList.get(0).getName());
+                                    outsideFactoryMode = outsideFactoryModeList.get(0);
+                                }
+
+                                try {
+                                    //设定用户访问信息
+                                    @SuppressLint("WrongConstant")
+                                    SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+                                    String userInfoJson = sharedPreferences.getString("loginInfo", null);
+
+                                    AuthCustomer customer = jsonToObject(userInfoJson, AuthCustomer.class);
+                                    et03.setText(customer.getName());
+                                    et04.setText(customer.getName());
+                                } catch (JsonProcessingException e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                    return;
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    createAlertDialog(C01S019_000Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                                    return;
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                             }
                         } else {
                             createAlertDialog(C01S019_000Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
@@ -210,7 +250,7 @@ public class C01S019_000Activity extends CommonActivity {
                     inFactoryDTO.setQmSharpenProviderCode(sharpenProvider.getOwnerCode());//启明外委供应商编码
                     inFactoryDTO.setQmSharpenProviderName(sharpenProvider.getName());//启明外委供应商名称
 
-                    inFactoryDTO.setOutWay(outsideFactoryMode);//外委方式
+                    inFactoryDTO.setOutWay(outsideFactoryMode.getKey());//外委方式
 
 
                     // 用于页面之间传值，新方法
@@ -258,9 +298,9 @@ public class C01S019_000Activity extends CommonActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 tv01.setText(sharpenProviderList.get(i).getName());
+                sharpenProvider = sharpenProviderList.get(i);
                 popupWindow.dismiss();
 
-                sharpenProvider = sharpenProviderList.get(i);
 //                //设置外委方式下拉列表第一条为空
 //                tv02.setText("");
 //                //清空外委方式列表
@@ -326,11 +366,9 @@ public class C01S019_000Activity extends CommonActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                tv02.setText(outsideFactoryModeList.get(i));
-                //TODO 选择轴下拉列表显示选中名字
-                popupWindow.dismiss();
-
+                tv02.setText(outsideFactoryModeList.get(i).getName());
                 outsideFactoryMode = outsideFactoryModeList.get(i);
+                popupWindow.dismiss();
             }
         });
         popupWindow.showAsDropDown(ll02);
@@ -358,7 +396,7 @@ public class C01S019_000Activity extends CommonActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             View view1 = LayoutInflater.from(C01S019_000Activity.this).inflate(R.layout.item_c03s004_001, null);
             TextView textView = (TextView) view1.findViewById(R.id.tv_01);
-            textView.setText(outsideFactoryModeList.get(i));
+            textView.setText(outsideFactoryModeList.get(i).getName());
             return view1;
         }
 
