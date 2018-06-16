@@ -37,7 +37,8 @@
                 <EditText
                         android:id="@+id/et_01"
                         android:layout_height="match_parent"
-                        style="@style/MiddleEditTextStyle"/>
+                        style="@style/MiddleEditTextStyle"
+                        android:singleLine="true"/>
             </LinearLayout>
         </LinearLayout>
         <View style="@style/View_1" />
