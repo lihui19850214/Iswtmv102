@@ -227,7 +227,9 @@ public class C01S013_002Activity extends CommonActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 tv02.setText(productLineList.get(i).getProductLineParts().getName());
                 productLine = productLineList.get(i);
-                et01.setText(productLineList.get(i).getToolDurable());
+                et01.setText(productLine.getToolDurable()+"");
+                //将光标设置在最后
+                et01.setSelection(et01.getText().length());
                 popupWindow.dismiss();
             }
         });
@@ -306,21 +308,21 @@ public class C01S013_002Activity extends CommonActivity {
 
     }
 
-    /**
-     * 点击空白收起键盘
-     *
-     * @param event
-     * @return
-     */
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
-                manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            }
-        }
-        return super.onTouchEvent(event);
-    }
+//    /**
+//     * 点击空白收起键盘
+//     *
+//     * @param event
+//     * @return
+//     */
+//    @Override
+//    public boolean onTouchEvent(MotionEvent event) {
+//        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//            if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
+//                manager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//            }
+//        }
+//        return super.onTouchEvent(event);
+//    }
 
     private void requestData(AuthCustomer authCustomer) {
         try {
