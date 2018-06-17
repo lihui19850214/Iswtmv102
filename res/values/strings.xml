@@ -296,5 +296,6 @@
     <string name="dataError">请检查数据</string>
     <string name="authorizedNumberError">授权人数不对</string>
     <string name="loginInfoError">登陆信息错误，请重新登陆</string>
+    <string name="scanSuccess">扫描成功</string>
 
 </resources>
