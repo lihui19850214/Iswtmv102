@@ -1,11 +1,6 @@
 package com.apiclient.pojo;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 
 /**
 * Created by jiangchenkeji
