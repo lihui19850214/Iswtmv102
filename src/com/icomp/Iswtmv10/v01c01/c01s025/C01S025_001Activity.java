@@ -85,6 +85,7 @@ public class C01S025_001Activity extends CommonActivity {
                 llContainer.removeAllViews();
                 loading.show();
 
+                // currentPage 属性不能有值，否则按分页查询
                 SynthesisBladeCodeVO synthesisBladeCodeVO = new SynthesisBladeCodeVO();
                 synthesisBladeCodeVO.setSynthesisCode(etT.getText().toString().trim());
 
