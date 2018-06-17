@@ -128,7 +128,7 @@
     <string name="c03s001_002_004">辅具</string>
     <string name="c03s001_002_005">其他</string>
     <string name="c03s001_002_006">配套</string>
-    <string name="c03s001_003_001">请点击扫描按钮初始化合成刀具</string>
+    <string name="c03s001_003_001">请点击扫描按钮并扫描标签以初始化合成刀具</string>
     <string name="c03s001_003_002">当前初始化数量：</string>
     <string name="c03s001_003_003">返回后所有初始化数据将会清空</string>
     <string name="c03s001_003_006">扫描数量不能为0，请点击扫描按钮，完成初始化动作</string>
@@ -188,7 +188,7 @@
     <string name="systemSettings">系统设置</string>
     <string name="initialization">初始化</string>
     <string name="serialNumber">序号</string>
-    <string name="materialNumber">材料号</string>
+    <string name="materialNumber">物料号</string>
     <string name="knifeBodyCode">刀身码</string>
     <string name="singleProductCode">单品编码</string>
     <string name="syntheticToolT">合成刀</string>
