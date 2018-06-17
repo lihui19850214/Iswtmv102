@@ -88,7 +88,7 @@ public class SynthesisBladeCodeVO implements Serializable{
     * @fieldType  Integer
     * @Description  当前页码
      */
-    private Integer currentPage = 1;
+    private Integer currentPage;
 
     /**
      * @fieldName totalPage
@@ -117,6 +117,13 @@ public class SynthesisBladeCodeVO implements Serializable{
     * @Description  开始查询记录
      */
     private Integer startRecord;
+
+    /**
+      * @fieldName intValue
+     * @fieldType  Integer
+     * @Description  数值
+     */
+    private Integer intValue;
 
     public String getSynthesisCode() {
         return synthesisCode;
@@ -236,6 +243,13 @@ public class SynthesisBladeCodeVO implements Serializable{
         this.maxPage = maxPage;
     }
 
+    public Integer getIntValue() {
+        return intValue;
+    }
+
+    public void setIntValue(Integer intValue) {
+        this.intValue = intValue;
+    }
 
 
 }
