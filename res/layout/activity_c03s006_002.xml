@@ -17,11 +17,11 @@
 
     <LinearLayout style="@style/BottomLinerLayoutStyle">
 
-        <Button android:text="@string/keepOn" android:onClick="btnKeepOn" style="@style/BottomButtonStyle" />
+        <Button android:text="@string/complete" android:onClick="btnComplete" style="@style/BottomButtonStyle" />
 
         <View style="@style/BottomLittlePartingLineStyle" />
 
-        <Button android:text="@string/complete" android:onClick="btnComplete" style="@style/BottomButtonStyle" />
+        <Button android:text="@string/keepOn" android:onClick="btnKeepOn" style="@style/BottomButtonStyle" />
 
     </LinearLayout>
 
