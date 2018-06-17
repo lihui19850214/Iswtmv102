@@ -622,6 +622,14 @@ public interface IRequest {
      */
     @POST("/cuttingToolBusiness/queryByTCode")
     Call<String> queryByTCode(@Body RequestBody json);
+
+    /**
+     * 流转刀具绑定
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/cuttingToolBusiness/bindForRunning")
+    Call<String> bindForRunning(@Body RequestBody json);
     // --------------流转刀具结束--------------
 
 }
