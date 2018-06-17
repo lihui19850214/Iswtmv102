@@ -65,6 +65,16 @@ public interface IRequest {
     Call<String> queryBladeCodes(@Body RequestBody json);
     // --------------刀具打码结束--------------
 
+    // --------------合成刀具打码开始--------------未完成
+    /**
+     * 合成刀T号查询刀身码
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/synthesisCuttingToolBusiness/queryBladeCode")
+    Call<String> queryBladeCode(@Body RequestBody json);
+    // --------------合成刀具打码结束--------------
+
 
     // --------------合成刀具初始化开始--------------
     /**
@@ -603,5 +613,15 @@ public interface IRequest {
     @POST("/cuttingToolBusiness/bindBlade")
     Call<String> bindBlade(@Body RequestBody json);
     // --------------材料刀刀身码绑定结束--------------
+
+    // --------------流转刀具开始--------------
+    /**
+     * 根据合成刀T号查询材料刀接口地址
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/cuttingToolBusiness/queryByTCode")
+    Call<String> queryByTCode(@Body RequestBody json);
+    // --------------流转刀具结束--------------
 
 }
