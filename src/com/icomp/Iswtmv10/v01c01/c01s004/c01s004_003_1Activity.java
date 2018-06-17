@@ -397,6 +397,10 @@ public class c01s004_003_1Activity extends CommonActivity {
             @Override
             public void onClick(View v) {
                 bladeCodeNum--;
+                Message message = new Message();
+                //修改刀身码数量的handler
+                bladeCodeHandler.sendMessage(message);
+
                 rfidMap.remove(rfid);
                 llContainer.removeView(mLinearLayout);
             }
