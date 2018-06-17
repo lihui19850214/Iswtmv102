@@ -427,7 +427,7 @@ public class C01S018_002Activity extends CommonActivity {
         }
 
         rfidToMap.put(rfid, cuttingToolBind);
-        businessCodeToBladeCodeMap.put(rfid, cuttingToolBind.getBladeCode());
+        businessCodeToBladeCodeMap.put(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode());
 
         GrindingVO grindingVO = new GrindingVO();
 
