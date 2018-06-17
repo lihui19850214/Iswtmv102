@@ -310,7 +310,7 @@ public class C03S006_001Activity extends CommonActivity {
 
     //扫描方法
     private void scan() {
-//        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
+        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
             rfid = null;
             isCanScan = false;
             btnScan.setClickable(false);
@@ -322,9 +322,9 @@ public class C03S006_001Activity extends CommonActivity {
             //扫描线程
             scanThread = new scanThread();
             scanThread.start();
-//        } else {
-//            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
-//        }
+        } else {
+            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+        }
     }
 
     //扫描线程
@@ -333,8 +333,8 @@ public class C03S006_001Activity extends CommonActivity {
         public void run() {
             super.run();
             //单扫方法
-//            rfidString = singleScan();
-            rfidString = "liuzhuan_rfid1";
+            rfidString = singleScan();
+//            rfidString = "liuzhuan_rfid1";
             if ("close".equals(rfidString)) {
                 btnScan.setClickable(true);
                 tvSerach.setClickable(true);
