@@ -61,9 +61,10 @@ public class C01S013_001Activity extends CommonActivity {
 
     // 合成刀标签
     String queryVORFID = "";
-
     // 刀身码
     String bladeCode = "";
+    // 标签code
+    String rfidCode = "";
 
     SynthesisCuttingToolBind synthesisCuttingToolBind;
     ProductLineAssemblyline assemblyline;
@@ -168,8 +169,12 @@ public class C01S013_001Activity extends CommonActivity {
                         if (null != popupWindow && popupWindow.isShowing()) {
                             popupWindow.dismiss();
                         }
+                        et00.setText("");
                     }
                 });
+
+                // 清空 bladeCode，使用标签
+                bladeCode = "";
 
                 RfidContainerVO rfidContainerVO = new RfidContainerVO();
                 rfidContainerVO.setLaserCode(rfidString);
@@ -216,6 +221,7 @@ public class C01S013_001Activity extends CommonActivity {
                                 process = queryVO.getProcess();
                                 equipment = queryVO.getEquipment();
                                 productLineList = queryVO.getPartsList();
+                                rfidCode = synthesisCuttingToolBind.getRfidContainer().getCode();
 
                                 setTextViewHandler(inpower);
                             } else {
@@ -323,6 +329,8 @@ public class C01S013_001Activity extends CommonActivity {
             createAlertDialog(C01S013_001Activity.this, "请扫输入刀身码", Toast.LENGTH_LONG);
             return;
         } else {
+            // 清空标签，使用 bladeCode
+            queryVORFID = "";
             bladeCode = et00.getText().toString().trim();
 
             RfidContainerVO rfidContainerVO = new RfidContainerVO();
@@ -344,6 +352,7 @@ public class C01S013_001Activity extends CommonActivity {
         paramMap.put("productLineList", productLineList);
         paramMap.put("bladeCode", bladeCode);
         paramMap.put("queryVORFID", queryVORFID);
+        paramMap.put("rfidCode", rfidCode);
         PARAM_MAP.put(1, paramMap);
 
         Intent intent = new Intent(C01S013_001Activity.this, C01S013_002Activity.class);

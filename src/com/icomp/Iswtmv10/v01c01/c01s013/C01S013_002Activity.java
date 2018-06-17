@@ -80,6 +80,8 @@ public class C01S013_002Activity extends CommonActivity {
     String queryVORFID = "";
     // 刀身码
     String bladeCode = "";
+    // 标签code
+    String rfidCode = "";
 
     SynthesisCuttingToolBind synthesisCuttingToolBind;
     ProductLineAssemblyline assemblyline;
@@ -108,6 +110,7 @@ public class C01S013_002Activity extends CommonActivity {
             equipment = (ProductLineEquipment) paramMap.get("equipment");
             productLineList = (List<ProductLine>) paramMap.get("productLineList");
             bladeCode = (String) paramMap.get("bladeCode");
+            rfidCode = (String) paramMap.get("rfidCode");
 
             tv00.setText(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());
             tv10.setText(process.getName());
@@ -347,7 +350,7 @@ public class C01S013_002Activity extends CommonActivity {
 
                     // ------------ 授权信息 ------------
                     impowerRecorder.setToolCode(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
-                    impowerRecorder.setRfidLasercode(authCustomer.getRfidContainer().getLaserCode());// rfid标签
+                    impowerRecorder.setRfidLasercode(rfidCode);// rfid标签
                     impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
                     impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
                     impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_UnInstall.getKey().toString());//操作key
@@ -368,10 +371,10 @@ public class C01S013_002Activity extends CommonActivity {
 
 
             RfidContainerVO RfidContainerVO = new RfidContainerVO();
-            if (queryVORFID != null) {
+            if (queryVORFID != null && !"".equals(queryVORFID)) {
                 RfidContainerVO.setLaserCode(queryVORFID);
             }
-            if (bladeCode != null) {
+            if (bladeCode != null && !"".equals(bladeCode)) {
                 RfidContainerVO.setSynthesisBladeCode(bladeCode);
             }
 
