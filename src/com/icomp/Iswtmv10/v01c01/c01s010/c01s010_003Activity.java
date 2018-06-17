@@ -278,19 +278,28 @@ public class c01s010_003Activity extends CommonActivity {
             }
 
 
-            for (String businessCode : realDataSet) {
-                DownCuttingToolVO downCuttingToolVO = downCuttingToolVOMap.get(businessCode);
-                if (downCuttingToolVO.getDownCount() > 0) {
-                    downCuttingToolVOList.add(downCuttingToolVO);
-                }
-            }
+//            for (String businessCode : realDataSet) {
+//                DownCuttingToolVO downCuttingToolVO = downCuttingToolVOMap.get(businessCode);
+//                if (downCuttingToolVO.getDownCount() > 0) {
+//                    downCuttingToolVOList.add(downCuttingToolVO);
+//                }
+//            }
+
+            // 有换装数量的 upCuttingTool
+            Set<String> upCuttingToolBusinessCode = new HashSet<>();
 
             Set<String> keys = upCuttingToolVOMap.keySet();
             for (String key : keys) {
                 UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(key);
                 if (upCuttingToolVO.getUpCount() > 0) {
+                    upCuttingToolBusinessCode.add(key);
                     upCuttingToolVOList.add(upCuttingToolVO);
                 }
+            }
+
+            // 只有换装数大于0的时候才传对应的真实数据
+            for (String bc : upCuttingToolBusinessCode) {
+                downCuttingToolVOList.add(downCuttingToolVOMap.get(bc));
             }
 
 

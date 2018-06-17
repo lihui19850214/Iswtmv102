@@ -243,6 +243,23 @@ public class c01s010_002Activity extends CommonActivity {
             return false;
         }
 
+        // 检查是否丢刀大于0，但是换装为0，这种情况是不可以的
+        Set<String> displaySyntheticKnifeBusinessCodes = displaySyntheticKnifeMap.keySet();
+        // 循环当前所有显示的材料刀配置
+        for (String bc : displaySyntheticKnifeBusinessCodes) {
+            UpCuttingToolVO uctVO = upCuttingToolVOMap.get(bc);
+            // 换装数量为0
+            if (uctVO.getUpCount() == 0) {
+                DownCuttingToolVO dctVO = downCuttingToolVOMap.get(bc);
+                // 丢刀数量大于0
+                if (dctVO.getDownLostCount() > 0) {
+                    // 不可以
+                    return false;
+                }
+            }
+        }
+
+
         List<SynthesisCuttingToolLocationConfig> SynthesisCuttingToolLocationConfigList = synthesisCuttingToolConfig.getSynthesisCuttingToolLocationConfigList();
 
         for (SynthesisCuttingToolLocationConfig config : SynthesisCuttingToolLocationConfigList) {
