@@ -1,11 +1,6 @@
 package com.apiclient.vo;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.math.BigDecimal;
-import java.sql.Timestamp;
 
 /**
 * Created by jiangchenkeji
@@ -67,6 +62,13 @@ public class SynthesisBladeCodeVO implements Serializable{
     private Integer minValue;
 
     /**
+      * @fieldName synthesisCode
+     * @fieldType  String
+     * @Description  合成刀T号
+     */
+    private String synthesisCode;
+
+    /**
      * @fieldName synthesisCuttingToolCode
     * @fieldType  String
     * @Description  
@@ -116,6 +118,13 @@ public class SynthesisBladeCodeVO implements Serializable{
      */
     private Integer startRecord;
 
+    public String getSynthesisCode() {
+        return synthesisCode;
+    }
+
+    public void setSynthesisCode(String synthesisCode) {
+        this.synthesisCode = synthesisCode;
+    }
 
     /* 标识 */
     public Integer getId() {
