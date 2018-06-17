@@ -170,7 +170,10 @@ public class C01S007_001Activity extends CommonActivity {
 
                                     if (cuttingToolBind != null) {
                                         tv00.setText(cuttingToolBind.getCuttingTool().getBusinessCode());
-                                        tv01.setText(cuttingToolBind.getBladeCode());
+                                        if (cuttingToolBind.getBladeCode().indexOf("-")>0){
+                                            tv01.setText(cuttingToolBind.getBladeCode().split("-")[1]);
+                                        }
+
                                     } else {
                                         Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
                                     }
