@@ -17,16 +17,12 @@ import com.apiclient.constants.ScrapStateEnum;
 import com.apiclient.dto.RunningDTO;
 import com.apiclient.pojo.CuttingTool;
 import com.apiclient.pojo.CuttingToolBind;
-import com.apiclient.pojo.SynthesisCuttingToolConfig;
-import com.apiclient.vo.BindEquipmentVO;
 import com.apiclient.vo.RfidContainerVO;
 import com.apiclient.vo.SynthesisCuttingToolInitVO;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
-import com.icomp.Iswtmv10.v01c01.c01s011.C01S011_003Activity;
-import com.icomp.Iswtmv10.v01c03.c03s001.C03S001_002Activity;
 import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.activity.DialogAlertCallBack;
 import okhttp3.MediaType;
@@ -36,13 +32,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * 流转刀具初始化页面1
  */
 public class C03S006_001Activity extends CommonActivity {
+
 
     @BindView(R.id.syntheticKnife)
     EditText syntheticKnife;
@@ -120,7 +116,7 @@ public class C03S006_001Activity extends CommonActivity {
         }
     }
 
-    @OnClick({R.id.ll_01, R.id.ll_02, R.id.btnScan, R.id.tvSerach, R.id.btnReturn, R.id.btnConfirm})
+    @OnClick({R.id.ll_01, R.id.ll_02, R.id.btn_scan, R.id.tvSerach, R.id.btnReturn, R.id.btnConfirm})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnReturn:
@@ -147,9 +143,9 @@ public class C03S006_001Activity extends CommonActivity {
                 }
 
                 StringBuffer sb = new StringBuffer();
-                sb.append("物料号：").append(cuttingTool.getBusinessCode()).append("\n");
+                sb.append("合成刀：").append(syntheticKnife.getText().toString().trim().toUpperCase()).append("\n");
                 sb.append("刀身码：").append(etBladeCode.getText().toString().trim()).append("\n");
-                sb.append("刀具状态：").append(scrapStateEnum.getName());
+                sb.append("物料号：").append(cuttingTool.getBusinessCode());
 
                 showDialogAlertContent(sb.toString(), new DialogAlertCallBack() {
                     @Override
@@ -164,7 +160,7 @@ public class C03S006_001Activity extends CommonActivity {
                 });
                 break;
             //扫描按钮处理
-            case R.id.btnScan:
+            case R.id.btn_scan:
                 scan();
                 break;
             //查询按钮处理
@@ -314,7 +310,7 @@ public class C03S006_001Activity extends CommonActivity {
 
     //扫描方法
     private void scan() {
-        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
+//        if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
             rfid = null;
             isCanScan = false;
             btnScan.setClickable(false);
@@ -326,9 +322,9 @@ public class C03S006_001Activity extends CommonActivity {
             //扫描线程
             scanThread = new scanThread();
             scanThread.start();
-        } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
-        }
+//        } else {
+//            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+//        }
     }
 
     //扫描线程
@@ -337,7 +333,8 @@ public class C03S006_001Activity extends CommonActivity {
         public void run() {
             super.run();
             //单扫方法
-            rfidString = singleScan();
+//            rfidString = singleScan();
+            rfidString = "liuzhuan_rfid1";
             if ("close".equals(rfidString)) {
                 btnScan.setClickable(true);
                 tvSerach.setClickable(true);
@@ -461,7 +458,7 @@ public class C03S006_001Activity extends CommonActivity {
 
 
             String jsonStr = objectToJson(runningDTO);
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             IRequest iRequest = retrofit.create(IRequest.class);
             Call<String> bindForRunning = iRequest.bindForRunning(body);
