@@ -68,6 +68,12 @@ public class SynthesisBladeCode implements Serializable{
      */
     private SynthesisCuttingTool synthesisCuttingTool;
 
+    /**
+      * @fieldName intValue
+     * @fieldType  Integer
+     * @Description  数值
+     */
+    private Integer intValue;
 
 
     /* 标识 */
@@ -135,6 +141,14 @@ public class SynthesisBladeCode implements Serializable{
 
     public void setSynthesisCuttingTool(SynthesisCuttingTool synthesisCuttingTool) {
         this.synthesisCuttingTool = synthesisCuttingTool;
+    }
+
+    public Integer getIntValue() {
+        return intValue;
+    }
+
+    public void setIntValue(Integer intValue) {
+        this.intValue = intValue;
     }
 
 
