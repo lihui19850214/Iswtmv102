@@ -1470,7 +1470,7 @@ public abstract class CommonActivity extends Activity {
 
         dialog.show();
         dialog.setContentView(view);
-        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
+        dialog.getWindow().setLayout((int) (screenWidth * 1), (int) (screenHeight * 0.6));
     }
 
 }
