@@ -136,7 +136,11 @@ public class C01S019_002Activity extends CommonActivity {
         TextView tvNum = (TextView) mLinearLayout.findViewById(R.id.tvNum);
 
         tvCaiLiao.setText(cailiao);
-        tvsingleProductCode.setText(laserCode);
+        if (laserCode != null && !"".equals(laserCode) && !"-".equals(laserCode) && (laserCode.indexOf("-") >= 0)) {
+            tvsingleProductCode.setText(laserCode.split("-")[1]);
+        } else {
+            tvsingleProductCode.setText(laserCode);
+        }
         tvNum.setText(num);
 
         mLlContainer.addView(mLinearLayout);

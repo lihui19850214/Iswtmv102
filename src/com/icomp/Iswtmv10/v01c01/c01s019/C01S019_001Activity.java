@@ -10,6 +10,8 @@ import android.view.*;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
+import com.apiclient.constants.CuttingToolConsumeTypeEnum;
+import com.apiclient.constants.CuttingToolTypeEnum;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.dto.InFactoryDTO;
 import com.apiclient.pojo.AverageProcessingVolume;
@@ -409,12 +411,27 @@ public class C01S019_001Activity extends CommonActivity {
                             cuttingToolList = jsonToObject(response.body(), List.class, CuttingTool.class);
 
                             if (cuttingToolList == null || cuttingToolList.size() == 0) {
+                                tv01.setText("");
                                 cuttingToolList = new ArrayList<>();
                                 cuttingTool = null;
                                 Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
                             } else {
-                                tv01.setText(cuttingToolList.get(0).getBusinessCode());
-                                cuttingTool = cuttingToolList.get(0);
+                                List<CuttingTool> cuttingToolListTemp = new ArrayList<>();
+                                // 不要 辅具、配套、其他 项的物料号
+                                for (CuttingTool ct : cuttingToolList) {
+                                    // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
+                                    if (CuttingToolTypeEnum.dj.getKey().equals(ct.getType())) {
+                                        cuttingToolListTemp.add(ct);
+//                                        // griding_zt("1","可刃磨钻头"),griding_dp("2","可刃磨刀片"),single_use_dp("3","一次性刀片"),other("9","其他");
+//                                        if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(ct.getConsumeType())) {}
+                                    }
+                                }
+
+                                cuttingToolList = new ArrayList<>(cuttingToolListTemp);
+                                if (cuttingToolList.size() > 0) {
+                                    tv01.setText(cuttingToolList.get(0).getBusinessCode());
+                                    cuttingTool = cuttingToolList.get(0);
+                                }
                             }
                         } else {
                             createAlertDialog(C01S019_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
@@ -461,7 +478,11 @@ public class C01S019_001Activity extends CommonActivity {
         tvCaiLiao.setTransformationMethod(new AllCapTransformationMethod());
 
         tvCaiLiao.setText(cailiao);
-        tvsingleProductCode.setText(laserCode);
+        if (laserCode != null && !"".equals(laserCode) && !"-".equals(laserCode) && (laserCode.indexOf("-") >= 0)) {
+            tvsingleProductCode.setText(laserCode.split("-")[1]);
+        } else {
+            tvsingleProductCode.setText(laserCode);
+        }
         tvNum.setText(num);
 
         mLinearLayout.setTag(position);
