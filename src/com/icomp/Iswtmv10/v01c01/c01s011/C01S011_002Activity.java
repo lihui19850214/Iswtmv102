@@ -83,6 +83,8 @@ public class C01S011_002Activity extends CommonActivity {
     // 刀身码
     String bladeCode = null;
 
+    String rfidCode = null;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,6 +101,7 @@ public class C01S011_002Activity extends CommonActivity {
         synthesisCuttingToolConfigRFID = (String) paramMap.get("synthesisCuttingToolConfigRFID");
         synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap.get("synthesisCuttingToolBind");
         bladeCode = (String) paramMap.get("bladeCode");
+        rfidCode = (String) paramMap.get("rfidCode");
 
         et00.setText(synthesisCuttingToolBind.getSynthesisCode()    );
     }
@@ -370,7 +373,7 @@ public class C01S011_002Activity extends CommonActivity {
 
                     // ------------ 授权信息 ------------
                     impowerRecorder.setToolCode(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
-                    impowerRecorder.setRfidLasercode(authCustomer.getRfidContainer().getLaserCode());// rfid标签
+                    impowerRecorder.setRfidLasercode(rfidCode);// rfid标签
                     impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
                     impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
                     impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_Install.getKey().toString());//操作key
@@ -394,10 +397,10 @@ public class C01S011_002Activity extends CommonActivity {
 
 
             RfidContainerVO RfidContainerVO = new RfidContainerVO();
-            if (synthesisCuttingToolConfigRFID != null) {
+            if (synthesisCuttingToolConfigRFID != null && !"".equals(synthesisCuttingToolConfigRFID)) {
                 RfidContainerVO.setLaserCode(synthesisCuttingToolConfigRFID);
             }
-            if (bladeCode != null) {
+            if (bladeCode != null && !"".equals(bladeCode)) {
                 RfidContainerVO.setSynthesisBladeCode(bladeCode);
             }
 

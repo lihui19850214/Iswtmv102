@@ -67,6 +67,8 @@ public class C01S011_001Activity extends CommonActivity {
     // 刀身码
     String bladeCode = "";
 
+    String rfidCode = "";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -172,8 +174,13 @@ public class C01S011_001Activity extends CommonActivity {
                         if (null != popupWindow && popupWindow.isShowing()) {
                             popupWindow.dismiss();
                         }
+                        // 使用标签后清空刀身码
+                        et00.setText("");
                     }
                 });
+
+                // 使用标签后清空刀身码
+                bladeCode = "";
 
                 RfidContainerVO rfidContainerVO = new RfidContainerVO();
                 rfidContainerVO.setLaserCode(rfidString);
@@ -225,6 +232,7 @@ public class C01S011_001Activity extends CommonActivity {
                                 synthesisCuttingToolConfig = queryVO.getConfig();
                                 synthesisCuttingToolBind = queryVO.getSynthesisCuttingToolBind();
                                 synthesisCuttingToolConfigRFID = rfid;
+                                rfidCode = synthesisCuttingToolBind.getRfidContainer().getCode();
 
                                 // 生成物料号下拉列表项
                                 generateBusinessCodeList();
@@ -350,6 +358,7 @@ public class C01S011_001Activity extends CommonActivity {
         paramMap.put("synthesisCuttingToolConfig", synthesisCuttingToolConfig);
         paramMap.put("synthesisCuttingToolBind", synthesisCuttingToolBind);
         paramMap.put("productLineEquipmentList", productLineEquipmentList);
+        paramMap.put("rfidCode", rfidCode);
         PARAM_MAP.put(1, paramMap);
 
         Intent intent = new Intent(C01S011_001Activity.this, C01S011_002Activity.class);
