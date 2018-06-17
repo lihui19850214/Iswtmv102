@@ -150,8 +150,8 @@ public class C00S000_003Activity extends CommonActivity {
         tool_outgoing.setCapabilityID("3");
         tool_outgoing.setCapabilityName("合成刀打码");
         tool_outgoing.setCapabilityUrl("v01c01.c01s025.C01S025_001Activity");
-        tool_outgoing.setCapabilityImg(getResource("a0c01s001"));//没有找到图标
-        menuMap.put("合成刀打码", tool_outgoing);
+        tool_outgoing.setCapabilityImg(getResource("a0c01s002"));//没有找到图标
+        menuMap.put("SynthesisMakeCode", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
         tool_outgoing.setCapabilityID("4");
@@ -254,20 +254,27 @@ public class C00S000_003Activity extends CommonActivity {
 
         tool_outgoing = new Vgrantlist();
         tool_outgoing.setCapabilityID("17");
+        tool_outgoing.setCapabilityName("流转刀具初始化");
+        tool_outgoing.setCapabilityUrl("v01c03.c03s006.C03S006_001Activity");
+        tool_outgoing.setCapabilityImg(getResource("a0c01s001"));//没有找到图标
+        menuMap.put("RunningMakeCode", tool_outgoing);
+
+        tool_outgoing = new Vgrantlist();
+        tool_outgoing.setCapabilityID("18");
         tool_outgoing.setCapabilityName("合成刀具初始化");
         tool_outgoing.setCapabilityUrl("v01c03.c03s001.C03S001_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s001"));//没有找到图标
         menuMap.put("SynthesisCuttingTool_Init", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("18");
+        tool_outgoing.setCapabilityID("19");
         tool_outgoing.setCapabilityName("设备初始化");
         tool_outgoing.setCapabilityUrl("v01c03.c03s003.C03S003_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s001"));//没有找到图标
         menuMap.put("Equipment_Init", tool_outgoing);
 
         tool_outgoing = new Vgrantlist();
-        tool_outgoing.setCapabilityID("19");
+        tool_outgoing.setCapabilityID("20");
         tool_outgoing.setCapabilityName("员工初始化");
         tool_outgoing.setCapabilityUrl("v01c03.c03s005.C03S005_001Activity");
         tool_outgoing.setCapabilityImg(getResource("a0c01s001"));//没有找到图标
