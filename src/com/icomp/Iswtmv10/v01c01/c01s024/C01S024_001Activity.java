@@ -139,7 +139,7 @@ public class C01S024_001Activity extends CommonActivity {
             super.run();
             //调用单扫方法
             rfidString = singleScan();
-//            rfidString="18000A00000D6440";
+//            rfidString="18000A00000EB967";
             if ("close".equals(rfidString)) {
                 btnScan.setClickable(true);
                 btnCancel.setClickable(true);
@@ -301,8 +301,10 @@ public class C01S024_001Activity extends CommonActivity {
             e.printStackTrace();
         }
 
-        tvCailiaoInfoGrindingTimes.setText(cuttingToolBind.getSharpenTimes());//修磨次数
-        tvCailiaoInfoCumulativeAmountOfProcessing.setText(cuttingToolBind.getProcessingCount());//累计加工量
+        tvCailiaoInfoGrindingTimes.setText(cuttingToolBind.getSharpenTimes()+"");//修磨次数
+        if (cuttingToolBind.getProcessingCount() != null) {
+            tvCailiaoInfoCumulativeAmountOfProcessing.setText(cuttingToolBind.getProcessingCount() + "");//累计加工量
+        }
     }
 
     /**
@@ -324,10 +326,12 @@ public class C01S024_001Activity extends CommonActivity {
             String date = df.format(synthesisCuttingToolBind.getRfidContainer().getOperatorTime());
             tvHechengInfoOperationTime.setText(date);//操作时间
         } catch (Exception e) {
-            e.printStackTrace();;
+            e.printStackTrace();
         }
 //        tvHechengInfoGrindingTimes.setText(synthesisCuttingToolBind.);//修磨次数
-        tvHechengInfoCumulativeAmountOfProcessing.setText(synthesisCuttingToolBind.getProcessingCount());//累计加工量
+        if (synthesisCuttingToolBind.getProcessingCount() != null) {
+            tvHechengInfoCumulativeAmountOfProcessing.setText(synthesisCuttingToolBind.getProcessingCount() + "");//累计加工量
+        }
     }
 
     /**
