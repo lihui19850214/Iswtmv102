@@ -255,6 +255,11 @@ public class CuttingToolVO implements Serializable {
      */
     private Integer startRecord;
 
+    /**
+     *
+     */
+    private String likeBusinessCode;
+
 
     /* 材料刀id */
     public Integer getId() {
@@ -555,6 +560,12 @@ public class CuttingToolVO implements Serializable {
         this.maxPage = maxPage;
     }
 
+    public String getLikeBusinessCode() {
+        return likeBusinessCode;
+    }
 
+    public void setLikeBusinessCode(String likeBusinessCode) {
+        this.likeBusinessCode = likeBusinessCode;
+    }
 
 }

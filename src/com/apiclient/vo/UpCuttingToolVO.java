@@ -5,6 +5,8 @@ package com.apiclient.vo;
  */
 public class UpCuttingToolVO {
 
+    private String businessCode;
+
     private String upCode;
 
     private Integer upCount;
@@ -12,6 +14,14 @@ public class UpCuttingToolVO {
     private String rfidCode;
 
     private String bladeCode;
+
+    public String getBusinessCode() {
+        return businessCode;
+    }
+
+    public void setBusinessCode(String businessCode) {
+        this.businessCode = businessCode;
+    }
 
     public String getBladeCode() {
         return bladeCode;

@@ -5,6 +5,8 @@ package com.apiclient.vo;
  */
 public class DownCuttingToolVO {
 
+    private String businessCode;
+
     private String downCode;
 
     private Integer downCount;
@@ -16,6 +18,14 @@ public class DownCuttingToolVO {
     private String bladeCode;
 
     private Integer needBind;
+
+    public String getBusinessCode() {
+        return businessCode;
+    }
+
+    public void setBusinessCode(String businessCode) {
+        this.businessCode = businessCode;
+    }
 
     public String getBladeCode() {
         return bladeCode;

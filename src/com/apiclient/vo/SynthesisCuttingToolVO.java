@@ -8,7 +8,7 @@ import java.util.List;
 * Automated Build
 * 实体 SynthesisCuttingToolVO 
 */
-public class SynthesisCuttingToolVO implements Serializable {
+public class SynthesisCuttingToolVO implements Serializable{
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -19,6 +19,13 @@ public class SynthesisCuttingToolVO implements Serializable {
      */
     private Integer id;
 
+
+    /**
+     * @fieldName code
+    * @fieldType  String
+    * @Description  编码
+     */
+    private String code;
 
     /**
      * @fieldName synthesisCode
@@ -35,13 +42,6 @@ public class SynthesisCuttingToolVO implements Serializable {
     private String picUrl;
 
     /**
-     * @fieldName code
-    * @fieldType  String
-    * @Description  编码
-     */
-    private String code;
-
-    /**
      * @fieldName isDel
     * @fieldType  Integer
     * @Description  逻辑删除
@@ -55,22 +55,12 @@ public class SynthesisCuttingToolVO implements Serializable {
      */
     private Integer synthesisCuttingToolTypeId;
 
-    /**
-     * @fieldName abc
-    * @fieldType  String
-    * @Description  
-     */
-    private String abc;
 
-    /**
-     * @fieldName synthesisCuttingToolTypeId
-    * @fieldType  
-    * @Description  合成刀类型 
-     */
-    private SynthesisCuttingToolTypeVO synthesisCuttingToolTypeVO;
-
+    private List<CuttingToolBindleRecordsVO> cuttingToolBindleRecordsVOList;
     private List<ProductLineVO> productLineVOList;
+    private List<SynthesisBladeCodeVO> synthesisBladeCodeVOList;
     private List<SynthesisCuttingToolBindVO> synthesisCuttingToolBindVOList;
+    private List<SynthesisCuttingToolBindleRecordsVO> synthesisCuttingToolBindleRecordsVOList;
     private List<SynthesisCuttingToolConfigVO> synthesisCuttingToolConfigVOList;
     private List<SynthesisCuttingToolLocationVO> synthesisCuttingToolLocationVOList;
     private List<SynthesisCuttingToolMaterialInventoryVO> synthesisCuttingToolMaterialInventoryVOList;
@@ -120,6 +110,13 @@ public class SynthesisCuttingToolVO implements Serializable {
         this.id = id;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
     public String getSynthesisCode() {
         return synthesisCode;
     }
@@ -133,13 +130,6 @@ public class SynthesisCuttingToolVO implements Serializable {
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
-    }
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
     }
     public Integer getIsDel() {
         return isDel;
@@ -155,22 +145,15 @@ public class SynthesisCuttingToolVO implements Serializable {
     public void setSynthesisCuttingToolTypeId(Integer synthesisCuttingToolTypeId) {
         this.synthesisCuttingToolTypeId = synthesisCuttingToolTypeId;
     }
-    public String getAbc() {
-        return abc;
+
+
+    public List<CuttingToolBindleRecordsVO> getCuttingToolBindleRecordsVOList() {
+        return cuttingToolBindleRecordsVOList;
     }
 
-    public void setAbc(String abc) {
-        this.abc = abc;
+    public void setCuttingToolBindleRecordsVOList(List<CuttingToolBindleRecordsVO> cuttingToolBindleRecordsVOList) {
+        this.cuttingToolBindleRecordsVOList = cuttingToolBindleRecordsVOList;
     }
-
-    public SynthesisCuttingToolTypeVO getSynthesisCuttingToolTypeVO() {
-        return synthesisCuttingToolTypeVO;
-    }
-
-    public void setSynthesisCuttingToolTypeVO(SynthesisCuttingToolTypeVO synthesisCuttingToolTypeVO) {
-        this.synthesisCuttingToolTypeVO = synthesisCuttingToolTypeVO;
-    }
-
     public List<ProductLineVO> getProductLineVOList() {
         return productLineVOList;
     }
@@ -178,12 +161,26 @@ public class SynthesisCuttingToolVO implements Serializable {
     public void setProductLineVOList(List<ProductLineVO> productLineVOList) {
         this.productLineVOList = productLineVOList;
     }
+    public List<SynthesisBladeCodeVO> getSynthesisBladeCodeVOList() {
+        return synthesisBladeCodeVOList;
+    }
+
+    public void setSynthesisBladeCodeVOList(List<SynthesisBladeCodeVO> synthesisBladeCodeVOList) {
+        this.synthesisBladeCodeVOList = synthesisBladeCodeVOList;
+    }
     public List<SynthesisCuttingToolBindVO> getSynthesisCuttingToolBindVOList() {
         return synthesisCuttingToolBindVOList;
     }
 
     public void setSynthesisCuttingToolBindVOList(List<SynthesisCuttingToolBindVO> synthesisCuttingToolBindVOList) {
         this.synthesisCuttingToolBindVOList = synthesisCuttingToolBindVOList;
+    }
+    public List<SynthesisCuttingToolBindleRecordsVO> getSynthesisCuttingToolBindleRecordsVOList() {
+        return synthesisCuttingToolBindleRecordsVOList;
+    }
+
+    public void setSynthesisCuttingToolBindleRecordsVOList(List<SynthesisCuttingToolBindleRecordsVO> synthesisCuttingToolBindleRecordsVOList) {
+        this.synthesisCuttingToolBindleRecordsVOList = synthesisCuttingToolBindleRecordsVOList;
     }
     public List<SynthesisCuttingToolConfigVO> getSynthesisCuttingToolConfigVOList() {
         return synthesisCuttingToolConfigVOList;

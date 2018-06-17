@@ -8,7 +8,7 @@ import java.util.List;
 * Automated Build
 * 实体 SynthesisCuttingTool 
 */
-public class SynthesisCuttingTool implements Serializable {
+public class SynthesisCuttingTool implements Serializable{
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -49,24 +49,16 @@ public class SynthesisCuttingTool implements Serializable {
     * @Description  合成刀类型 
      */
     private Integer synthesisCuttingToolTypeId;
-    /**
-     * @fieldName abc
-    * @fieldType  String
-    * @Description  
-     */
-    private String abc;
 
-    /**
-     * @fieldName synthesisCuttingToolTypeId
-    * @fieldType  
-    * @Description  合成刀类型 
-     */
-    private SynthesisCuttingToolType synthesisCuttingToolType;
 
+    private List<CuttingToolBindleRecords> cuttingToolBindleRecordsList;
     private List<ProductLine> productLineList;
+    private List<SynthesisBladeCode> synthesisBladeCodeList;
     private List<SynthesisCuttingToolBind> synthesisCuttingToolBindList;
+    private List<SynthesisCuttingToolBindleRecords> synthesisCuttingToolBindleRecordsList;
     private List<SynthesisCuttingToolConfig> synthesisCuttingToolConfigList;
     private List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList;
+    private List<SynthesisCuttingToolMaterialInventory> synthesisCuttingToolMaterialInventoryList;
 
 
     /* id */
@@ -113,22 +105,15 @@ public class SynthesisCuttingTool implements Serializable {
     public void setSynthesisCuttingToolTypeId(Integer synthesisCuttingToolTypeId) {
         this.synthesisCuttingToolTypeId = synthesisCuttingToolTypeId;
     }
-    public String getAbc() {
-        return abc;
+
+
+    public List<CuttingToolBindleRecords> getCuttingToolBindleRecordsList() {
+        return cuttingToolBindleRecordsList;
     }
 
-    public void setAbc(String abc) {
-        this.abc = abc;
+    public void setCuttingToolBindleRecordsList(List<CuttingToolBindleRecords> cuttingToolBindleRecordsList) {
+        this.cuttingToolBindleRecordsList = cuttingToolBindleRecordsList;
     }
-
-    public SynthesisCuttingToolType getSynthesisCuttingToolType() {
-        return synthesisCuttingToolType;
-    }
-
-    public void setSynthesisCuttingToolType(SynthesisCuttingToolType synthesisCuttingToolType) {
-        this.synthesisCuttingToolType = synthesisCuttingToolType;
-    }
-
     public List<ProductLine> getProductLineList() {
         return productLineList;
     }
@@ -136,12 +121,26 @@ public class SynthesisCuttingTool implements Serializable {
     public void setProductLineList(List<ProductLine> productLineList) {
         this.productLineList = productLineList;
     }
+    public List<SynthesisBladeCode> getSynthesisBladeCodeList() {
+        return synthesisBladeCodeList;
+    }
+
+    public void setSynthesisBladeCodeList(List<SynthesisBladeCode> synthesisBladeCodeList) {
+        this.synthesisBladeCodeList = synthesisBladeCodeList;
+    }
     public List<SynthesisCuttingToolBind> getSynthesisCuttingToolBindList() {
         return synthesisCuttingToolBindList;
     }
 
     public void setSynthesisCuttingToolBindList(List<SynthesisCuttingToolBind> synthesisCuttingToolBindList) {
         this.synthesisCuttingToolBindList = synthesisCuttingToolBindList;
+    }
+    public List<SynthesisCuttingToolBindleRecords> getSynthesisCuttingToolBindleRecordsList() {
+        return synthesisCuttingToolBindleRecordsList;
+    }
+
+    public void setSynthesisCuttingToolBindleRecordsList(List<SynthesisCuttingToolBindleRecords> synthesisCuttingToolBindleRecordsList) {
+        this.synthesisCuttingToolBindleRecordsList = synthesisCuttingToolBindleRecordsList;
     }
     public List<SynthesisCuttingToolConfig> getSynthesisCuttingToolConfigList() {
         return synthesisCuttingToolConfigList;
@@ -156,6 +155,13 @@ public class SynthesisCuttingTool implements Serializable {
 
     public void setSynthesisCuttingToolLocationList(List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList) {
         this.synthesisCuttingToolLocationList = synthesisCuttingToolLocationList;
+    }
+    public List<SynthesisCuttingToolMaterialInventory> getSynthesisCuttingToolMaterialInventoryList() {
+        return synthesisCuttingToolMaterialInventoryList;
+    }
+
+    public void setSynthesisCuttingToolMaterialInventoryList(List<SynthesisCuttingToolMaterialInventory> synthesisCuttingToolMaterialInventoryList) {
+        this.synthesisCuttingToolMaterialInventoryList = synthesisCuttingToolMaterialInventoryList;
     }
 
 }
