@@ -12,6 +12,7 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.apiclient.constants.CuttingToolConsumeTypeEnum;
 import com.apiclient.constants.CuttingToolTypeEnum;
 import com.apiclient.constants.ScrapStateEnum;
 import com.apiclient.dto.RunningDTO;
@@ -399,9 +400,10 @@ public class C03S006_001Activity extends CommonActivity {
                                 for (CuttingTool ct : cuttingToolList) {
                                     // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
                                     if (CuttingToolTypeEnum.dj.getKey().equals(ct.getType())) {
-                                        cuttingToolListTemp.add(ct);
-//                                        // griding_zt("1","可刃磨钻头"),griding_dp("2","可刃磨刀片"),single_use_dp("3","一次性刀片"),other("9","其他");
-//                                        if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(ct.getConsumeType())) {}
+                                        // griding_zt("1","可刃磨钻头"),griding_dp("2","可刃磨刀片"),single_use_dp("3","一次性刀片"),other("9","其他");
+                                        if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(ct.getConsumeType())) {
+                                            cuttingToolListTemp.add(ct);
+                                        }
                                     }
                                 }
 
