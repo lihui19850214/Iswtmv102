@@ -110,6 +110,8 @@ public class C01S011_001Activity extends CommonActivity {
                 break;
             case R.id.btn_next:
                 if (et00.getText() != null && !"".equals(et00.getText().toString().trim())) {
+                    // 使用刀身码后清空标签
+                    synthesisCuttingToolConfigRFID = "";
                     bladeCode = et00.getText().toString().trim();
                     RfidContainerVO rfidContainerVO = new RfidContainerVO();
                     rfidContainerVO.setSynthesisBladeCode(et00.getText().toString().trim());
