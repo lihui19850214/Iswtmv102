@@ -667,13 +667,13 @@ public class c01s010_001Activity extends CommonActivity {
                             }
                         });
                         // TODO 确认是否不需要修改 bind
-                        SynthesisCuttingToolLocation location = configToBindMap.get(tv01.getText());
+                        SynthesisCuttingToolLocation location = configToBindMap.get(selectBusinessCode);
 
                         // 生成的刀身码
                         final String selectBladeCode = (selectBusinessCode + "-" + etBladeCode.getText().toString().trim());
 
                         SynthesisCuttingToolLocation synthesisCuttingToolLocation = new SynthesisCuttingToolLocation();
-                        synthesisCuttingToolLocation.setCuttingToolCode(location.getCuttingTool().getCode());
+                        synthesisCuttingToolLocation.setCuttingToolCode(configMap.get(selectBusinessCode));
                         synthesisCuttingToolLocation.setId(location.getId());
                         synthesisCuttingToolLocation.setCuttingToolBladeCode(selectBladeCode);
 
@@ -764,7 +764,6 @@ public class c01s010_001Activity extends CommonActivity {
             View view1 = LayoutInflater.from(c01s010_001Activity.this).inflate(R.layout.item_c03s004_001, null);
             TextView textView = (TextView) view1.findViewById(R.id.tv_01);
             textView.setText(businessCodeList.get(i));
-            //TODO 需要取值数据
             return view1;
         }
     }
