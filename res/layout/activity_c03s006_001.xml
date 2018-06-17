@@ -31,7 +31,8 @@
                 <EditText
                         android:id="@+id/syntheticKnife"
                         android:layout_height="match_parent"
-                        style="@style/MiddleEditTextStyle"/>
+                        style="@style/MiddleEditTextStyle"
+                        android:singleLine="true"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -73,7 +74,6 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/border"
                     android:clickable="true"
-                    android:onClick="dropdown"
                     android:orientation="horizontal" >
 
                 <TextView
@@ -110,7 +110,8 @@
                 <EditText
                         android:id="@+id/et_bladeCode"
                         android:layout_height="match_parent"
-                        style="@style/MiddleEditTextStyle"/>
+                        style="@style/MiddleEditTextStyle"
+                        android:singleLine="true"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -138,7 +139,6 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/border"
                     android:clickable="true"
-                    android:onClick="dropdown1"
                     android:orientation="horizontal">
 
                 <TextView
@@ -175,7 +175,7 @@
 
         <View style="@style/BottomLittlePartingLineStyle" />
 
-        <Button android:text="@string/confirm" android:id="@+id/btnConfirm" style="@style/BottomButtonStyle" />
+        <Button android:text="@string/binding" android:id="@+id/btnConfirm" style="@style/BottomButtonStyle" />
 
     </LinearLayout>
 
