@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.apiclient.pojo.SynthesisBladeCode;
+import com.apiclient.vo.SynthesisBladeCodeVO;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
@@ -38,7 +40,7 @@ public class C01S025_001Activity extends CommonActivity {
     private Retrofit retrofit;
 
 
-    List<String> bladeCodeList = new ArrayList<>();
+    List<SynthesisBladeCode> synthesisBladeCodeList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,33 +85,26 @@ public class C01S025_001Activity extends CommonActivity {
                 llContainer.removeAllViews();
                 loading.show();
 
-                IRequest iRequest = retrofit.create(IRequest.class);
+                SynthesisBladeCodeVO synthesisBladeCodeVO = new SynthesisBladeCodeVO();
+                synthesisBladeCodeVO.setSynthesisCode(etT.getText().toString().trim());
 
-                // TODO 参数是什么
-                String jsonStr = objectToJson(etT.getText().toString().trim());
+                String jsonStr = objectToJson(synthesisBladeCodeVO);
                 RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                // TODO 接口是什么
-                Call<String> queryBladeCodes = iRequest.queryBladeCodes(body);
-                queryBladeCodes.enqueue(new MyCallBack<String>() {
+                IRequest iRequest = retrofit.create(IRequest.class);
+                Call<String> queryBladeCode = iRequest.queryBladeCode(body);
+
+                queryBladeCode.enqueue(new MyCallBack<String>() {
                     @Override
                     public void _onResponse(Response<String> response) {
                         try {
                             if (response.raw().code() == 200) {
-                                // TODO 返回值
-//                                qimingRecordsList = jsonToObject(response.body(), List.class, QimingRecords.class);
+                                synthesisBladeCodeList = jsonToObject(response.body(), List.class, SynthesisBladeCode.class);
 
-                                String data = null;
                                 // 判断是否有数据
-                                if (data == null) {
-                                    Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // 清空内容
-                                    bladeCodeList.clear();
+                                if (synthesisBladeCodeList != null && synthesisBladeCodeList.size() > 0) {
 
-                                    // TODO 填充 bladeCodeList 数据
-
-                                    int count = bladeCodeList.size();
+                                    int count = synthesisBladeCodeList.size();
                                     int i = 0;
 
                                     while (i < count) {
@@ -118,22 +113,24 @@ public class C01S025_001Activity extends CommonActivity {
                                         String str3 = "";
 
                                         if (i < count) {
-                                            str1 = bladeCodeList.get(i);
+                                            str1 = synthesisBladeCodeList.get(i).getBladeCode();
                                         }
                                         i++;
 
                                         if (i < count) {
-                                            str2 = bladeCodeList.get(i);
+                                            str2 = synthesisBladeCodeList.get(i).getBladeCode();
                                         }
                                         i++;
 
                                         if (i < count) {
-                                            str3 = bladeCodeList.get(i);
+                                            str3 = synthesisBladeCodeList.get(i).getBladeCode();
                                         }
                                         i++;
 
                                         addLayout(str1, str2, str3);
                                     }
+                                } else {
+                                    Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
                                 }
                             } else {
                                 createAlertDialog(C01S025_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
