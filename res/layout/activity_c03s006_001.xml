@@ -171,11 +171,11 @@
 
     <LinearLayout style="@style/BottomLinerLayoutStyle">
 
-        <Button android:text="@string/returnBy" android:id="@+id/btnReturn" android:onClick="btnReturn" style="@style/BottomButtonStyle" />
+        <Button android:text="@string/returnBy" android:id="@+id/btnReturn" style="@style/BottomButtonStyle" />
 
         <View style="@style/BottomLittlePartingLineStyle" />
 
-        <Button android:text="@string/confirm" android:id="@+id/btnConfirm" android:onClick="btnConfirm" style="@style/BottomButtonStyle" />
+        <Button android:text="@string/confirm" android:id="@+id/btnConfirm" style="@style/BottomButtonStyle" />
 
     </LinearLayout>
 

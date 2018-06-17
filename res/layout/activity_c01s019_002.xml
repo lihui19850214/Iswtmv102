@@ -36,7 +36,7 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:textColor="@color/baseColor"
-                                android:text="材料号"
+                                android:text="物料号"
                                 android:gravity="center"/>
                         <ImageView
                                 android:layout_width="1dp"
