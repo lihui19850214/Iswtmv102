@@ -613,10 +613,10 @@ public class C01S011_001Activity extends CommonActivity {
                             }
                         });
                         // TODO 确认是否不需要修改 bind
-                        SynthesisCuttingToolLocation location = configToBindMap.get(tv01.getText());
+                        SynthesisCuttingToolLocation location = configToBindMap.get(selectBusinessCode);
 
                         SynthesisCuttingToolLocation synthesisCuttingToolLocation = new SynthesisCuttingToolLocation();
-                        synthesisCuttingToolLocation.setCuttingToolCode(location.getCuttingTool().getCode());
+                        synthesisCuttingToolLocation.setCuttingToolCode(configMap.get(selectBusinessCode));
                         synthesisCuttingToolLocation.setId(location.getId());
                         synthesisCuttingToolLocation.setCuttingToolBladeCode(selectBusinessCode + "-" + etBladeCode.getText().toString().trim());
 
