@@ -62,8 +62,11 @@ public class c01s010_001Activity extends CommonActivity {
     // 刀身码
     String bladeCode = "";
 
-    // 合成刀标签
+    // 合成刀标签Code
     String synthesisCuttingToolConfigRFID = "";
+
+    // 合成刀标签
+    String bladeCode_RFID = "";
 
     // 合成刀配置
     SynthesisCuttingToolConfig synthesisCuttingToolConfig = new SynthesisCuttingToolConfig();
@@ -84,6 +87,7 @@ public class c01s010_001Activity extends CommonActivity {
             try {
                 synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap.get("synthesisCuttingToolConfig");
                 synthesisCuttingToolConfigRFID = (String) paramMap.get("synthesisCuttingToolConfigRFID");
+                bladeCode_RFID = (String) paramMap.get("bladeCode_RFID");
 
                 bladeCode = (String) paramMap.get("bladeCode");
 
@@ -162,9 +166,13 @@ public class c01s010_001Activity extends CommonActivity {
                         if (null != popupWindow && popupWindow.isShowing()) {
                             popupWindow.dismiss();
                         }
+
+                        // 使用了 bladeCode_RFID，所以清空 bladeCode
+                        et00.setText("");
                     }
                 });
-
+                // 使用了 bladeCode_RFID，所以清空 bladeCode
+                bladeCode = "";
 
                 RfidContainerVO rfidContainerVO = new RfidContainerVO();
                 rfidContainerVO.setLaserCode(rfidString);
@@ -201,6 +209,8 @@ public class c01s010_001Activity extends CommonActivity {
             createAlertDialog(c01s010_001Activity.this, "请扫输入刀身码", Toast.LENGTH_LONG);
             return;
         } else {
+            // 使用了 bladeCode，所以清空 bladeCode_RFID
+            bladeCode_RFID = "";
             bladeCode = et00.getText().toString().trim();
 
             RfidContainerVO rfidContainerVO = new RfidContainerVO();
@@ -297,7 +307,7 @@ public class c01s010_001Activity extends CommonActivity {
      * @param rfid
      * @return
      */
-    private void getBind(String bladeCode, String rfid) {
+    private void getBind(String bladeCode, final String rfid) {
         try {
             SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
 
@@ -335,6 +345,7 @@ public class c01s010_001Activity extends CommonActivity {
                             if (synthesisCuttingToolBind != null) {
                                 // TODO 如果钻头没有刀身码需要弹框输入刀身码，然后存储到起来，不填写刀身码不能往下走
                                 synthesisCuttingToolConfigRFID = synthesisCuttingToolBind.getRfidContainer().getCode();
+                                bladeCode_RFID = rfid;
                                 generateBusinessCodeList();
                                 String inpower = response.headers().get("impower");
                                 inpowerHandler(inpower);
@@ -783,6 +794,7 @@ public class c01s010_001Activity extends CommonActivity {
         // 用于页面之间传值，新方法
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("bladeCode", bladeCode);
+        paramMap.put("bladeCode_RFID", bladeCode_RFID);
         paramMap.put("synthesisCuttingToolConfigRFID", synthesisCuttingToolConfigRFID);
         paramMap.put("synthesisCuttingToolConfig", synthesisCuttingToolConfig);
         paramMap.put("synthesisCuttingToolBind", synthesisCuttingToolBind);

@@ -67,6 +67,8 @@ public class c01s010_002Activity extends CommonActivity {
 
     // 刀身码
     String bladeCode = "";
+    // 标签
+    String bladeCode_RFID = "";
     // 合成刀标签
     String synthesisCuttingToolConfigRFID = "";
     // 合成刀配置
@@ -106,6 +108,7 @@ public class c01s010_002Activity extends CommonActivity {
 
             if (paramMap2 != null) {
                 bladeCode = (String) paramMap2.get("bladeCode");
+                bladeCode_RFID = (String) paramMap2.get("bladeCode_RFID");
                 synthesisCuttingToolConfigRFID = (String) paramMap2.get("synthesisCuttingToolConfigRFID");
                 synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap2.get("synthesisCuttingToolConfig");
                 synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap2.get("synthesisCuttingToolBind");
@@ -128,6 +131,7 @@ public class c01s010_002Activity extends CommonActivity {
                 PARAM_MAP.remove(2);
             } else if (paramMap1 != null) {
                 bladeCode = (String) paramMap1.get("bladeCode");
+                bladeCode_RFID = (String) paramMap1.get("bladeCode_RFID");
                 synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap1.get("synthesisCuttingToolConfig");
                 synthesisCuttingToolConfigRFID = (String) paramMap1.get("synthesisCuttingToolConfigRFID");
                 synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap1.get("synthesisCuttingToolBind");
@@ -171,6 +175,7 @@ public class c01s010_002Activity extends CommonActivity {
                 Map<String, Object> paramMap = new HashMap<>();
 
                 paramMap.put("bladeCode", bladeCode);
+                paramMap.put("bladeCode_RFID", bladeCode_RFID);
                 paramMap.put("synthesisCuttingToolConfigRFID", synthesisCuttingToolConfigRFID);
                 paramMap.put("synthesisCuttingToolConfig", synthesisCuttingToolConfig);
                 paramMap.put("synthesisCuttingToolBind", synthesisCuttingToolBind);

@@ -65,6 +65,8 @@ public class c01s010_003Activity extends CommonActivity {
 
     // 刀身码
     String bladeCode = "";
+    // 标签
+    String bladeCode_RFID = "";
     // 合成刀标签
     String synthesisCuttingToolConfigRFID = "";
     // 合成刀配置
@@ -103,6 +105,7 @@ public class c01s010_003Activity extends CommonActivity {
         Map<String, Object> paramMap = PARAM_MAP.get(2);
 
         bladeCode = (String) paramMap.get("bladeCode");
+        bladeCode_RFID = (String) paramMap.get("bladeCode_RFID");
         synthesisCuttingToolConfigRFID = (String) paramMap.get("synthesisCuttingToolConfigRFID");
         synthesisCuttingToolConfig = (SynthesisCuttingToolConfig) paramMap.get("synthesisCuttingToolConfig");
         synthesisCuttingToolBind = (SynthesisCuttingToolBind) paramMap.get("synthesisCuttingToolBind");
@@ -303,9 +306,18 @@ public class c01s010_003Activity extends CommonActivity {
             }
 
 
-            SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
             RfidContainerVO rfidContainerVO = new RfidContainerVO();
             rfidContainerVO.setCode(synthesisCuttingToolConfigRFID);
+
+
+            SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
+            if (bladeCode != null && !"".equals(bladeCode)) {
+                synthesisCuttingToolBindVO.setBladeCode(bladeCode);
+            }
+            if (bladeCode_RFID != null && !"".equals(bladeCode_RFID)) {
+                rfidContainerVO.setLaserCode(bladeCode_RFID);
+            }
+
             // 合成刀查询 code
             synthesisCuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
             // 合成刀组装信息code编码
