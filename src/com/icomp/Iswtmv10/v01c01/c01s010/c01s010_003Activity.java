@@ -304,6 +304,10 @@ public class c01s010_003Activity extends CommonActivity {
 
 
             SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
+            RfidContainerVO rfidContainerVO = new RfidContainerVO();
+            rfidContainerVO.setCode(synthesisCuttingToolConfigRFID);
+            // 合成刀查询 code
+            synthesisCuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
             // 合成刀组装信息code编码
             synthesisCuttingToolBindVO.setCode(synthesisCuttingToolBind.getCode());
 
