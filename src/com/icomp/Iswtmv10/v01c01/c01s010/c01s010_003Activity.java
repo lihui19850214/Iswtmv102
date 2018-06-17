@@ -172,21 +172,17 @@ public class c01s010_003Activity extends CommonActivity {
                 } else if (CuttingToolConsumeTypeEnum.other.getKey().equals(config.getCuttingTool().getConsumeType())) {
                     daojuType = CuttingToolConsumeTypeEnum.other.getName();
                 }
-            } else if (CuttingToolTypeEnum.fj.getKey().equals(config.getCuttingTool().getType())) {
-                daojuType = CuttingToolTypeEnum.fj.getName();
-            } else if (CuttingToolTypeEnum.pt.getKey().equals(config.getCuttingTool().getType())) {
-                daojuType = CuttingToolTypeEnum.pt.getName();
-            } else if (CuttingToolTypeEnum.other.getKey().equals(config.getCuttingTool().getType())) {
-                daojuType = CuttingToolTypeEnum.other.getName();
+            } else {
+                return;
             }
 
-            View mLinearLayout = LayoutInflater.from(this).inflate(R.layout.tablerow_c01s010_002, null);
+            View mLinearLayout = LayoutInflater.from(this).inflate(R.layout.tablerow_c01s010_003, null);
 
             TextView cailiaohao = (TextView) mLinearLayout.findViewById(R.id.cailiaohao);//材料号
             TextView daojuleixing = (TextView) mLinearLayout.findViewById(R.id.daojuleixing);//刀具类型
             TextView zongshuliang = (TextView) mLinearLayout.findViewById(R.id.zongshuliang);//总数量
-            TextView huanzhuangshuliang = (EditText) mLinearLayout.findViewById(R.id.huanzhuangshuliang);//换装数量
-            TextView diudaoshuliang = (EditText) mLinearLayout.findViewById(R.id.diudaoshuliang);//丢刀数量
+            TextView huanzhuangshuliang = (TextView) mLinearLayout.findViewById(R.id.huanzhuangshuliang);//换装数量
+            TextView diudaoshuliang = (TextView) mLinearLayout.findViewById(R.id.diudaoshuliang);//丢刀数量
 
 
             String businessCode = "";
@@ -216,12 +212,12 @@ public class c01s010_003Activity extends CommonActivity {
             cailiaohao.setText(displayBusinessCode);//"显示的材料号"
             cailiaohao.setTag(businessCode);//"材料号"
             daojuleixing.setText(daojuType);//刀具类型
-            zongshuliang.setText(config.getCount());//"总数量"
+            zongshuliang.setText(config.getCount()+"");//"总数量"
 
             UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(businessCode);
-            huanzhuangshuliang.setText(upCuttingToolVO.getUpCount());//"换装数量"
+            huanzhuangshuliang.setText(upCuttingToolVO.getUpCount()+"");//"换装数量"
             DownCuttingToolVO downCuttingToolVO = downCuttingToolVOMap.get(businessCode);
-            diudaoshuliang.setText(downCuttingToolVO.getDownLostCount());//"丢刀数量"
+            diudaoshuliang.setText(downCuttingToolVO.getDownLostCount()+"");//"丢刀数量"
 
 
             mTlContainer.addView(mLinearLayout);
@@ -240,6 +236,8 @@ public class c01s010_003Activity extends CommonActivity {
     private void requestData(AuthCustomer authCustomer) {
         try {
             loading.show();
+            upCuttingToolVOList = new ArrayList<>();
+            downCuttingToolVOList = new ArrayList<>();
 
             ObjectMapper mapper = new ObjectMapper();
             Map<String, String> headsMap = new HashMap<>();
@@ -261,27 +259,26 @@ public class c01s010_003Activity extends CommonActivity {
 
                     // ------------ 授权信息 ------------
                     impowerRecorder.setToolCode(synthesisCuttingToolConfig.getSynthesisCuttingTool().getSynthesisCode());// 合成刀编码
-                    impowerRecorder.setRfidLasercode(authCustomer.getRfidContainer().getLaserCode());// rfid标签
+                    impowerRecorder.setRfidLasercode(synthesisCuttingToolConfigRFID);// 操作信息code
                     impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
                     impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
                     impowerRecorder.setOperatorKey(OperationEnum.SynthesisCuttingTool_Exchange.getKey().toString());//操作key
 
-//                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
-//                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
-//                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
-
                     impowerRecorderList.add(impowerRecorder);
                 }
-                headsMap.put("impower", mapper.writeValueAsString(impowerRecorderList));
+                headsMap.put("impower", objectToJson(impowerRecorderList));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                return;
             } catch (IOException e) {
                 e.printStackTrace();
                 createAlertDialog(c01s010_003Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                return;
             } catch (Exception e) {
                 e.printStackTrace();
                 Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                return;
             }
 
 
@@ -301,20 +298,9 @@ public class c01s010_003Activity extends CommonActivity {
             }
 
 
-            RfidContainerVO rfidContainerVO = new RfidContainerVO();
-            if (bladeCode != null && !"".equals(bladeCode)) {
-                // 合成刀刀身码
-                rfidContainerVO.setSynthesisBladeCode(bladeCode);
-            }
-            if (synthesisCuttingToolConfigRFID != null && !"".equals(synthesisCuttingToolConfigRFID)) {
-                // 扫描的标签标识
-                rfidContainerVO.setLaserCode(synthesisCuttingToolConfigRFID);
-            }
-
             SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
             // 合成刀组装信息code编码
             synthesisCuttingToolBindVO.setCode(synthesisCuttingToolBind.getCode());
-            synthesisCuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
 
             ExChangeVO exChangeVO = new ExChangeVO();
             exChangeVO.setSynthesisCuttingToolBindVO(synthesisCuttingToolBindVO);

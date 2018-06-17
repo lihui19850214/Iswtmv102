@@ -34,7 +34,7 @@ public class c01s010_004Activity extends CommonActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnGoOn:
-                Intent intent = new Intent(this, c01s010_002Activity.class);
+                Intent intent = new Intent(this, c01s010_001Activity.class);
                 startActivity(intent);
                 finish();
                 break;

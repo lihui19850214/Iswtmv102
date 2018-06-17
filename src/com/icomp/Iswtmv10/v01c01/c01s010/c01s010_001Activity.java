@@ -18,6 +18,8 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.apiclient.constants.CuttingToolConsumeTypeEnum;
+import com.apiclient.constants.CuttingToolTypeEnum;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.dto.BindBladeDTO;
 import com.apiclient.pojo.*;
@@ -26,6 +28,7 @@ import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
+import com.icomp.Iswtmv10.v01c01.c01s011.C01S011_001Activity;
 import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.activity.ExceptionProcessCallBack;
 import okhttp3.MediaType;
@@ -169,7 +172,7 @@ public class c01s010_001Activity extends CommonActivity {
                 SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
                 synthesisCuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
 
-                getSynthesisCuttingConfig(synthesisCuttingToolBindVO, rfidString);
+                getSynthesisCuttingConfig(synthesisCuttingToolBindVO, rfidString, null);
             }
         }
     }
@@ -206,7 +209,7 @@ public class c01s010_001Activity extends CommonActivity {
             SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
             synthesisCuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
 
-            getSynthesisCuttingConfig(synthesisCuttingToolBindVO, "");
+            getSynthesisCuttingConfig(synthesisCuttingToolBindVO, null, bladeCode);
         }
     }
 
@@ -214,7 +217,7 @@ public class c01s010_001Activity extends CommonActivity {
      * 根据刀身码或者rfid标签查询合成刀配置信息
      * @param synthesisCuttingToolBindVO 参数
      */
-    private void getSynthesisCuttingConfig(SynthesisCuttingToolBindVO synthesisCuttingToolBindVO, final String rfid) {
+    private void getSynthesisCuttingConfig(SynthesisCuttingToolBindVO synthesisCuttingToolBindVO, final String rfid, final String bladeCode) {
         try {
             runOnUiThread(new Runnable() {
                 @Override
@@ -240,23 +243,29 @@ public class c01s010_001Activity extends CommonActivity {
                         if (response.raw().code() == 200) {
                             // 辅具和配套不显示在列表上
                             synthesisCuttingToolConfig = jsonToObject(response.body(), SynthesisCuttingToolConfig.class);
-                            synthesisCuttingToolConfigRFID = rfid;
 
                             if (synthesisCuttingToolConfig != null) {
-                                getBind(rfid);
+                                getBind(bladeCode, rfid);
                             } else {
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
+                                }
                                 Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
                             }
                         } else {
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
+                            }
                             createAlertDialog(c01s010_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                    } finally {
                         if (null != loading && loading.isShowing()) {
                             loading.dismiss();
                         }
+                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    } finally {
+
                     }
                 }
 
@@ -285,17 +294,23 @@ public class c01s010_001Activity extends CommonActivity {
     /**
      * 根据刀身码或者rfid标签查询合成刀组装信息
      *
-     * @param rfidString
+     * @param rfid
      * @return
      */
-    private void getBind(String rfidString) {
+    private void getBind(String bladeCode, String rfid) {
         try {
-            loading.show();
+            SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
 
             RfidContainerVO rfidContainerVO = new RfidContainerVO();
-            rfidContainerVO.setLaserCode(rfidString);
 
-            SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
+            if (bladeCode != null && !"".equals(bladeCode)) {
+                rfidContainerVO.setSynthesisBladeCode(bladeCode);
+            }
+
+            if (rfid != null && !"".equals(rfid)) {
+                rfidContainerVO.setLaserCode(rfid);
+            }
+
             synthesisCuttingToolBindVO.setRfidContainerVO(rfidContainerVO);
 
             String jsonStr = objectToJson(synthesisCuttingToolBindVO);
@@ -318,17 +333,9 @@ public class c01s010_001Activity extends CommonActivity {
 
                             // 不为null继续操作
                             if (synthesisCuttingToolBind != null) {
-                                // 不为null继续操作
-                                if (synthesisCuttingToolBind.getSynthesisCuttingToolLocationList() != null) {
-                                    List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList = synthesisCuttingToolBind.getSynthesisCuttingToolLocationList();
-
-                                    for (SynthesisCuttingToolLocation synthesisCuttingToolLocation : synthesisCuttingToolLocationList) {
-                                        // TODO 如果钻头没有刀身码需要弹框输入刀身码，然后存储到起来，不填写刀身码不能往下走
-                                        synthesisCuttingToolLocation.getCuttingTool().getBusinessCode();
-
-                                    }
-                                }
-
+                                // TODO 如果钻头没有刀身码需要弹框输入刀身码，然后存储到起来，不填写刀身码不能往下走
+                                synthesisCuttingToolConfigRFID = synthesisCuttingToolBind.getRfidContainer().getCode();
+                                generateBusinessCodeList();
                                 String inpower = response.headers().get("impower");
                                 inpowerHandler(inpower);
                             } else {
@@ -377,13 +384,23 @@ public class c01s010_001Activity extends CommonActivity {
             // 是否需要授权 true为需要授权；false为不需要授权
             is_need_authorization = false;
 
-            jumpPage();
+            // 如果刀身码为空，需要填写刀身码
+            if (bladeCodeIsEmpty()) {
+                showDialog();
+            } else {
+                jumpPage();
+            }
         } else if ("2".equals(inpowerMap.get("type"))) {
             is_need_authorization = true;
             exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
                 @Override
                 public void confirm() {
-                    bladeCodeIsEmpty();
+                    // 如果刀身码为空，需要填写刀身码
+                    if (bladeCodeIsEmpty()) {
+                        showDialog();
+                    } else {
+                        jumpPage();
+                    }
                 }
 
                 @Override
@@ -396,7 +413,7 @@ public class c01s010_001Activity extends CommonActivity {
             stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
                 @Override
                 public void confirm() {
-                    bladeCodeIsEmpty();
+                    finish();
                 }
 
                 @Override
@@ -408,46 +425,163 @@ public class c01s010_001Activity extends CommonActivity {
         }
     }
 
+    // ---------------添加刀身码开始--------------------
     /**
-     * 业务逻辑，判断刀身码是否为空，控制跳转
+     * 检查钻头是否没有刀身码
+     * @return true为没有刀身码；false为有刀身码；
      */
-    private void bladeCodeIsEmpty() {
-        // TODO 判断是否刀身码是否为空，如果为空需要填写刀身码
-//        if () {
-//            jumpPage();
-//        } else {
-//            showDialog();
-//        }
-    }
+    private boolean bladeCodeIsEmpty() {
+        boolean isEmpty = false;
 
-    public void jumpPage() {
-        // 用于页面之间传值，新方法
-        Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("bladeCode", bladeCode);
-        paramMap.put("synthesisCuttingToolConfigRFID", synthesisCuttingToolConfigRFID);
-        paramMap.put("synthesisCuttingToolConfig", synthesisCuttingToolConfig);
-        PARAM_MAP.put(1, paramMap);
+        for (String bus : businessCodeList) {
+            SynthesisCuttingToolLocation location = configToBindMap.get(bus);
+            if (location.getCuttingToolBladeCode() == null || "".equals(location.getCuttingToolBladeCode())) {
+                isEmpty = true;
+            }
+        }
 
-        Intent intent = new Intent(c01s010_001Activity.this, c01s010_002Activity.class);
-        // 不清空页面之间传递的值
-        intent.putExtra("isClearParamMap", false);
-        startActivity(intent);
-        finish();
+        return isEmpty;
     }
 
 
-    // 物料号下拉列表
+    // 只有钻头的物料号下拉列表
     List<String> businessCodeList = new ArrayList<>();
     // 物料号选项
-    String selectBusinessCode = null;
-    // 物料号对应 config 信息
-    Map<String, Map<String, String>> configMap = new HashMap<>();
+    String selectBusinessCode = "";
+    // 物料号对应 config 信息中CuttingTool的code字段
+    Map<String, String> configMap = new HashMap<>();
+    // bind 中的物料号
+    Map<String, SynthesisCuttingToolLocation> realMap = new HashMap<>();
+
+    // config 的物料号对应 location 的物料号(真实数据)
+    Map<String, SynthesisCuttingToolLocation> configToBindMap = new HashMap<>();
+
+    /**
+     * 生成物料号下拉列表项
+     */
+    private void generateBusinessCodeList() {
+        // 只有转头的物料号下拉列表
+        businessCodeList = new ArrayList<>();
+        // 物料号选项
+        selectBusinessCode = "";
+        // 物料号对应 config 信息中CuttingTool的code字段
+        configMap = new HashMap<>();
+        // bind 中的物料号
+        realMap = new HashMap<>();
+
+        // config 的物料号对应 location 的物料号(真实数据)
+        configToBindMap = new HashMap<>();
+        try {
+            if (synthesisCuttingToolBind.getSynthesisCuttingToolLocationList() != null) {
+                List<SynthesisCuttingToolLocation> synthesisCuttingToolLocationList = synthesisCuttingToolBind.getSynthesisCuttingToolLocationList();
+
+                for (SynthesisCuttingToolLocation synthesisCuttingToolLocation : synthesisCuttingToolLocationList) {
+                    String businessCode = synthesisCuttingToolLocation.getCuttingTool().getBusinessCode();
+                    realMap.put(businessCode, synthesisCuttingToolLocation);
+                }
+            }
+
+            List<SynthesisCuttingToolLocationConfig> SynthesisCuttingToolLocationConfigList = synthesisCuttingToolConfig.getSynthesisCuttingToolLocationConfigList();
+
+            for (SynthesisCuttingToolLocationConfig config : SynthesisCuttingToolLocationConfigList) {
+
+                // 是否时钻头：true为钻头；false为非钻头；
+                boolean isDrillingBit = false;
+                // 判断是否是钻头
+                // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
+                if (CuttingToolTypeEnum.dj.getKey().equals(config.getCuttingTool().getType())) {
+                    // griding_zt("1","可刃磨钻头"),griding_dp("2","可刃磨刀片"),single_use_dp("3","一次性刀片"),other("9","其他");
+                    if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(config.getCuttingTool().getConsumeType())) {
+                        isDrillingBit = true;
+                    }
+                } else {
+                    continue;
+                }
+
+
+                String mainBusinessCode = null;     // 主刀材料号
+                String replaceBusinessCode1 = null; // 备用刀1材料号
+                String replaceBusinessCode2 = null; // 备用刀2材料号
+                String replaceBusinessCode3 = null; // 备用刀3材料号
+
+                String realBusinessCode = null;     // 有真实数据的材料号
+
+                if (isDrillingBit) {
+                    mainBusinessCode = config.getCuttingTool().getBusinessCode();
+                    // 真实数据
+                    if (realMap.containsKey(mainBusinessCode)) {
+                        realBusinessCode = mainBusinessCode;
+                    }
+                    businessCodeList.add(mainBusinessCode);
+                    configMap.put(mainBusinessCode, config.getCuttingTool().getCode());
+
+                    // 备用刀1不为空
+                    if (config.getReplaceCuttingTool1() != null) {
+                        replaceBusinessCode1 = config.getReplaceCuttingTool1().getBusinessCode();
+                        // 真实数据
+                        if (realMap.containsKey(replaceBusinessCode1)) {
+                            realBusinessCode = replaceBusinessCode1;
+                        }
+                        businessCodeList.add(replaceBusinessCode1);
+                        configMap.put(replaceBusinessCode1, config.getReplaceCuttingTool1().getCode());
+                    }
+
+                    // 备用刀2不为空
+                    if (config.getReplaceCuttingTool2() != null) {
+                        replaceBusinessCode2 = config.getReplaceCuttingTool2().getBusinessCode();
+                        // 真实数据
+                        if (realMap.containsKey(replaceBusinessCode2)) {
+                            realBusinessCode = replaceBusinessCode2;
+                        }
+                        businessCodeList.add(replaceBusinessCode2);
+                        configMap.put(replaceBusinessCode2, config.getReplaceCuttingTool2().getCode());
+                    }
+
+                    // 备用刀3不为空
+                    if (config.getReplaceCuttingTool3() != null) {
+                        replaceBusinessCode3 = config.getReplaceCuttingTool3().getBusinessCode();
+                        // 真实数据
+                        if (realMap.containsKey(replaceBusinessCode3)) {
+                            realBusinessCode = replaceBusinessCode3;
+                        }
+                        businessCodeList.add(replaceBusinessCode3);
+                        configMap.put(replaceBusinessCode3, config.getReplaceCuttingTool3().getCode());
+                    }
+
+                    //---------------------------------主刀和备用刀指向同一个真实数据的物料号开始----------------------------------
+                    SynthesisCuttingToolLocation location = realMap.get(realBusinessCode);
+
+                    configToBindMap.put(mainBusinessCode, location);
+
+                    if (replaceBusinessCode1 != null) {
+                        configToBindMap.put(replaceBusinessCode1, location);
+                    }
+                    if (replaceBusinessCode2 != null) {
+                        configToBindMap.put(replaceBusinessCode2, location);
+                    }
+                    if (replaceBusinessCode3 != null) {
+                        configToBindMap.put(replaceBusinessCode3, location);
+                    }
+                    //---------------------------------主刀和备用刀指向同一个真实数据的物料号结束----------------------------------
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
 
     /**
      * 显示数据提示dialog
      */
     //显示物料号和刀身码的弹框
-    private void showDialog(final String rfid, final String businessCode, final CuttingToolBind cuttingToolBind) {
+    //private void showDialog(final String rfid, final String businessCode, final CuttingToolBind cuttingToolBind) {
+    private void showDialog() {
         LayoutInflater inflater = LayoutInflater.from(this);
         View view = inflater.inflate(R.layout.dialog_c01s011_002_1, null);
         final AlertDialog dialog = new AlertDialog.Builder(this, R.style.MyDialog).create();
@@ -460,6 +594,11 @@ public class c01s010_001Activity extends CommonActivity {
 
         final LinearLayout ll01 = (LinearLayout) view.findViewById(R.id.ll_01);
         final TextView tv01 = (TextView) view.findViewById(R.id.tv_01);
+
+        if (businessCodeList != null && businessCodeList.size() > 0) {
+            tv01.setText(businessCodeList.get(0));
+            selectBusinessCode = businessCodeList.get(0);
+        }
 
         // 物料号下拉列表
         ll01.setOnClickListener(new View.OnClickListener() {
@@ -493,9 +632,8 @@ public class c01s010_001Activity extends CommonActivity {
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                        tv01.setText(businessCodeList.get(i).toString());
+                        tv01.setText(businessCodeList.get(i));
                         selectBusinessCode = businessCodeList.get(i);
-                        // TODO 取值不正确
                         popupWindow.dismiss();
                     }
                 });
@@ -518,12 +656,80 @@ public class c01s010_001Activity extends CommonActivity {
             public void onClick(View view) {
                 if (null == etBladeCode.getText() || "".equals(etBladeCode.getText().toString().trim())) {
                     createAlertDialog(c01s010_001Activity.this, "请输入刀身码", Toast.LENGTH_LONG);
-                } else if (null == tv01.getText().toString().trim() || "".equals(tv01.getText().toString().trim())) {
+                } else if (null == tv01.getText() || "".equals(tv01.getText().toString().trim())) {
                     createAlertDialog(c01s010_001Activity.this, "请选择物料号", Toast.LENGTH_LONG);
                 } else {
-                    // TODO 需要处理
-//                    bindBlade();
-                    jumpPage();
+                    try {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                loading.show();
+                            }
+                        });
+                        // TODO 确认是否不需要修改 bind
+                        SynthesisCuttingToolLocation location = configToBindMap.get(tv01.getText());
+
+                        // 生成的刀身码
+                        final String selectBladeCode = (selectBusinessCode + "-" + etBladeCode.getText().toString().trim());
+
+                        SynthesisCuttingToolLocation synthesisCuttingToolLocation = new SynthesisCuttingToolLocation();
+                        synthesisCuttingToolLocation.setCuttingToolCode(location.getCuttingTool().getCode());
+                        synthesisCuttingToolLocation.setId(location.getId());
+                        synthesisCuttingToolLocation.setCuttingToolBladeCode(selectBladeCode);
+
+
+                        BindBladeDTO bindBladeDTO = new BindBladeDTO();
+                        bindBladeDTO.setLocation(synthesisCuttingToolLocation);
+
+                        String jsonStr = objectToJson(bindBladeDTO);
+                        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+                        //调用接口，查询合成刀具组成信息
+                        IRequest iRequest = retrofit.create(IRequest.class);
+                        Call<String> bindBlade = iRequest.bindBlade(body);
+
+                        bindBlade.enqueue(new MyCallBack<String>() {
+                            @Override
+                            public void _onResponse(Response<String> response) {
+                                try {
+                                    if (response.raw().code() == 200) {
+                                        // TODO 需要确定是否修改了实际的值，在第二页面确定
+                                        SynthesisCuttingToolLocation location = configToBindMap.get(tv01.getText());
+                                        location.setCuttingToolBladeCode(selectBladeCode);
+                                        jumpPage();
+                                    } else {
+                                        createAlertDialog(c01s010_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                } finally {
+                                    if (null != loading && loading.isShowing()) {
+                                        loading.dismiss();
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void _onFailure(Throwable t) {
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
+                                }
+                                createAlertDialog(c01s010_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
+                                }
+                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -531,7 +737,7 @@ public class c01s010_001Activity extends CommonActivity {
 
         dialog.show();
         dialog.setContentView(view);
-        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.4));
+        dialog.getWindow().setLayout((int) (screenWidth * 1), (int) (screenHeight * 0.4));
 
     }
 
@@ -557,11 +763,29 @@ public class c01s010_001Activity extends CommonActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             View view1 = LayoutInflater.from(c01s010_001Activity.this).inflate(R.layout.item_c03s004_001, null);
             TextView textView = (TextView) view1.findViewById(R.id.tv_01);
-            textView.setText(businessCodeList.get(i).toString());
+            textView.setText(businessCodeList.get(i));
             //TODO 需要取值数据
             return view1;
         }
     }
+
+
+    public void jumpPage() {
+        // 用于页面之间传值，新方法
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("bladeCode", bladeCode);
+        paramMap.put("synthesisCuttingToolConfigRFID", synthesisCuttingToolConfigRFID);
+        paramMap.put("synthesisCuttingToolConfig", synthesisCuttingToolConfig);
+        paramMap.put("synthesisCuttingToolBind", synthesisCuttingToolBind);
+        PARAM_MAP.put(1, paramMap);
+
+        Intent intent = new Intent(c01s010_001Activity.this, c01s010_002Activity.class);
+        // 不清空页面之间传递的值
+        intent.putExtra("isClearParamMap", false);
+        startActivity(intent);
+        finish();
+    }
+
 
     /**
      * 添加材料刀刀身码
