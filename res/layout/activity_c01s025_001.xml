@@ -28,7 +28,6 @@
                     android:layout_weight="2"
                     android:layout_height="match_parent"
                     android:background="@drawable/border"
-                    android:digits="@string/onlyAllowInputNumbers"
                     android:singleLine="true"
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/daoju_all"
