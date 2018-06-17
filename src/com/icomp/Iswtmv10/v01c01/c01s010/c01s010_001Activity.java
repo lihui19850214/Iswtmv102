@@ -425,6 +425,9 @@ public class c01s010_001Activity extends CommonActivity {
         }
     }
 
+    // 真实钻头location
+    SynthesisCuttingToolLocation realZuanTouLocation = null;
+
     // ---------------添加刀身码开始--------------------
     /**
      * 检查钻头是否没有刀身码
@@ -436,6 +439,7 @@ public class c01s010_001Activity extends CommonActivity {
         for (String bus : businessCodeList) {
             SynthesisCuttingToolLocation location = configToBindMap.get(bus);
             if (location.getCuttingToolBladeCode() == null || "".equals(location.getCuttingToolBladeCode())) {
+                realZuanTouLocation = location;
                 isEmpty = true;
             }
         }
@@ -677,6 +681,9 @@ public class c01s010_001Activity extends CommonActivity {
                         synthesisCuttingToolLocation.setId(location.getId());
                         synthesisCuttingToolLocation.setCuttingToolBladeCode(selectBladeCode);
 
+                        realZuanTouLocation.getCuttingTool().setBusinessCode(selectBusinessCode);
+                        realZuanTouLocation.setCuttingToolCode(configMap.get(selectBusinessCode));
+                        realZuanTouLocation.setCuttingToolBladeCode(selectBladeCode);
 
                         BindBladeDTO bindBladeDTO = new BindBladeDTO();
                         bindBladeDTO.setLocation(synthesisCuttingToolLocation);
