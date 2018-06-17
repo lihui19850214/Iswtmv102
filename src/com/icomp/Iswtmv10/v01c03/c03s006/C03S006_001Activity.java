@@ -441,12 +441,12 @@ public class C03S006_001Activity extends CommonActivity {
         try {
             loading.show();
 
-            CuttingTool cuttingTool = new CuttingTool();
-            cuttingTool.setCode(cuttingTool.getCode());
+            CuttingTool ct = new CuttingTool();
+            ct.setCode(cuttingTool.getCode());
 
             CuttingToolBind cuttingToolBind = new CuttingToolBind();
             cuttingToolBind.setBladeCode(etBladeCode.getText().toString().trim());
-            cuttingToolBind.setCuttingTool(cuttingTool);
+            cuttingToolBind.setCuttingTool(ct);
 
             RfidContainerVO rfidContainerVO = new RfidContainerVO();
             rfidContainerVO.setLaserCode(rfid);
