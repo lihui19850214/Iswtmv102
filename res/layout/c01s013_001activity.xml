@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView android:text="卸下设备" style="@style/FunctionalTitleTextViewStyle" />
+    <TextView android:text="@string/C01S010" style="@style/FunctionalTitleTextViewStyle" />
 
     <LinearLayout style="@style/MiddleLinerLayoutStyle">
         <TextView
@@ -25,11 +25,11 @@
                     android:textColor="@color/baseColor"
                     android:textSize="@dimen/text_content_size"
                     android:gravity="center"
-                    android:text="合成刀具刀身码:"/>
+                    android:text="刀身码:"/>
 
             <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:layout_height="match_parent">
 
                 <EditText
@@ -38,7 +38,6 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/border_no_radius"
-                        android:digits="@string/onlyAllowInputNumbers"
                         android:textColor="@color/baseColor"
                         android:textSize="20sp"
                         android:singleLine="true"

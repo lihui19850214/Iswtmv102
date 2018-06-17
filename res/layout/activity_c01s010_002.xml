@@ -50,35 +50,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:orientation="horizontal" tools:ignore="Suspicious0dp">
-
-            <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="right|center"
-                    android:text="刀身码："
-                    android:textColor="@color/baseColor"
-                    android:textSize="@dimen/text_content_size" />
-
-            <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="match_parent">
-                <TextView
-                        android:id="@+id/tv_02"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:maxLength="10"
-                        android:textSize="@dimen/text_content_size"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="10dp"/>
-            </LinearLayout>
-        </LinearLayout>
 
         <TableLayout
                 android:layout_width="match_parent"
@@ -154,7 +125,7 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="6">
+            android:layout_weight="5">
 
             <TableLayout
                     android:id="@+id/tlContainer"

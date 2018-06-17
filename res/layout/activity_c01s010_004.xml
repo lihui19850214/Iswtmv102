@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context="com.icomp.Iswtmv10.v01c01.c01s010.c01s010_004Activity">
 
-    <TextView android:text="刀具换装" style="@style/FunctionalTitleTextViewStyle"/>
+    <TextView android:text="@string/C01S010" style="@style/FunctionalTitleTextViewStyle"/>
 
     <LinearLayout style="@style/MiddleLinerLayoutStyle" android:gravity="center_vertical">
         <TextView
