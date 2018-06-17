@@ -134,7 +134,7 @@ public class c01s010_002Activity extends CommonActivity {
 
 
                 // 合成刀具编码，如果取值不对，使用synthesisCuttingToolConfig.getSynthesisCuttingTool().getSynthesisCode()
-                tv01.setText(synthesisCuttingToolConfig.getSynthesisCuttingToolCode());
+                tv01.setText(synthesisCuttingToolBind.getSynthesisCode());
 
                 // 查询真实数据
                 init();

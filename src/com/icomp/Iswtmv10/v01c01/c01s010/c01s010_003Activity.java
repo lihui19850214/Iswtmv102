@@ -58,8 +58,6 @@ public class c01s010_003Activity extends CommonActivity {
     TextView tv01;
     @BindView(R.id.activity_c01s010_003)
     LinearLayout activityC01s010003;
-    @BindView(R.id.tv_02)
-    TextView tv02;
 
 
     private Retrofit retrofit;
@@ -111,9 +109,7 @@ public class c01s010_003Activity extends CommonActivity {
         rfidSet = (Set<String>) paramMap.get("rfidSet");
 
         // 合成刀具编码，如果取值不对，使用synthesisCuttingToolConfig.getSynthesisCuttingTool().getSynthesisCode()
-        tv01.setText(synthesisCuttingToolConfig.getSynthesisCuttingToolCode());
-        // 刀身码
-        tv02.setText(bladeCode);
+        tv01.setText(synthesisCuttingToolBind.getSynthesisCode());
 
         drillingBitSet = (Set<String>) paramMap.get("drillingBitSet");// 钻头材料号(现在叫物料号)
         realDataSet = (Set<String>) paramMap.get("realDataSet");// 真实数据的材料号(现在叫物料号)
