@@ -51,6 +51,7 @@ public class UHFApplication extends Application {
                     try {
                         Looper.loop();
                     } catch (Exception e) {
+                        e.printStackTrace();
 //                        // 捕获到异常: main 在 android.app.ActivityThread
 //                        Log.e("捕获到异常", Thread.currentThread().getName() + " 在 " + e.getStackTrace()[0].getClassName());
 //                        // 捕获到异常: com.icomp.Iswtmv10.v01c01.c01s002.c01s002_002Activity
@@ -95,6 +96,7 @@ public class UHFApplication extends Application {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread t, Throwable e) {
+                e.printStackTrace();
                 Looper.prepare();
                 Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                 Looper.loop();
