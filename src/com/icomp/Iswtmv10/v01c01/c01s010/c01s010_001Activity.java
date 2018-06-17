@@ -681,9 +681,12 @@ public class c01s010_001Activity extends CommonActivity {
                         synthesisCuttingToolLocation.setId(location.getId());
                         synthesisCuttingToolLocation.setCuttingToolBladeCode(selectBladeCode);
 
+
                         realZuanTouLocation.getCuttingTool().setBusinessCode(selectBusinessCode);
                         realZuanTouLocation.setCuttingToolCode(configMap.get(selectBusinessCode));
+                        realZuanTouLocation.getCuttingTool().setCode(configMap.get(selectBusinessCode));
                         realZuanTouLocation.setCuttingToolBladeCode(selectBladeCode);
+
 
                         BindBladeDTO bindBladeDTO = new BindBladeDTO();
                         bindBladeDTO.setLocation(synthesisCuttingToolLocation);
