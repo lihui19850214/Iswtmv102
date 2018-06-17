@@ -363,6 +363,14 @@ public interface IRequest {
     @POST("/cuttingToolBusiness/queryCuttingToolBind")
     Call<String> queryCuttingToolBind(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
+    /**
+     * 根据RFID获取材料刀信息
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/cuttingToolBusiness/queryBindInfo")
+    Call<String> queryBindInfo(@Body RequestBody json, @HeaderMap Map<String, String> headers);
+
 
     /**
      * 根据材料号获取材料刀

@@ -196,7 +196,10 @@ public class C01S018_002Activity extends CommonActivity {
         ImageView tvRemove = (ImageView) mLinearLayout.findViewById(R.id.tvRemove);
 
         tvCaiLiao.setText(cailiao);
-        tvsingleProductCode.setText(laserCode);
+        if (null!=laserCode&&!"".equals(laserCode)&&laserCode.split("-").length>=1){
+            tvsingleProductCode.setText(laserCode.split("-")[1]);
+        }
+
 //        tvNum.setText(num);
 
         tvCaiLiao.setTag(position);
@@ -308,7 +311,7 @@ public class C01S018_002Activity extends CommonActivity {
 
                     //调用接口，查询合成刀具组成信息
                     IRequest iRequest = retrofit.create(IRequest.class);
-                    Call<String> queryCuttingToolBind = iRequest.queryCuttingToolBind(body, headsMap);
+                    Call<String> queryCuttingToolBind = iRequest.queryBindInfo(body, headsMap);
 
                     queryCuttingToolBind.enqueue(new MyCallBack<String>() {
                         @Override
@@ -343,7 +346,9 @@ public class C01S018_002Activity extends CommonActivity {
                                     }
                                 });
                             } finally {
-
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
+                                }
                             }
                         }
 
@@ -422,7 +427,7 @@ public class C01S018_002Activity extends CommonActivity {
         }
 
         rfidToMap.put(rfid, cuttingToolBind);
-        businessCodeToBladeCodeMap.put(rfid, cuttingToolBind.getBladeCode());
+        businessCodeToBladeCodeMap.put(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode());
 
         GrindingVO grindingVO = new GrindingVO();
 
