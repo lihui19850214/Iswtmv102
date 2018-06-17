@@ -770,6 +770,8 @@ public class c01s010_002Activity extends CommonActivity {
             boolean editable = true;
             // 是否是钻头
             boolean isDrillingBit = false;
+            // 是否显示物料号列表 true显示；false不显示；钻头不显示
+            boolean isShowBusinessCode = true;
 
             // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
             if (CuttingToolTypeEnum.dj.getKey().equals(config.getCuttingTool().getType())) {
@@ -777,6 +779,7 @@ public class c01s010_002Activity extends CommonActivity {
                 if (CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(config.getCuttingTool().getConsumeType())) {
                     editable = false;
                     isDrillingBit = true;
+                    isShowBusinessCode = false;
                     daojuType = CuttingToolConsumeTypeEnum.griding_zt.getName();
                 } else if (CuttingToolConsumeTypeEnum.griding_dp.getKey().equals(config.getCuttingTool().getConsumeType())) {
                     daojuType = CuttingToolConsumeTypeEnum.griding_dp.getName();
@@ -844,60 +847,62 @@ public class c01s010_002Activity extends CommonActivity {
             //将光标设置在最后
             diudaoshuliang.setSelection(diudaoshuliang.getText().length());
 
-
-            cailiaohao.setClickable(true);
+            // 显示物料号列表
+            if (isShowBusinessCode) {
+                cailiaohao.setClickable(true);
 //            cailiaohao.setFocusable(true);
-            // 增加TextView的点击事件，单击事件
-            cailiaohao.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    showPopupWindow(cailiaohao, config, new ShowPopupWindowCallBack() {
-                        @Override
-                        public void select(String selectBusinessCode) {
+                // 增加TextView的点击事件，单击事件
+                cailiaohao.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View v) {
+                        showPopupWindow(cailiaohao, config, new ShowPopupWindowCallBack() {
+                            @Override
+                            public void select(String selectBusinessCode) {
 
-                            if (!selectBusinessCode.equals(cailiaohao.getTag().toString())) {
+                                if (!selectBusinessCode.equals(cailiaohao.getTag().toString())) {
 
-                                String realBusinessCode = getRealBusinessCode(config);
+                                    String realBusinessCode = getRealBusinessCode(config);
 
-                                String textviewContent = "";
-                                if (realDataSet.contains(selectBusinessCode)) {
-                                    textviewContent = selectBusinessCode;
-                                } else {
-                                    textviewContent = selectBusinessCode + "(" + realBusinessCode + ")";
-                                }
+                                    String textviewContent = "";
+                                    if (realDataSet.contains(selectBusinessCode)) {
+                                        textviewContent = selectBusinessCode;
+                                    } else {
+                                        textviewContent = selectBusinessCode + "(" + realBusinessCode + ")";
+                                    }
 
-                                // 不是钻头 and 不是真实数据时换上数量为总数量
-                                if (!drillingBitSet.contains(selectBusinessCode) && !realDataSet.contains(selectBusinessCode)) {
-                                    UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(selectBusinessCode);
-                                    upCuttingToolVO.setUpCount(config.getCount());
+                                    // 不是钻头 and 不是真实数据时换上数量为总数量
+                                    if (!drillingBitSet.contains(selectBusinessCode) && !realDataSet.contains(selectBusinessCode)) {
+                                        UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(selectBusinessCode);
+                                        upCuttingToolVO.setUpCount(config.getCount());
+                                        upCuttingToolVO.setRfidCode(null);
+                                        upCuttingToolVO.setBladeCode(null);
+                                    }
+
+                                    displaySyntheticKnifeMap.remove(cailiaohao.getTag().toString());
+                                    displaySyntheticKnifeMap.put(selectBusinessCode, textviewContent);
+
+                                    UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(cailiaohao.getTag().toString());
+                                    upCuttingToolVO.setUpCount(0);
                                     upCuttingToolVO.setRfidCode(null);
                                     upCuttingToolVO.setBladeCode(null);
+
+                                    DownCuttingToolVO downCuttingToolVO = downCuttingToolVOMap.get(cailiaohao.getTag().toString());
+                                    downCuttingToolVO.setDownLostCount(0);
+                                    downCuttingToolVO.setDownRfidLaserCode(null);
+
+                                    //
+                                    Map<String, Object> paramMap = new HashMap<>();
+                                    paramMap.put("tableRow", tableRow);
+                                    paramMap.put("selectBusinessCode", selectBusinessCode);
+
+                                    Message message = new Message();
+                                    message.obj = paramMap;
+                                    cailiaohaoHandler.sendMessage(message);
                                 }
-
-                                displaySyntheticKnifeMap.remove(cailiaohao.getTag().toString());
-                                displaySyntheticKnifeMap.put(selectBusinessCode, textviewContent);
-
-                                UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(cailiaohao.getTag().toString());
-                                upCuttingToolVO.setUpCount(0);
-                                upCuttingToolVO.setRfidCode(null);
-                                upCuttingToolVO.setBladeCode(null);
-
-                                DownCuttingToolVO downCuttingToolVO = downCuttingToolVOMap.get(cailiaohao.getTag().toString());
-                                downCuttingToolVO.setDownLostCount(0);
-                                downCuttingToolVO.setDownRfidLaserCode(null);
-
-                                //
-                                Map<String, Object> paramMap = new HashMap<>();
-                                paramMap.put("tableRow", tableRow);
-                                paramMap.put("selectBusinessCode", selectBusinessCode);
-
-                                Message message = new Message();
-                                message.obj = paramMap;
-                                cailiaohaoHandler.sendMessage(message);
                             }
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
+            }
 
             if (editable) {
                 // 换装添加事件
