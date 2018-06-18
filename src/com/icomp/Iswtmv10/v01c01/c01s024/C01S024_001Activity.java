@@ -165,23 +165,23 @@ public class C01S024_001Activity extends CommonActivity {
                     //调用接口，查询合成刀具组成信息
                     IRequest iRequest = retrofit.create(IRequest.class);
 
-                    FastQueryVO fastQueryVO = new FastQueryVO();
-                    fastQueryVO.setRfidLaserCode(rfidString);
+                    RFIDQueryVO rfidQueryVOParam = new RFIDQueryVO();
+                    rfidQueryVOParam.setRfidCode(rfidString);
 
-                    String jsonStr = objectToJson(fastQueryVO);
+                    String jsonStr = objectToJson(rfidQueryVOParam);
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                    Call<String> fastQuery = iRequest.fastQuery(body);
-                    fastQuery.enqueue(new MyCallBack<String>() {
+                    Call<String> queryByRFID = iRequest.queryByRFID(body);
+                    queryByRFID.enqueue(new MyCallBack<String>() {
                         @Override
                         public void _onResponse(Response<String> response) {
                             try {
                                 if (response.raw().code() == 200) {
-                                    FastQueryVO fastQueryVO = jsonToObject(response.body(), FastQueryVO.class);
+                                    RFIDQueryVO rfidQueryVO = jsonToObject(response.body(), RFIDQueryVO.class);
 
-                                    if (fastQueryVO != null) {
+                                    if (rfidQueryVO != null) {
                                         Message message = new Message();
-                                        message.obj = fastQueryVO;
+                                        message.obj = rfidQueryVO;
                                         //输入授权和扫描授权的handler
                                         quicQkueryHandler.sendMessage(message);
                                     } else {
@@ -255,27 +255,27 @@ public class C01S024_001Activity extends CommonActivity {
     Handler quicQkueryHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            FastQueryVO fastQueryVO = (FastQueryVO) msg.obj;
+            RFIDQueryVO rfidQueryVO = (RFIDQueryVO) msg.obj;
 
-            if (fastQueryVO.getCuttingToolBind() != null) {
+            if (rfidQueryVO.getCuttingToolBind() != null) {
                 // 添加材料刀数据
-                addDataForCailiao(fastQueryVO.getCuttingToolBind());
+                addDataForCailiao(rfidQueryVO.getCuttingToolBind());
             }
 
-            if (fastQueryVO.getSynthesisCuttingToolBind() != null) {
+            if (rfidQueryVO.getSynthesisCuttingToolBind() != null) {
                 // 添加合成刀数据
-                addDataForHechengdao(fastQueryVO.getSynthesisCuttingToolBind());
+                addDataForHechengdao(rfidQueryVO.getSynthesisCuttingToolBind());
             }
 
-            if (fastQueryVO.getEquipment() != null) {
+            if (rfidQueryVO.getEquipment() != null) {
                 //添加设备数据
-                addDataForEquipment(fastQueryVO.getEquipment());
+                addDataForEquipment(rfidQueryVO.getEquipment());
             }
-
-            if (fastQueryVO.getAuthCustomer() != null) {
-                // 添加人员数据
-                addDataForpersonnel(fastQueryVO.getAuthCustomer());
-            }
+            // TODO 新接口没有人员信息
+//            if (rfidQueryVO.getAuthCustomer() != null) {
+//                // 添加人员数据
+//                addDataForpersonnel(rfidQueryVO.getAuthCustomer());
+//            }
         }
     };
 
