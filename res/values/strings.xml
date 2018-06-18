@@ -242,6 +242,7 @@
     <string name="binding">绑定</string>
     <string name="operate">操作</string>
     <string name="next">下一步</string>
+    <string name="clearRFID">清空</string>
     <string name="affirm">确认</string>
     <string name="disboard">卸下</string>
     <string name="submit">提交</string>
