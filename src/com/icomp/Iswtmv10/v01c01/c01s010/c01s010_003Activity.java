@@ -312,7 +312,7 @@ public class c01s010_003Activity extends CommonActivity {
 
             SynthesisCuttingToolBindVO synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
             if (bladeCode != null && !"".equals(bladeCode)) {
-                synthesisCuttingToolBindVO.setBladeCode(bladeCode);
+                rfidContainerVO.setSynthesisBladeCode(bladeCode);
             }
             if (bladeCode_RFID != null && !"".equals(bladeCode_RFID)) {
                 rfidContainerVO.setLaserCode(bladeCode_RFID);
