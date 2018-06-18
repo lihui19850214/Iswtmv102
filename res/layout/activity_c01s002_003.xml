@@ -10,7 +10,7 @@
 
     <TextView android:text="@string/C01S101" style="@style/FunctionalTitleTextViewStyle" />
 
-    <LinearLayout style="@style/MiddleLinerLayoutStyle">
+    <LinearLayout style="@style/MiddleLinerLayoutStyle" android:gravity="center_vertical">
         <TextView
                 android:text="清空成功"
                 android:drawableTop="@drawable/success"

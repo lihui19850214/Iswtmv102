@@ -56,7 +56,7 @@
 
         <View style="@style/BottomLittlePartingLineStyle" />
 
-        <Button android:id="@+id/btnNext" android:text="@string/next" style="@style/BottomButtonStyle"/>
+        <Button android:id="@+id/btnNext" android:text="@string/clearRFID" style="@style/BottomButtonStyle"/>
     </LinearLayout>
 
 </LinearLayout>
