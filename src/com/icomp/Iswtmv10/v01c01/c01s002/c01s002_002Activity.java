@@ -179,30 +179,31 @@ public class c01s002_002Activity extends CommonActivity {
                     //调用接口，查询合成刀具组成信息
                     IRequest iRequest = retrofit.create(IRequest.class);
 
-                    FastQueryVO fastQueryVO = new FastQueryVO();
-                    fastQueryVO.setRfidLaserCode(rfidString);
+                    RFIDQueryVO rfidQueryVOParam = new RFIDQueryVO();
+                    rfidQueryVOParam.setRfidCode(rfidString);
 
-                    String jsonStr = objectToJson(fastQueryVO);
+                    String jsonStr = objectToJson(rfidQueryVOParam);
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                    Call<String> fastQuery = iRequest.fastQuery(body);
-                    fastQuery.enqueue(new MyCallBack<String>() {
+                    Call<String> queryByRFID = iRequest.queryByRFID(body);
+                    queryByRFID.enqueue(new MyCallBack<String>() {
                         @Override
                         public void _onResponse(Response<String> response) {
                             try {
                                 if (response.raw().code() == 200) {
-                                    FastQueryVO fastQueryVO = jsonToObject(response.body(), FastQueryVO.class);
+                                    RFIDQueryVO rfidQueryVO = jsonToObject(response.body(), RFIDQueryVO.class);
 
-                                    if (fastQueryVO != null) {
+                                    if (rfidQueryVO != null) {
                                         String rfidCode = "";
                                         // 材料刀
-                                        CuttingToolBind cuttingToolBind = fastQueryVO.getCuttingToolBind();
+                                        CuttingToolBind cuttingToolBind = rfidQueryVO.getCuttingToolBind();
                                         // 合成刀具
-                                        SynthesisCuttingToolBind synthesisCuttingToolBind = fastQueryVO.getSynthesisCuttingToolBind();
+                                        SynthesisCuttingToolBind synthesisCuttingToolBind = rfidQueryVO.getSynthesisCuttingToolBind();
                                         // 设备
-                                        ProductLineEquipment productLineEquipment = fastQueryVO.getEquipment();
-                                        // 人员
-                                        AuthCustomer authCustomer = fastQueryVO.getAuthCustomer();
+                                        ProductLineEquipment productLineEquipment = rfidQueryVO.getEquipment();
+                                        // TODO 新接口没有人员信息
+//                                        // 人员
+//                                        AuthCustomer authCustomer = rfidQueryVO.getAuthCustomer();
 
 
                                         StringBuffer content = new StringBuffer();
@@ -253,14 +254,15 @@ public class c01s002_002Activity extends CommonActivity {
                                             //添加设备数据
                                             content.append("设备名称：").append(productLineEquipment.getName());
                                         }
-                                        // 员工
-                                        else if (authCustomer != null) {
-                                            rfidCode = authCustomer.getRfidContainer().getCode();
-                                            // 添加人员数据
-                                            content.append("员工号：").append(authCustomer.getEmployeeCode()).append("\n");
-                                            content.append("真实姓名：").append(authCustomer.getName()).append("\n");
-                                            content.append("部门：").append(authCustomer.getAuthDepartment().getName());
-                                        }
+                                        // TODO 新接口没有人员信息
+//                                        // 员工
+//                                        else if (authCustomer != null) {
+//                                            rfidCode = authCustomer.getRfidContainer().getCode();
+//                                            // 添加人员数据
+//                                            content.append("员工号：").append(authCustomer.getEmployeeCode()).append("\n");
+//                                            content.append("真实姓名：").append(authCustomer.getName()).append("\n");
+//                                            content.append("部门：").append(authCustomer.getAuthDepartment().getName());
+//                                        }
 
                                         // 查询出信息
                                         if (!"".equals(content.toString())) {
