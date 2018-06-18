@@ -36,8 +36,6 @@ public class c01s002_003Activity extends CommonActivity {
                 finish();
                 break;
             case R.id.btnComplete:
-                intent = new Intent(this, C00S000_002Activity.class);
-                startActivity(intent);
                 finish();
                 break;
         }

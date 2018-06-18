@@ -3,27 +3,30 @@ package com.icomp.Iswtmv10.v01c01.c01s002;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.*;
 
-import com.apiclient.pojo.AuthCustomer;
-import com.apiclient.pojo.CuttingToolBind;
-import com.apiclient.pojo.ProductLineEquipment;
-import com.apiclient.pojo.SynthesisCuttingToolBind;
+import com.apiclient.constants.OperationEnum;
+import com.apiclient.pojo.*;
+import com.apiclient.vo.FastQueryVO;
 import com.apiclient.vo.RFIDQueryVO;
+import com.apiclient.vo.RfidContainerVO;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
+import com.icomp.Iswtmv10.v01c01.c01s019.C01S019_002Activity;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +54,9 @@ public class c01s002_002Activity extends CommonActivity {
 
     //调用接口
     private Retrofit retrofit;
+
+    // rfid标签code集合
+    List<String> rfidCodeList = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +88,8 @@ public class c01s002_002Activity extends CommonActivity {
                     stop_scan();
                 }
 
-                is_need_authorization = true;
+                // TODO 授权信息是什么，未确定，暂时不开启授权
+                is_need_authorization = false;
                 authorizationWindow(new AuthorizationWindowCallBack() {
                     @Override
                     public void success(AuthCustomer authCustomer) {
@@ -172,43 +179,92 @@ public class c01s002_002Activity extends CommonActivity {
                     //调用接口，查询合成刀具组成信息
                     IRequest iRequest = retrofit.create(IRequest.class);
 
-                    //TODO 需要处理参数
-                    RFIDQueryVO rFIDQueryVO = new RFIDQueryVO();
-                    rFIDQueryVO.setRfidCode(rfidString);
+                    FastQueryVO fastQueryVO = new FastQueryVO();
+                    fastQueryVO.setRfidLaserCode(rfidString);
 
-                    String jsonStr = objectToJson(rFIDQueryVO);
+                    String jsonStr = objectToJson(fastQueryVO);
                     RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-                    Call<String> queryByRFID = iRequest.queryByRFID(body);
-                    queryByRFID.enqueue(new MyCallBack<String>() {
+                    Call<String> fastQuery = iRequest.fastQuery(body);
+                    fastQuery.enqueue(new MyCallBack<String>() {
                         @Override
                         public void _onResponse(Response<String> response) {
                             try {
                                 if (response.raw().code() == 200) {
-                                    RFIDQueryVO rfidQueryVO = jsonToObject(response.body(), RFIDQueryVO.class);
+                                    FastQueryVO fastQueryVO = jsonToObject(response.body(), FastQueryVO.class);
 
-                                    if (rfidQueryVO != null) {
-                                        CuttingToolBind cuttingToolBind = rfidQueryVO.getCuttingToolBind();// 材料刀，单品刀
-                                        ProductLineEquipment productLineEquipment = rfidQueryVO.getEquipment();// 设备
-                                        SynthesisCuttingToolBind synthesisCuttingToolBind = rfidQueryVO.getSynthesisCuttingToolBind();// 合成刀具
+                                    if (fastQueryVO != null) {
+                                        String rfidCode = "";
+                                        // 材料刀
+                                        CuttingToolBind cuttingToolBind = fastQueryVO.getCuttingToolBind();
+                                        // 合成刀具
+                                        SynthesisCuttingToolBind synthesisCuttingToolBind = fastQueryVO.getSynthesisCuttingToolBind();
+                                        // 设备
+                                        ProductLineEquipment productLineEquipment = fastQueryVO.getEquipment();
+                                        // 人员
+                                        AuthCustomer authCustomer = fastQueryVO.getAuthCustomer();
+
 
                                         StringBuffer content = new StringBuffer();
+                                        // 材料刀
                                         if (cuttingToolBind != null) {
-                                            content.append("材料号：" + cuttingToolBind.getCuttingTool().getBusinessCode() + "\n");
-                                            //content.append("状态：" + cuttingToolBind.getCuttingTool() + "\n");//TODO 不知道是哪个字段
-                                            content.append("刀身码：" + cuttingToolBind.getBladeCode());
-                                        } else if (productLineEquipment != null) {
-                                            content.append("设备代码：" + productLineEquipment.getCode());
-                                        } else if (synthesisCuttingToolBind != null) {
-                                            content.append("合成刀具编码：" + synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());
-                                        } else if (false) {// TODO 是否还有人员信息和标签
-                                            content.append("员工号：" + "\n");
-                                            content.append("真实姓名：" + "\n");
-                                            content.append("部门：" + "\n");
+                                            rfidCode = cuttingToolBind.getRfidContainer().getCode();
+                                            // 添加材料刀数据
+                                            content.append("物料号：").append(cuttingToolBind.getCuttingTool().getBusinessCode()).append("\n");
+                                            content.append("最后执行操作：").append(cuttingToolBind.getRfidContainer().getPrevOperation()).append("\n");
+                                            content.append("操作者：").append(cuttingToolBind.getRfidContainer().getOperatorName()).append("\n");
+
+                                            try {
+                                                SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
+                                                String date = df.format(cuttingToolBind.getRfidContainer().getOperatorTime());
+                                                content.append("操作时间：").append(date).append("\n");
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+
+                                            content.append("修磨次数：").append(cuttingToolBind.getSharpenTimes()).append("\n");
+                                            if (cuttingToolBind.getProcessingCount() != null) {
+                                                content.append("累计加工量：").append(cuttingToolBind.getProcessingCount());
+                                            }
+                                        }
+                                        // 合成刀
+                                        else if (synthesisCuttingToolBind != null) {
+                                            rfidCode = synthesisCuttingToolBind.getRfidContainer().getCode();
+                                            // 添加合成刀数据
+                                            content.append("合成刀具编码：").append(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode()).append("\n");
+                                            content.append("最后执行操作：").append(synthesisCuttingToolBind.getRfidContainer().getPrevOperation()).append("\n");
+                                            content.append("操作者：").append(synthesisCuttingToolBind.getRfidContainer().getOperatorName()).append("\n");
+
+                                            try {
+                                                SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
+                                                String date = df.format(synthesisCuttingToolBind.getRfidContainer().getOperatorTime());
+                                                content.append("操作时间：").append(date).append("\n");
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                            if (synthesisCuttingToolBind.getProcessingCount() != null) {
+                                                content.append("累计加工量：").append(synthesisCuttingToolBind.getProcessingCount());
+                                            }
+
+                                        }
+                                        // 设备
+                                        else if (productLineEquipment != null) {
+                                            rfidCode = productLineEquipment.getRfidContainer().getCode();
+                                            //添加设备数据
+                                            content.append("设备名称：").append(productLineEquipment.getName());
+                                        }
+                                        // 员工
+                                        else if (authCustomer != null) {
+                                            rfidCode = authCustomer.getRfidContainer().getCode();
+                                            // 添加人员数据
+                                            content.append("员工号：").append(authCustomer.getEmployeeCode()).append("\n");
+                                            content.append("真实姓名：").append(authCustomer.getName()).append("\n");
+                                            content.append("部门：").append(authCustomer.getAuthDepartment().getName());
                                         }
 
+                                        // 查询出信息
                                         if (!"".equals(content.toString())) {
-                                            showDialogAlert(content.toString(), rfidString);
+                                            showDialogAlert(content.toString(), rfidString, rfidCode);
                                         }
                                     } else {
                                         Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
@@ -243,9 +299,6 @@ public class c01s002_002Activity extends CommonActivity {
                     }
                     Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                // 重复扫描
-                Toast.makeText(getApplicationContext(), "重复扫描", Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -253,7 +306,7 @@ public class c01s002_002Activity extends CommonActivity {
     /**
      * 显示数据提示dialog
      */
-    private void showDialogAlert(String content, final String rfid) {
+    private void showDialogAlert(String content, final String rfid, final String rfidCode) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.MyDialog2);
         final AlertDialog dialog = builder.create();
         View view = View.inflate(this, R.layout.dialog_alert, null);
@@ -267,13 +320,15 @@ public class c01s002_002Activity extends CommonActivity {
             public void onClick(View v) {
                 //将rfidString放入params.rfidList列表中
                 rfidList.add(rfid);
+                rfidCodeList.add(rfidCode);
 
                 //扫描数量 scanNumber+1
                 scanNumber = scanNumber + 1;
-                //显示当前清空数量
-                mTvNum.setText("清空数量：" + scanNumber);
-                mBtnNext.setText("清空");
 
+                // 设置清空数量
+                Message message = new Message();
+                message.obj = rfidString;
+                setValueHandler.sendMessage(message);
 
                 //重新启动扫描线程
                 scanThread = new scanThread();
@@ -296,25 +351,92 @@ public class c01s002_002Activity extends CommonActivity {
 
         dialog.show();
         dialog.setContentView(view);
-        dialog.getWindow().setLayout((int) (screenWidth * 0.8), (int) (screenHeight * 0.6));
+        dialog.getWindow().setLayout((int) (screenWidth * 1), (int) (screenHeight * 0.6));
     }
 
+    //扫描Handler
+    @SuppressLint("HandlerLeak")
+    Handler setValueHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
 
+            //显示当前清空数量
+            mTvNum.setText("清空数量：" + scanNumber);
+        }
+    };
 
     //提交清空 RFID 标签数据
     private void requestData(AuthCustomer authCustomer) {
         try {
             loading.show();
-            IRequest iRequest = retrofit.create(IRequest.class);
+            // TODO 授权信息是什么，未确定，暂时不开启授权
+//            Map<String, String> headsMap = new HashMap<>();
+//
+//            // 授权信息集合
+//            List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
+//            // 授权信息
+//            ImpowerRecorder impowerRecorder = new ImpowerRecorder();
+//
+//            try {
+//                // 需要授权信息
+//                if (is_need_authorization && authCustomer != null) {
+//                    //设定用户访问信息
+//                    @SuppressLint("WrongConstant")
+//                    SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
+//                    String userInfoJson = sharedPreferences.getString("loginInfo", null);
+//
+//                    AuthCustomer customer = jsonToObject(userInfoJson, AuthCustomer.class);
+//
+//                    Set<String> rfids = rfidToMap.keySet();
+//                    for (String rfid : rfids) {
+//                        CuttingToolBind cuttingToolBind = rfidToMap.get(rfid);
+//                        impowerRecorder = new ImpowerRecorder();
+//
+//                        // ------------ 授权信息 ------------
+//                        impowerRecorder.setToolCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 合成刀编码
+//                        impowerRecorder.setRfidLasercode(authCustomer.getRfidContainer().getLaserCode());// rfid标签
+//                        impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
+//                        impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
+//                        impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_Inside.getKey().toString());//操作key
+//
+//                        impowerRecorderList.add(impowerRecorder);
+//                    }
+//                }
+//                headsMap.put("impower", objectToJson(impowerRecorderList));
+//            } catch (JsonProcessingException e) {
+//                e.printStackTrace();
+//                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+//                return;
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                createAlertDialog(c01s002_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+//                return;
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+
+            List<RfidContainerVO> rfidContainerVOList = new ArrayList<>();
+
+            for (String rfidCode : rfidCodeList) {
+                RfidContainerVO rfidContainerVO = new RfidContainerVO();
+                rfidContainerVO.setCode(rfidCode);
+
+                rfidContainerVOList.add(rfidContainerVO);
+            }
+
 
             // TODO 需要处理参数
             RFIDQueryVO rFIDQueryVO = new RFIDQueryVO();
-            // TODO 授权信息不知道放哪
-//        authorizationList.get(0);
-            String jsonStr = objectToJson(rFIDQueryVO);
+            //TODO 缺少这个属性
+//            rFIDQueryVO.setRfidContainerVOLis(rfidContainerVOList);
 
+            String jsonStr = objectToJson(rFIDQueryVO);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
+            IRequest iRequest = retrofit.create(IRequest.class);
             Call<String> clearRFID = iRequest.clearRFID(body);
 
             clearRFID.enqueue(new MyCallBack<String>() {
