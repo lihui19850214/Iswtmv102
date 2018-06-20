@@ -36,6 +36,7 @@ public class C01S007_002Activity extends CommonActivity {
             case R.id.btnGoOn:
                 Intent intent = new Intent(C01S007_002Activity.this, C01S007_001Activity.class);
                 startActivity(intent);
+                finish();
                 break;
             case R.id.btnComplete:
                 finish();
