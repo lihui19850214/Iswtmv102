@@ -147,6 +147,7 @@ public class c01s005_002_2Activity extends CommonActivity {
                     // 不清空页面之间传递的值
                     intent.putExtra("isClearParamMap", false);
                     startActivity(intent);
+                    finish();
                 } else {
                     createAlertDialog(c01s005_002_2Activity.this, "请添加要报废的材料", Toast.LENGTH_LONG);
                 }
