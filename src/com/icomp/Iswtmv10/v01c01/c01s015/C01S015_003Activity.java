@@ -10,18 +10,15 @@ import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.utils.SysApplication;
 
 /**
- * 库房盘点页面3
- * Created by FanLL on 2017/6/16.
+ * 刀具绑定页面2
  */
-
 public class C01S015_003Activity extends CommonActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c01s015_003);
-        //创建Activity时，添加到List进行管理
-        SysApplication.getInstance().addActivity(this);
+
     }
 
     //继续按钮处理--跳转到合成道具初始化页面1
