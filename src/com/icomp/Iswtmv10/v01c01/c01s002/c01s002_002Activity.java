@@ -10,6 +10,8 @@ import android.os.Message;
 import android.view.View;
 import android.widget.*;
 
+import com.apiclient.constants.EquipmentTypeEnum;
+import com.apiclient.constants.GrindingEnum;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.FastQueryVO;
@@ -43,10 +45,9 @@ public class c01s002_002Activity extends CommonActivity {
 
     @BindView(R.id.tvNum)
     TextView mTvNum;
+
     @BindView(R.id.btnScan)
     Button mBtnScan;
-    @BindView(R.id.btnStop)
-    Button mBtnStop;
     @BindView(R.id.btnCancel)
     Button mBtnCancel;
     @BindView(R.id.btnNext)
@@ -68,50 +69,35 @@ public class c01s002_002Activity extends CommonActivity {
 
     }
 
-    @OnClick({R.id.btnScan, R.id.btnStop, R.id.btnCancel, R.id.btnNext})
+    @OnClick({R.id.btnScan, R.id.btnCancel, R.id.btnNext})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btnScan:
                 scan();
                 break;
-            case R.id.btnStop:
-                stop_scan();
-                break;
             case R.id.btnCancel:
-                if (!isCanScan) {
-                    stop_scan();
-                }
                 finish();
                 break;
             case R.id.btnNext:
-                if (!isCanScan) {
-                    stop_scan();
+                if (rfidCodeList == null || rfidCodeList.size() == 0) {
+                    createAlertDialog(c01s002_002Activity.this, "请扫描标签", Toast.LENGTH_LONG);
+                } else {
+                    // TODO 授权信息是什么，未确定，暂时不开启授权
+                    is_need_authorization = false;
+                    authorizationWindow(new AuthorizationWindowCallBack() {
+                        @Override
+                        public void success(AuthCustomer authCustomer) {
+                            requestData(authCustomer);
+                        }
+
+                        @Override
+                        public void fail() {
+
+                        }
+                    });
                 }
-
-                // TODO 授权信息是什么，未确定，暂时不开启授权
-                is_need_authorization = false;
-                authorizationWindow(new AuthorizationWindowCallBack() {
-                    @Override
-                    public void success(AuthCustomer authCustomer) {
-                        requestData(authCustomer);
-                    }
-
-                    @Override
-                    public void fail() {
-
-                    }
-                });
                 break;
         }
-    }
-
-    private void stop_scan() {
-        scanOrNot = false;
-        isCanScan = true;
-        close();
-        mBtnScan.setClickable(true);
-        mBtnScan.setText(getString(R.string.scan));
-        mBtnScan.setBackgroundResource(R.drawable.border);
     }
 
     //扫描数量
@@ -120,190 +106,223 @@ public class c01s002_002Activity extends CommonActivity {
     public List<String> rfidList;
 
     //扫描线程
-    private scanThread scanThread;
+    private ScanThread scanThread;
 
     //扫描方法
     private void scan() {
         if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
-            mBtnScan.setText("扫描中");
-            mBtnScan.setClickable(false);
-            mBtnScan.setBackgroundResource(R.color.hintcolor);
-
-            //设置扫描或停止条件为true
-            scanOrNot = true;
             isCanScan = false;
+            mBtnScan.setClickable(false);
+            mBtnCancel.setClickable(false);
+            mBtnNext.setClickable(false);
+
+            //显示扫描弹框的方法
+            scanPopupWindow();
+
             //启动扫描线程
-            scanThread = new scanThread();
+            scanThread = new ScanThread();
             scanThread.start();
         } else {
             Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
         }
     }
 
+
     //扫描线程
-    private class scanThread extends Thread{
+    private class ScanThread extends Thread{
         @Override
         public void run() {
             super.run();
-            //需每次置rfidString为null
-            rfidString = null;
+            //单扫方法
+            rfidString = singleScan();//TODO 生产环境需要
+//            rfidString = "18000A00000FB125";
+            if ("close".equals(rfidString)) {
+                isCanScan = true;
+                mBtnScan.setClickable(true);
+                mBtnCancel.setClickable(true);
+                mBtnNext.setClickable(true);
 
-            while (null == rfidString && scanOrNot) {
-                rfidString = alwaysScan();
-            }
-
-            if (null != rfidString) {
                 Message message = new Message();
-                message.obj = rfidString;
-                scanHandler.sendMessage(message);
+                overtimeHandler.sendMessage(message);
+            } else if (null != rfidString) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        isCanScan = true;
+                        mBtnScan.setClickable(true);
+                        mBtnCancel.setClickable(true);
+                        mBtnNext.setClickable(true);
+
+                        if (null != popupWindow && popupWindow.isShowing()) {
+                            popupWindow.dismiss();
+                        }
+
+                        loading.show();
+                    }
+                });
+
+
+                if (null == rfidList) {
+                    rfidList = new ArrayList<>();
+                }
+
+                if (!rfidList.contains(rfidString)) {
+                    try {
+                        loading.show();
+
+                        //调用接口，查询合成刀具组成信息
+                        IRequest iRequest = retrofit.create(IRequest.class);
+
+                        RFIDQueryVO rfidQueryVOParam = new RFIDQueryVO();
+                        rfidQueryVOParam.setRfidCode(rfidString);
+
+                        String jsonStr = objectToJson(rfidQueryVOParam);
+                        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+
+                        Call<String> queryByRFID = iRequest.queryByRFID(body);
+                        queryByRFID.enqueue(new MyCallBack<String>() {
+                            @Override
+                            public void _onResponse(Response<String> response) {
+                                try {
+                                    if (response.raw().code() == 200) {
+                                        RFIDQueryVO rfidQueryVO = jsonToObject(response.body(), RFIDQueryVO.class);
+
+                                        if (rfidQueryVO != null) {
+                                            String rfidCode = "";
+                                            // 材料刀
+                                            CuttingToolBind cuttingToolBind = rfidQueryVO.getCuttingToolBind();
+                                            // 合成刀具
+                                            SynthesisCuttingToolBind synthesisCuttingToolBind = rfidQueryVO.getSynthesisCuttingToolBind();
+                                            // 设备
+                                            ProductLineEquipment productLineEquipment = rfidQueryVO.getEquipment();
+                                            // 人员
+                                            AuthCustomer authCustomer = rfidQueryVO.getAuthCustomer();
+
+
+                                            StringBuffer content = new StringBuffer();
+                                            // 材料刀
+                                            if (cuttingToolBind != null) {
+                                                rfidCode = cuttingToolBind.getRfidContainer().getCode();
+                                                // 添加材料刀数据
+                                                content.append("物料号：").append(cuttingToolBind.getCuttingTool().getBusinessCode()).append("\n");
+                                                String bladeCode = cuttingToolBind.getBladeCode();
+                                                if (bladeCode != null && bladeCode.indexOf("-") > 0) {
+                                                    bladeCode = bladeCode.split("-")[1];
+                                                }
+                                                content.append("刀身码：").append(bladeCode).append("\n");
+                                                content.append("最后操作：").append(cuttingToolBind.getRfidContainer().getPrevOperation()).append("\n");
+                                                content.append("操作者：").append(cuttingToolBind.getRfidContainer().getOperatorName()).append("\n");
+
+                                                try {
+                                                    SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
+                                                    String date = df.format(cuttingToolBind.getRfidContainer().getOperatorTime());
+                                                    content.append("操作时间：").append(date).append("\n");
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                    content.append("操作时间：").append("").append("\n");
+                                                }
+
+                                                if (cuttingToolBind.getProcessingCount() != null) {
+                                                    content.append("累计加工：").append(cuttingToolBind.getProcessingCount()).append("\n");
+                                                } else {
+                                                    content.append("累计加工：").append("").append("\n");
+                                                }
+
+                                                String grinding = "";
+                                                if (GrindingEnum.inside.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding())) {
+                                                    grinding = GrindingEnum.inside.getName();
+                                                } else if (GrindingEnum.outside.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding())) {
+                                                    grinding = GrindingEnum.outside.getName();
+                                                } else if (GrindingEnum.outside_tuceng.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding())) {
+                                                    grinding = GrindingEnum.outside_tuceng.getName();
+                                                }
+                                                content.append("修磨方式：").append(grinding).append("\n");
+                                            }
+                                            // 合成刀
+                                            else if (synthesisCuttingToolBind != null) {
+                                                rfidCode = synthesisCuttingToolBind.getRfidContainer().getCode();
+                                                // 添加合成刀数据
+                                                content.append("合成刀：").append(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode()).append("\n");
+                                                content.append("最后操作：").append(synthesisCuttingToolBind.getRfidContainer().getPrevOperation()).append("\n");
+                                                content.append("操作者：").append(synthesisCuttingToolBind.getRfidContainer().getOperatorName()).append("\n");
+
+                                                try {
+                                                    SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
+                                                    String date = df.format(synthesisCuttingToolBind.getRfidContainer().getOperatorTime());
+                                                    content.append("操作时间：").append(date).append("\n");
+                                                } catch (Exception e) {
+                                                    e.printStackTrace();
+                                                }
+                                                if (synthesisCuttingToolBind.getProcessingCount() != null) {
+                                                    content.append("累计加工：").append(synthesisCuttingToolBind.getProcessingCount());
+                                                }
+                                            }
+                                            // 设备
+                                            else if (productLineEquipment != null) {
+                                                rfidCode = productLineEquipment.getRfidContainer().getCode();
+
+                                                String type = "";
+                                                if (EquipmentTypeEnum.Processing.getKey().equals(productLineEquipment.getType())) {
+                                                    type = EquipmentTypeEnum.Processing.getName();
+                                                } else if (EquipmentTypeEnum.Grinding.getKey().equals(productLineEquipment.getType())) {
+                                                    type = EquipmentTypeEnum.Grinding.getName();
+                                                }
+
+                                                //添加设备数据
+                                                content.append("设备名称：").append(productLineEquipment.getName()).append("\n");
+                                                content.append("设备类型：").append(type);
+                                            }
+                                            // 员工
+                                            else if (authCustomer != null) {
+                                                rfidCode = authCustomer.getRfidContainer().getCode();
+                                                // 添加人员数据
+                                                content.append("员工号：").append(authCustomer.getEmployeeCode()).append("\n");
+                                                content.append("真实姓名：").append(authCustomer.getName()).append("\n");
+                                                content.append("部门：").append(authCustomer.getAuthDepartment().getName()).append("\n");
+                                                content.append("职务：").append(authCustomer.getAuthPosition().getName());
+                                            }
+
+                                            // 查询出信息
+                                            if (!"".equals(content.toString())) {
+                                                showDialogAlert(content.toString(), rfidString, rfidCode);
+                                            }
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        createAlertDialog(c01s002_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                } finally {
+                                    loading.dismiss();
+                                }
+                            }
+
+                            @Override
+                            public void _onFailure(Throwable t) {
+                                loading.dismiss();
+                                createAlertDialog(c01s002_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
+                                }
+                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+
             }
         }
     }
-
-    //扫描Handler
-    @SuppressLint("HandlerLeak")
-    Handler scanHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            rfidString = msg.obj.toString();
-
-            if (null == rfidList) {
-                rfidList = new ArrayList<>();
-            }
-
-            if (!rfidList.contains(rfidString)) {
-                try {
-                    loading.show();
-
-                    //调用接口，查询合成刀具组成信息
-                    IRequest iRequest = retrofit.create(IRequest.class);
-
-                    RFIDQueryVO rfidQueryVOParam = new RFIDQueryVO();
-                    rfidQueryVOParam.setRfidCode(rfidString);
-
-                    String jsonStr = objectToJson(rfidQueryVOParam);
-                    RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
-
-                    Call<String> queryByRFID = iRequest.queryByRFID(body);
-                    queryByRFID.enqueue(new MyCallBack<String>() {
-                        @Override
-                        public void _onResponse(Response<String> response) {
-                            try {
-                                if (response.raw().code() == 200) {
-                                    RFIDQueryVO rfidQueryVO = jsonToObject(response.body(), RFIDQueryVO.class);
-
-                                    if (rfidQueryVO != null) {
-                                        String rfidCode = "";
-                                        // 材料刀
-                                        CuttingToolBind cuttingToolBind = rfidQueryVO.getCuttingToolBind();
-                                        // 合成刀具
-                                        SynthesisCuttingToolBind synthesisCuttingToolBind = rfidQueryVO.getSynthesisCuttingToolBind();
-                                        // 设备
-                                        ProductLineEquipment productLineEquipment = rfidQueryVO.getEquipment();
-                                        // TODO 新接口没有人员信息
-//                                        // 人员
-//                                        AuthCustomer authCustomer = rfidQueryVO.getAuthCustomer();
-
-
-                                        StringBuffer content = new StringBuffer();
-                                        // 材料刀
-                                        if (cuttingToolBind != null) {
-                                            rfidCode = cuttingToolBind.getRfidContainer().getCode();
-                                            // 添加材料刀数据
-                                            content.append("物料号：").append(cuttingToolBind.getCuttingTool().getBusinessCode()).append("\n");
-                                            content.append("最后执行操作：").append(cuttingToolBind.getRfidContainer().getPrevOperation()).append("\n");
-                                            content.append("操作者：").append(cuttingToolBind.getRfidContainer().getOperatorName()).append("\n");
-
-                                            try {
-                                                SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
-                                                String date = df.format(cuttingToolBind.getRfidContainer().getOperatorTime());
-                                                content.append("操作时间：").append(date).append("\n");
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-
-                                            content.append("修磨次数：").append(cuttingToolBind.getSharpenTimes()).append("\n");
-                                            if (cuttingToolBind.getProcessingCount() != null) {
-                                                content.append("累计加工量：").append(cuttingToolBind.getProcessingCount());
-                                            }
-                                        }
-                                        // 合成刀
-                                        else if (synthesisCuttingToolBind != null) {
-                                            rfidCode = synthesisCuttingToolBind.getRfidContainer().getCode();
-                                            // 添加合成刀数据
-                                            content.append("合成刀具编码：").append(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode()).append("\n");
-                                            content.append("最后执行操作：").append(synthesisCuttingToolBind.getRfidContainer().getPrevOperation()).append("\n");
-                                            content.append("操作者：").append(synthesisCuttingToolBind.getRfidContainer().getOperatorName()).append("\n");
-
-                                            try {
-                                                SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
-                                                String date = df.format(synthesisCuttingToolBind.getRfidContainer().getOperatorTime());
-                                                content.append("操作时间：").append(date).append("\n");
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                            if (synthesisCuttingToolBind.getProcessingCount() != null) {
-                                                content.append("累计加工量：").append(synthesisCuttingToolBind.getProcessingCount());
-                                            }
-
-                                        }
-                                        // 设备
-                                        else if (productLineEquipment != null) {
-                                            rfidCode = productLineEquipment.getRfidContainer().getCode();
-                                            //添加设备数据
-                                            content.append("设备名称：").append(productLineEquipment.getName());
-                                        }
-                                        // TODO 新接口没有人员信息
-//                                        // 员工
-//                                        else if (authCustomer != null) {
-//                                            rfidCode = authCustomer.getRfidContainer().getCode();
-//                                            // 添加人员数据
-//                                            content.append("员工号：").append(authCustomer.getEmployeeCode()).append("\n");
-//                                            content.append("真实姓名：").append(authCustomer.getName()).append("\n");
-//                                            content.append("部门：").append(authCustomer.getAuthDepartment().getName());
-//                                        }
-
-                                        // 查询出信息
-                                        if (!"".equals(content.toString())) {
-                                            showDialogAlert(content.toString(), rfidString, rfidCode);
-                                        }
-                                    } else {
-                                        Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    createAlertDialog(c01s002_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
-                                    //重新启动扫描线程
-                                    scanThread = new scanThread();
-                                    scanThread.start();
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                            } finally {
-                                loading.dismiss();
-                            }
-                        }
-
-                        @Override
-                        public void _onFailure(Throwable t) {
-                            if (!isCanScan) {
-                                stop_scan();
-                            }
-                            loading.dismiss();
-                            createAlertDialog(c01s002_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (null != loading && loading.isShowing()) {
-                        loading.dismiss();
-                    }
-                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                }
-            }
-        }
-    };
 
     /**
      * 显示数据提示dialog
@@ -332,10 +351,6 @@ public class c01s002_002Activity extends CommonActivity {
                 message.obj = rfidString;
                 setValueHandler.sendMessage(message);
 
-                //重新启动扫描线程
-                scanThread = new scanThread();
-                scanThread.start();
-
                 dialog.cancel();
             }
         });
@@ -343,17 +358,13 @@ public class c01s002_002Activity extends CommonActivity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //重新启动扫描线程
-                scanThread = new scanThread();
-                scanThread.start();
-
                 dialog.cancel();
             }
         });
 
         dialog.show();
         dialog.setContentView(view);
-        dialog.getWindow().setLayout((int) (screenWidth * 1), (int) (screenHeight * 0.6));
+        dialog.getWindow().setLayout((int) (screenWidth * 1), (int) (screenHeight * 0.8));
     }
 
     //扫描Handler
@@ -430,10 +441,8 @@ public class c01s002_002Activity extends CommonActivity {
             }
 
 
-            // TODO 需要处理参数
             RFIDQueryVO rFIDQueryVO = new RFIDQueryVO();
-            //TODO 缺少这个属性
-//            rFIDQueryVO.setRfidContainerVOLis(rfidContainerVOList);
+            rFIDQueryVO.setRfidContainerVOList(rfidContainerVOList);
 
             String jsonStr = objectToJson(rFIDQueryVO);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
