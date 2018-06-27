@@ -19,6 +19,7 @@
                 android:gravity="start|bottom"
                 android:text="@string/c01s002_002_001"/>
 
+        <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
         <TextView
                 android:id="@+id/tvNum"
                 android:layout_gravity="center"
@@ -28,7 +29,7 @@
                 android:text="清空数量：0"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-
+        </LinearLayout>
         <LinearLayout
                 style="@style/MiddleTwoButtonLinerLayoutStyle"
                 android:layout_height="wrap_content"
@@ -38,13 +39,6 @@
                 <Button
                         android:id="@+id/btnScan"
                         android:text="@string/scan"
-                        style="@style/TwoButtonStyle"
-                        android:layout_height="wrap_content"/>
-
-
-                <Button
-                        android:id="@+id/btnStop"
-                        android:text="@string/stop"
                         style="@style/TwoButtonStyle"
                         android:layout_height="wrap_content"/>
 
