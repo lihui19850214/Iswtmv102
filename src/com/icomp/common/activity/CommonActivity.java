@@ -13,6 +13,8 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.net.wifi.WifiManager;
 import android.os.*;
 import android.text.method.ReplacementTransformationMethod;
@@ -148,6 +150,11 @@ public abstract class CommonActivity extends Activity {
 //    protected boolean mSwitchFlag = false;
 //    private VirtualKeyListenerBroadcastReceiver mVirtualKeyListenerBroadcastReceiver;
 
+    // 扫描成功提示音
+    public static int scanSuccessSoundID = -1;
+    //
+    public static SoundPool soundPool = null;
+
     /**
      * Called when the activity is first created.
      */
@@ -174,6 +181,12 @@ public abstract class CommonActivity extends Activity {
 
         // 初始化读头
         initRFID();
+
+        // 判断是否未加载提示音
+        if (scanSuccessSoundID < 0) {
+            soundPool = new SoundPool(3, AudioManager.STREAM_MUSIC, 0);
+            scanSuccessSoundID = soundPool.load(getApplicationContext(), R.raw.tip02, 1);
+        }
     }
 
 
@@ -838,6 +851,8 @@ public abstract class CommonActivity extends Activity {
             String[] rfid = rfidWithUHF.readTagFromBuffer();
             if (null != rfid && !rfid[0].equals(REGULARLENGTH1) && !rfid[0].equals(REGULARLENGTH2)) {
                 rfidString = rfid[1];
+                // 音频文件id、左声道音量，有声道音量、优先级、循环次数、播放速率
+                soundPool.play(scanSuccessSoundID, 1, 1,1, 0, 1);
             }
             if ("".equals(rfidString) || null == rfidString) {
                 // 判断超过扫描时间，读头关闭
