@@ -36,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 刀具打码
+ * 刀具打码页面1
  */
 public class C01S007_001Activity extends CommonActivity {
 
@@ -88,7 +88,7 @@ public class C01S007_001Activity extends CommonActivity {
             createAlertDialog(C01S007_001Activity.this, "请先扫描刀具盒标签", Toast.LENGTH_LONG);
         } else {
             Intent intent = new Intent(C01S007_001Activity.this, C01S007_002Activity.class);
-            // 不清空页面之间传递的值
+            intent.putExtra("businessCode", cuttingToolBind.getCuttingTool().getBusinessCode());
             intent.putExtra("bladeCode", cuttingToolBind.getBladeCode());
             startActivity(intent);
             finish();
