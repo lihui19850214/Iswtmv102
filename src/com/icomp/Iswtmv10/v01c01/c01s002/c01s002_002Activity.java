@@ -135,7 +135,7 @@ public class c01s002_002Activity extends CommonActivity {
             super.run();
             //单扫方法
             rfidString = singleScan();//TODO 生产环境需要
-//            rfidString = "18000A00000FB125";
+//            rfidString = "18000A00000EB967";
             if ("close".equals(rfidString)) {
                 isCanScan = true;
                 mBtnScan.setClickable(true);
@@ -156,8 +156,6 @@ public class c01s002_002Activity extends CommonActivity {
                         if (null != popupWindow && popupWindow.isShowing()) {
                             popupWindow.dismiss();
                         }
-
-                        loading.show();
                     }
                 });
 
@@ -168,7 +166,13 @@ public class c01s002_002Activity extends CommonActivity {
 
                 if (!rfidList.contains(rfidString)) {
                     try {
-                        loading.show();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                loading.show();
+                            }
+                        });
+
 
                         //调用接口，查询合成刀具组成信息
                         IRequest iRequest = retrofit.create(IRequest.class);
@@ -204,14 +208,14 @@ public class c01s002_002Activity extends CommonActivity {
                                             if (cuttingToolBind != null) {
                                                 rfidCode = cuttingToolBind.getRfidContainer().getCode();
                                                 // 添加材料刀数据
-                                                content.append("物料号：").append(cuttingToolBind.getCuttingTool().getBusinessCode()).append("\n");
+                                                content.append("物料号\u3000：").append(cuttingToolBind.getCuttingTool().getBusinessCode()).append("\n");
                                                 String bladeCode = cuttingToolBind.getBladeCode();
                                                 if (bladeCode != null && bladeCode.indexOf("-") > 0) {
                                                     bladeCode = bladeCode.split("-")[1];
                                                 }
-                                                content.append("刀身码：").append(bladeCode).append("\n");
+                                                content.append("刀身码\u3000：").append(bladeCode).append("\n");
                                                 content.append("最后操作：").append(cuttingToolBind.getRfidContainer().getPrevOperation()).append("\n");
-                                                content.append("操作者：").append(cuttingToolBind.getRfidContainer().getOperatorName()).append("\n");
+                                                content.append("操作者\u3000：").append(cuttingToolBind.getRfidContainer().getOperatorName()).append("\n");
 
                                                 try {
                                                     SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
@@ -236,15 +240,15 @@ public class c01s002_002Activity extends CommonActivity {
                                                 } else if (GrindingEnum.outside_tuceng.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding())) {
                                                     grinding = GrindingEnum.outside_tuceng.getName();
                                                 }
-                                                content.append("修磨方式：").append(grinding).append("\n");
+                                                content.append("修磨方式：").append(grinding).append("");
                                             }
                                             // 合成刀
                                             else if (synthesisCuttingToolBind != null) {
                                                 rfidCode = synthesisCuttingToolBind.getRfidContainer().getCode();
                                                 // 添加合成刀数据
-                                                content.append("合成刀：").append(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode()).append("\n");
+                                                content.append("合成刀\u3000：").append(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode()).append("\n");
                                                 content.append("最后操作：").append(synthesisCuttingToolBind.getRfidContainer().getPrevOperation()).append("\n");
-                                                content.append("操作者：").append(synthesisCuttingToolBind.getRfidContainer().getOperatorName()).append("\n");
+                                                content.append("操作者\u3000：").append(synthesisCuttingToolBind.getRfidContainer().getOperatorName()).append("\n");
 
                                                 try {
                                                     SimpleDateFormat df = new SimpleDateFormat("yyyy年MM月dd日");
@@ -252,9 +256,12 @@ public class c01s002_002Activity extends CommonActivity {
                                                     content.append("操作时间：").append(date).append("\n");
                                                 } catch (Exception e) {
                                                     e.printStackTrace();
+                                                    content.append("操作时间：").append("").append("\n");
                                                 }
                                                 if (synthesisCuttingToolBind.getProcessingCount() != null) {
                                                     content.append("累计加工：").append(synthesisCuttingToolBind.getProcessingCount());
+                                                } else {
+                                                    content.append("累计加工：").append("");
                                                 }
                                             }
                                             // 设备
@@ -269,17 +276,17 @@ public class c01s002_002Activity extends CommonActivity {
                                                 }
 
                                                 //添加设备数据
-                                                content.append("设备名称：").append(productLineEquipment.getName()).append("\n");
+                                                content.append("设备名称：").append(productLineEquipment.getName()).append("\n\n");
                                                 content.append("设备类型：").append(type);
                                             }
                                             // 员工
                                             else if (authCustomer != null) {
                                                 rfidCode = authCustomer.getRfidContainer().getCode();
                                                 // 添加人员数据
-                                                content.append("员工号：").append(authCustomer.getEmployeeCode()).append("\n");
-                                                content.append("真实姓名：").append(authCustomer.getName()).append("\n");
-                                                content.append("部门：").append(authCustomer.getAuthDepartment().getName()).append("\n");
-                                                content.append("职务：").append(authCustomer.getAuthPosition().getName());
+                                                content.append("员工号\u3000：").append(authCustomer.getEmployeeCode()).append("\n\n");
+                                                content.append("真实姓名：").append(authCustomer.getName()).append("\n\n");
+                                                content.append("部门\u3000\u3000：").append(authCustomer.getAuthDepartment().getName()).append("\n\n");
+                                                content.append("职务\u3000\u3000：").append(authCustomer.getAuthPosition().getName());
                                             }
 
                                             // 查询出信息
@@ -364,7 +371,7 @@ public class c01s002_002Activity extends CommonActivity {
 
         dialog.show();
         dialog.setContentView(view);
-        dialog.getWindow().setLayout((int) (screenWidth * 1), (int) (screenHeight * 0.8));
+        dialog.getWindow().setLayout((int) (screenWidth * 1), (int) (screenHeight * 0.65));
     }
 
     //扫描Handler
