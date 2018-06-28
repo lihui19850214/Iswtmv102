@@ -338,8 +338,7 @@ public class c01s005_002_3Activity extends CommonActivity {
                         impowerRecorder.setRfidLasercode(authCustomer.getRfidContainer().getLaserCode());// rfid标签
                         impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
                         impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
-                        // TODO 缺少报废，暂时先不报错
-                        impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_Bind.getKey().toString());//操作key
+                        impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_scap.getKey().toString());//操作key
 
 //                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
 //                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
