@@ -2,7 +2,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_c01s008_002"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -46,6 +45,66 @@
             </LinearLayout>
         </LinearLayout>
 
+
+        <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+            <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/table_border_c">
+
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:layout_weight="1.7"
+                        android:textColor="@color/baseColor"
+                        android:text="物料号" />
+
+                <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/baseColor"/>
+
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:textColor="@color/baseColor"
+                        android:text="刀具类型" />
+
+                <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/baseColor"/>
+
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:layout_weight="0.6"
+                        android:textColor="@color/baseColor"
+                        android:text="总数量" />
+
+                <ImageView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/baseColor"/>
+
+                <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:gravity="center"
+                        android:layout_weight="0.8"
+                        android:textColor="@color/baseColor"
+                        android:text="拆分数量" />
+
+            </TableRow>
+        </TableLayout>
+
         <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -54,65 +113,10 @@
             <TableLayout
                     android:id="@+id/tlContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-            >
+                    android:layout_height="match_parent">
 
-                <TableRow
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/table_border_c">
-
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:gravity="center"
-                            android:layout_weight="1"
-                            android:textColor="@color/baseColor"
-                            android:text="材料号" />
-
-                    <ImageView
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/baseColor"/>
-
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:gravity="center"
-                            android:layout_weight="1"
-                            android:textColor="@color/baseColor"
-                            android:text="刀具类型" />
-
-                    <ImageView
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/baseColor"/>
-
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:gravity="center"
-                            android:layout_weight="1"
-                            android:textColor="@color/baseColor"
-                            android:text="总数量" />
-
-                    <ImageView
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:background="@color/baseColor"/>
-
-                    <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:gravity="center"
-                            android:layout_weight="1"
-                            android:textColor="@color/baseColor"
-                            android:text="拆分数量" />
-
-                </TableRow>
             </TableLayout>
+
         </ScrollView>
 
         <TextView

@@ -44,7 +44,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
                     android:id="@+id/tvsingleProductCode"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/table_height"
-                    android:layout_weight="1.5"
+                    android:layout_weight="1"
                     android:background="@null"
                     android:layout_gravity="center"
                     android:textColor="@color/baseColor"
@@ -58,7 +58,7 @@ xmlns:android="http://schemas.android.com/apk/res/android">
                     android:id="@+id/tvNum"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/table_height"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:background="@null"
                     android:layout_gravity="center"
                     android:textColor="@color/baseColor"
@@ -73,22 +73,12 @@ xmlns:android="http://schemas.android.com/apk/res/android">
                     android:layout_width="0dp"
                     android:layout_gravity="center"
                     android:layout_height="@dimen/table_height"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:textColor="@color/baseColor"
                     android:background="@null"
                     android:gravity="center"
                     android:src="@drawable/cancel"
                     android:padding="10dp" />
-            <TextView
-                    android:id="@+id/tvRfidContain"
-                    android:visibility="gone"
-                    android:layout_width="0dp"
-                    android:layout_gravity="center"
-                    android:layout_height="@dimen/table_height"
-                    android:layout_weight="1"
-                    android:textColor="@color/baseColor"
-                    android:background="@null"
-                    android:gravity="center"/>
 
         </LinearLayout>
     </LinearLayout>

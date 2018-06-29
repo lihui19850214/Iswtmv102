@@ -91,6 +91,7 @@ android:background="@color/backgroundcolor">
                 android:id="@+id/btnCancel"
                 android:text="@string/cancel"
                 android:textSize="20sp"
+                android:height="40dp"
                 style="@style/TwoButtonStyle"
                 android:layout_height="wrap_content"/>
 
@@ -98,6 +99,7 @@ android:background="@color/backgroundcolor">
                 android:id="@+id/btnConfirm"
                 android:text="@string/confirm"
                 android:textSize="20sp"
+                android:height="40dp"
                 style="@style/TwoButtonStyle"
                 android:layout_height="wrap_content"/>
 

@@ -11,62 +11,68 @@
 
     <LinearLayout style="@style/MiddleLinerLayoutStyle">
         <TextView
-                android:layout_weight="3"
-                android:text="请点击扫描按钮并扫描要组装的合成刀具标签，或输入合成刀具编码查询"
+                android:layout_height="wrap_content"
+                android:text="请扫描要组装的合成刀具标签或者输入要组装的合成刀具刀身码"
                 style="@style/MiddleTextPromptStule"/>
 
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:paddingTop="20dp">
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="center"
+                    android:text="刀身码:"/>
 
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent">
 
-        <EditText
-                android:id="@+id/et_00"
-                android:hint="@string/c03s001_001_002"
-                android:digits="@string/allowInput"
-                style="@style/MiddleEditTextStyle"/>
-
-
-
-
-
-        <View style="@style/View_1" />
-
-        <LinearLayout style="@style/MiddleTwoButtonLinerLayoutStyle" android:layout_marginTop="10dp">
-
-            <Button
-                    android:id="@+id/btnSearch"
-                    android:text="@string/search"
-                    android:background="@drawable/border_c"
-                    android:textStyle="bold"
-                    style="@style/TwoButtonStyle" />
-
-            <Button
-                    android:id="@+id/btnScan"
-                    android:text="@string/scan"
-                    android:background="@drawable/border_c"
-                    android:textStyle="bold"
-                    style="@style/TwoButtonStyle" />
+                <EditText
+                        android:id="@+id/et_00"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/border_no_radius"
+                        android:textColor="@color/baseColor"
+                        android:textSize="20sp"
+                        android:singleLine="true"
+                        android:textCursorDrawable="@drawable/text_cursor_shape"/>
+            </LinearLayout>
 
         </LinearLayout>
+        <View style="@style/View_1"/>
+        <View style="@style/View_1"/>
+        <View style="@style/View_1"/>
 
-        <View style="@style/View_1" />
-        <View style="@style/View_1" />
 
-
-
-        <!--TextView
-                android:id="@+id/tvScan"
+        <TextView
+                android:id="@+id/btnScan"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
                 android:background="@drawable/border_c"
                 android:text="@string/scan"
                 android:textColor="@color/baseColor"
                 android:gravity="center"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="40dp"
                 android:textSize="@dimen/button_textsize"
                 android:textStyle="bold"
-                android:layout_gravity="center_horizontal"/-->
+                android:layout_gravity="center_horizontal"/>
+
     </LinearLayout>
 
     <LinearLayout style="@style/BottomLinerLayoutStyle">
         <Button android:id="@+id/btnCancel" android:text="@string/returnBy" style="@style/BottomButtonStyle"/>
+
+        <View style="@style/BottomLittlePartingLineStyle" />
+
+        <Button android:id="@+id/btnSearch" android:text="@string/next" style="@style/BottomButtonStyle" />
     </LinearLayout>
 </LinearLayout>
