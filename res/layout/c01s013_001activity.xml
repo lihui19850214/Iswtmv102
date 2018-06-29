@@ -9,7 +9,7 @@
     <LinearLayout style="@style/MiddleLinerLayoutStyle">
         <TextView
                 android:layout_height="wrap_content"
-                android:text="请扫描要安上设备的合成刀具标签或者输入要安上的合成刀具刀身码"
+                android:text="请扫描要换装的合成刀具标签或者输入要换装的合成刀具刀身码"
                 style="@style/MiddleTextPromptStule"/>
 
         <LinearLayout
