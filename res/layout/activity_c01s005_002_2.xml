@@ -2,7 +2,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_c01s005_002_2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -48,7 +47,7 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"
                             android:textColor="@color/baseColor"
-                            android:text="材料号"
+                            android:text="物料号"
                             android:gravity="center"/>
                         <ImageView
                             android:layout_width="1dp"
@@ -58,7 +57,7 @@
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1.5"
+                            android:layout_weight="1"
                             android:textColor="@color/baseColor"
                             android:text="刀身码/状态"
                             android:gravity="center"/>
@@ -71,7 +70,7 @@
                         <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1"
+                                android:layout_weight="0.5"
                                 android:textColor="@color/baseColor"
                                 android:text="数量"
                                 android:gravity="center"/>
@@ -85,7 +84,7 @@
                             android:id="@+id/textView4"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_weight="0.5"
                             android:gravity="center"
                             android:text="操作"
                             android:textColor="@color/baseColor" />
