@@ -209,8 +209,8 @@ public interface IRequest {
      * @param headers 请求头
      * @return json格式数据
      */
-    @POST("/synthesisCuttingToolBusiness/breakUp")
-    Call<String> breakUp(@Body RequestBody json, @HeaderMap Map<String, String> headers);
+    @POST("/synthesisCuttingToolBusiness/Unconfig")
+    Call<String> unconfig(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
     /**
      * 拆分扫描
@@ -230,8 +230,8 @@ public interface IRequest {
      * @param headers 请求头
      * @return json格式数据
      */
-    @POST("/synthesisCuttingToolBusiness/packageUp")
-    Call<String> packageUp(@Body RequestBody json, @HeaderMap Map<String, String> headers);
+    @POST("/synthesisCuttingToolBusiness/Config")
+    Call<String> config(@Body RequestBody json, @HeaderMap Map<String, String> headers);
     // --------------刀具组装结束--------------
 
 
@@ -532,7 +532,7 @@ public interface IRequest {
      * @return json格式数据
      */
     @POST("/ScrapBusiness/addScrap")
-    Call<String> addScrap(@Body RequestBody json, @HeaderMap Map<String, String> headers);
+    Call<String> addScrap(@Body RequestBody json);
     // --------------报废结束--------------
 
 
