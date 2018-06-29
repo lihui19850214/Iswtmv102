@@ -12,9 +12,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.apiclient.constants.OperationEnum;
+import com.apiclient.constants.ScrapCaseEnum;
 import com.apiclient.constants.ScrapReasonEnum;
 import com.apiclient.constants.ScrapStateEnum;
 import com.apiclient.pojo.*;
+import com.apiclient.vo.ScrapVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
@@ -50,28 +52,22 @@ public class c01s005_002_3Activity extends CommonActivity {
     Button btnCancel;
     @BindView(R.id.btnNext)
     Button btnNext;
-    @BindView(R.id.activity_c01s005_002_3)
-    LinearLayout activityC01s0050023;
-
-    private List<TongDaoModul> jsonList = new ArrayList<>();
-
-
-    List<CuttingToolsScrap> cuttingToolsScrapList = new ArrayList<>();
 
 
     // 报废原因下拉列表所有数据
-    List<ScrapReasonEnum> scrapReasonList = new ArrayList<>();
+    List<ScrapCaseEnum> scrapCaseEnumList = new ArrayList<>();
     // 当前选择的报废原因
-    private int scrap_reason_posttion;
+    ScrapCaseEnum scrapCaseEnum = null;
 
-
-    // 报废状态下拉列表所有数据 key=name
-    private Map<String, String> scrapStatusMap = new HashMap<>();
 
     // 根据 rfid 查询的数据
-    private Map<String, CuttingToolsScrap> rfidToMap = new HashMap<>();
-    // 根据才料号查询的数据
-    private Map<String, CuttingToolsScrap> materialNumToMap = new HashMap<>();
+    private Map<String, CuttingToolBind> rfidToMap = new HashMap<>();
+    // 根据物料号对应刀身码或状态
+    private Map<String, String> businessCodeToBladeCodeMap = new HashMap<>();
+
+    List<ScrapVO> scrapVOList = new ArrayList<>();
+
+    ScrapBO scrapBO = new ScrapBO();
 
     private Retrofit retrofit;
 
@@ -83,31 +79,22 @@ public class c01s005_002_3Activity extends CommonActivity {
 
         retrofit = RetrofitSingle.newInstance();
 
-        //存储所有报废状态，key=name
-        for (ScrapStateEnum scrapStateEnum : ScrapStateEnum.values()){
-            scrapStatusMap.put(scrapStateEnum.getKey(), scrapStateEnum.getName());
-        }
-
         //存储所有报废原因，下拉列表
-        for (ScrapReasonEnum scrapReasonEnum : ScrapReasonEnum.values()){
-            scrapReasonList.add(scrapReasonEnum);
+        for (ScrapCaseEnum scrapCaseEnum : ScrapCaseEnum.values()){
+            scrapCaseEnumList.add(scrapCaseEnum);
         }
 
         try {
             Map<String, Object> paramMap = PARAM_MAP.get(1);
-            rfidToMap = (Map<String, CuttingToolsScrap>) paramMap.get("rfidToMap");
-            materialNumToMap = (Map<String, CuttingToolsScrap>) paramMap.get("materialNumToMap");
-            cuttingToolsScrapList = (List<CuttingToolsScrap>) paramMap.get("cuttingToolsScrapList");
+            scrapBO = (ScrapBO) paramMap.get("scrapBO");
+            rfidToMap = (Map<String, CuttingToolBind>) paramMap.get("rfidToMap");
+            scrapVOList = (List<ScrapVO>) paramMap.get("scrapVOList");
+            businessCodeToBladeCodeMap = (Map<String, String>) paramMap.get("businessCodeToBladeCodeMap");
 
-            for (CuttingToolsScrap cuttingToolsScrap : cuttingToolsScrapList) {
-                CuttingTool cuttingTool = cuttingToolsScrap.getCuttingTool();
+            for (ScrapVO scrapVO : scrapVOList) {
+                String bl = businessCodeToBladeCodeMap.get(scrapVO.getCuttingTool().getBusinessCode());
 
-                if (cuttingTool.getCuttingToolBindList() == null || cuttingTool.getCuttingToolBindList().size() == 0) {
-                    addLayout(cuttingToolsScrap.getMaterialNum(), scrapStatusMap.get(cuttingToolsScrap.getCause()), cuttingToolsScrap.getCount() + "");
-                } else {
-                    CuttingToolBind cuttingToolBind = cuttingTool.getCuttingToolBindList().get(0);
-                    addLayout(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode(), cuttingToolsScrap.getCount() + "");
-                }
+                addLayout(scrapVO.getCuttingTool().getBusinessCode(), bl, scrapVO.getCount().toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -126,17 +113,21 @@ public class c01s005_002_3Activity extends CommonActivity {
                 finish();
                 break;
             case R.id.btnNext:
-                authorizationWindow(new AuthorizationWindowCallBack() {
-                    @Override
-                    public void success(AuthCustomer authCustomer) {
-                        requestData(authCustomer);
-                    }
+                if (scrapCaseEnum != null) {
+                    authorizationWindow(new AuthorizationWindowCallBack() {
+                        @Override
+                        public void success(AuthCustomer authCustomer) {
+                            requestData(authCustomer);
+                        }
 
-                    @Override
-                    public void fail() {
+                        @Override
+                        public void fail() {
 
-                    }
-                });
+                        }
+                    });
+                } else {
+                    createAlertDialog(c01s005_002_3Activity.this, "请选择报废原因", Toast.LENGTH_LONG);
+                }
                 break;
         }
     }
@@ -153,7 +144,11 @@ public class c01s005_002_3Activity extends CommonActivity {
         TextView tvNum = (TextView) mLinearLayout.findViewById(R.id.tvNum);
 
         tvCaiLiao.setText(cailiao);
-        tvsingleProductCode.setText(laserCode);
+        if (laserCode != null && !"".equals(laserCode) && !"-".equals(laserCode) && (laserCode.indexOf("-") >= 0)) {
+            tvsingleProductCode.setText(laserCode.split("-")[1]);
+        } else {
+            tvsingleProductCode.setText(laserCode);
+        }
         tvNum.setText(num);
 
         mLlContainer.addView(mLinearLayout);
@@ -185,8 +180,8 @@ public class c01s005_002_3Activity extends CommonActivity {
     public void showPopupWindow(View view2) {
         View view = LayoutInflater.from(c01s005_002_3Activity.this).inflate(R.layout.spinner_c03s004_001, null);
         ListView listView = (ListView) view.findViewById(R.id.ll_spinner);
-        ScrapStatusAdapter myAdapter = new ScrapStatusAdapter();
-        listView.setAdapter(myAdapter);
+        ScrapStatusAdapter scrapStatusAdapter = new ScrapStatusAdapter();
+        listView.setAdapter(scrapStatusAdapter);
         final PopupWindow popupWindow = new PopupWindow(view, ll01.getWidth(), ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setBackgroundDrawable(new PaintDrawable());
         popupWindow.setFocusable(true);
@@ -204,8 +199,8 @@ public class c01s005_002_3Activity extends CommonActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                tv01.setText(scrapReasonList.get(i).getName());
-                //TODO 需要获取下拉列表值
+                tv01.setText(scrapCaseEnumList.get(i).getName());
+                scrapCaseEnum = scrapCaseEnumList.get(i);
 
                 popupWindow.dismiss();
             }
@@ -220,12 +215,12 @@ public class c01s005_002_3Activity extends CommonActivity {
     class ScrapStatusAdapter extends BaseAdapter {
         @Override
         public int getCount() {
-            return scrapReasonList.size();
+            return scrapCaseEnumList.size();
         }
 
         @Override
         public Object getItem(int i) {
-            return scrapReasonList.get(i);
+            return scrapCaseEnumList.get(i);
         }
 
         @Override
@@ -237,7 +232,7 @@ public class c01s005_002_3Activity extends CommonActivity {
         public View getView(int i, View view, ViewGroup viewGroup) {
             View view1 = LayoutInflater.from(c01s005_002_3Activity.this).inflate(R.layout.item_c03s004_001, null);
             TextView textView = (TextView) view1.findViewById(R.id.tv_01);
-            textView.setText(scrapReasonList.get(i).getName());
+            textView.setText(scrapCaseEnumList.get(i).getName());
             return view1;
         }
     }
@@ -290,12 +285,12 @@ public class c01s005_002_3Activity extends CommonActivity {
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
             //mView.measure(0, 0);
             totalHeight += mView.getMeasuredHeight();
-            Log.d("数据" + i, String.valueOf(totalHeight));
+            //Log.d("数据" + i, String.valueOf(totalHeight));
         }
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
         params.height = totalHeight + (listView.getDividerHeight() * (mAdapter.getCount() - 1));
-        Log.d("数据", "listview总高度="+ params.height);
+        //Log.d("数据", "listview总高度="+ params.height);
         listView.setLayoutParams(params);
         listView.requestLayout();
         return totalHeight;
@@ -307,68 +302,20 @@ public class c01s005_002_3Activity extends CommonActivity {
         try {
             loading.show();
 
-            Map<String, String> headsMap = new HashMap<>();
-
-            // 授权信息集合
-            List<ImpowerRecorder> impowerRecorderList = new ArrayList<>();
-            // 授权信息
-            ImpowerRecorder impowerRecorder = new ImpowerRecorder();
-
-            try {
-                // 需要授权信息
-                if (is_need_authorization && authCustomer != null) {
-                    //设定用户访问信息
-                    @SuppressLint("WrongConstant")
-                    SharedPreferences sharedPreferences = getSharedPreferences("userInfo", CommonActivity.MODE_APPEND);
-                    String userInfoJson = sharedPreferences.getString("loginInfo", null);
-
-                    AuthCustomer customer = jsonToObject(userInfoJson, AuthCustomer.class);
-
-                    Set<String> rfids = rfidToMap.keySet();
-                    for (String rfid : rfids) {
-                        CuttingToolsScrap cuttingToolsScrap = rfidToMap.get(rfid);
-
-                        CuttingToolBind cuttingToolBind = cuttingToolsScrap.getCuttingTool().getCuttingToolBindList().get(0);
-
-
-                        impowerRecorder = new ImpowerRecorder();
-
-                        // ------------ 授权信息 ------------
-                        impowerRecorder.setToolCode(cuttingToolBind.getCuttingTool().getBusinessCode());// 合成刀编码
-                        impowerRecorder.setRfidLasercode(authCustomer.getRfidContainer().getLaserCode());// rfid标签
-                        impowerRecorder.setOperatorUserCode(customer.getCode());//操作者code
-                        impowerRecorder.setImpowerUser(authCustomer.getCode());//授权人code
-                        impowerRecorder.setOperatorKey(OperationEnum.Cutting_tool_scap.getKey().toString());//操作key
-
-//                impowerRecorder.setOperatorUserName(URLEncoder.encode(authCustomer.getName(),"utf-8"));//操作者姓名
-//                impowerRecorder.setImpowerUserName(URLEncoder.encode(authorizationList.get(0).getName(),"utf-8"));//授权人名称
-//                impowerRecorder.setOperatorValue(URLEncoder.encode(OperationEnum.SynthesisCuttingTool_Exchange.getName(),"utf-8"));//操作者code
-
-                        impowerRecorderList.add(impowerRecorder);
-                    }
-                }
-                headsMap.put("impower", objectToJson(impowerRecorderList));
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-            } catch (IOException e) {
-                e.printStackTrace();
-                createAlertDialog(c01s005_002_3Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            // 需要授权信息
+            if (is_need_authorization && authCustomer != null) {
+                scrapBO.setAuthCustomer(authCustomer);
             }
 
-            IRequest iRequest = retrofit.create(IRequest.class);
+            scrapBO.setReason(scrapCaseEnum.getKey());
 
-            for (CuttingToolsScrap cuttingToolsScrap : cuttingToolsScrapList) {
-                cuttingToolsScrap.setCause(scrapReasonList.get(scrap_reason_posttion).getKey());
-            }
-
-            String jsonStr = objectToJson(cuttingToolsScrapList);
+            //地址 /ScrapBusiness/addScrap
+            //参数ScrapBO
+            String jsonStr = objectToJson(scrapBO);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-            Call<String> addScrap = iRequest.addScrap(body, headsMap);
+            IRequest iRequest = retrofit.create(IRequest.class);
+            Call<String> addScrap = iRequest.addScrap(body);
 
             addScrap.enqueue(new MyCallBack<String>() {
                 @Override
@@ -404,93 +351,4 @@ public class c01s005_002_3Activity extends CommonActivity {
         }
     }
 
-
-// --------------------以下代码没用，暂时保留---------------------
-    /**
-     * 遍历所有数据并转化为json
-     */
-    private String bianliAndToJson() throws JsonProcessingException {
-        jsonList.clear();
-        if (mLlContainer.getChildCount() == 0) {
-            return null;
-        }
-        for (int k = 0; k < mLlContainer.getChildCount(); k++) {
-            LinearLayout mDataLin = (LinearLayout) mLlContainer.getChildAt(k);
-            for (int i = 0; i < mDataLin.getChildCount(); i++) {
-                View child = mDataLin.getChildAt(i);
-                if (child instanceof LinearLayout) {
-                    int child2Coutn = ((LinearLayout) child).getChildCount();
-                    TongDaoModul c = new TongDaoModul();
-                    for (int j = 0; j < child2Coutn; j++) {
-                        View child2 = ((LinearLayout) child).getChildAt(j);
-                        if (child2 instanceof TextView) {
-                            switch (child2.getId()) {
-                                case R.id.tvCailiao:
-                                    c.setCaiLiao(((TextView) child2).getText().toString());
-                                    break;
-                                case R.id.tvBaofeishuliang:
-                                    c.setGroupNum(((TextView) child2).getText().toString());
-                                    break;
-                                case R.id.tvsynthesisParametersCode:
-                                    c.setSynthesisParametersCode(((TextView) child2).getText().toString());
-                                    break;
-                                case R.id.tvrFID:
-                                    c.setrFID(((TextView) child2).getText().toString());
-                                    break;
-                            }
-                        }
-                    }
-                    jsonList.add(c);
-
-                }
-
-            }
-        }
-
-        return objectToJson(jsonList);
-    }
-
-    class MyAdapter extends BaseAdapter {
-        private List<TongDaoModul> list;
-
-        public MyAdapter(List<TongDaoModul> list) {
-            this.list = list;
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return list.get(position);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            View view = LayoutInflater.from(c01s005_002_3Activity.this).inflate(R.layout.item_dialog_list, null);
-            CheckBox c = (CheckBox) view.findViewById(R.id.cb);
-            TextView tvCaiLiao = (TextView) view.findViewById(R.id.tvCaiLiao);
-            TextView tvGroupNum = (TextView) view.findViewById(R.id.tvGroupNum);
-            c.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    list.get(position).setCheck(isChecked);
-                }
-            });
-            tvCaiLiao.setText(list.get(position).getCaiLiao());
-            tvGroupNum.setText(list.get(position).getGroupNum());
-            return view;
-        }
-
-        public List<TongDaoModul> getList() {
-            return list;
-        }
-    }
 }
