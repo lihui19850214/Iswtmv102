@@ -60,10 +60,10 @@ public class c01s005_002_3Activity extends CommonActivity {
     ScrapCaseEnum scrapCaseEnum = null;
 
 
-    // 根据 rfid 查询的数据
-    private Map<String, CuttingToolBind> rfidToMap = new HashMap<>();
-    // 根据物料号对应刀身码或状态
-    private Map<String, String> businessCodeToBladeCodeMap = new HashMap<>();
+    // 根据行号对应刀身码或状态
+    private Map<Integer, String> businessCodeToBladeCodeMap = new HashMap<>();
+    // 行号对应的ScrapVO
+    private Map<Integer, ScrapVO> scrapVOMap = new HashMap<>();
 
     List<ScrapVO> scrapVOList = new ArrayList<>();
 
@@ -86,15 +86,17 @@ public class c01s005_002_3Activity extends CommonActivity {
 
         try {
             Map<String, Object> paramMap = PARAM_MAP.get(1);
-            scrapBO = (ScrapBO) paramMap.get("scrapBO");
-            rfidToMap = (Map<String, CuttingToolBind>) paramMap.get("rfidToMap");
-            scrapVOList = (List<ScrapVO>) paramMap.get("scrapVOList");
-            businessCodeToBladeCodeMap = (Map<String, String>) paramMap.get("businessCodeToBladeCodeMap");
+            scrapVOMap = (Map<Integer, ScrapVO>) paramMap.get("scrapVOMap");
+            businessCodeToBladeCodeMap = (Map<Integer, String>) paramMap.get("businessCodeToBladeCodeMap");
 
-            for (ScrapVO scrapVO : scrapVOList) {
-                String bl = businessCodeToBladeCodeMap.get(scrapVO.getCuttingToolVO().getBusinessCode());
+            Set<Integer> rows = scrapVOMap.keySet();
+            for (Integer row : rows) {
+                ScrapVO scrapVO = scrapVOMap.get(row);
+                String bc = businessCodeToBladeCodeMap.get(row);
 
-                addLayout(scrapVO.getCuttingToolVO().getBusinessCode(), bl, scrapVO.getCount().toString());
+                scrapVOList.add(scrapVO);
+
+                addLayout(scrapVO.getCuttingToolVO().getBusinessCode(), bc, scrapVO.getCount().toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -307,6 +309,8 @@ public class c01s005_002_3Activity extends CommonActivity {
                 scrapBO.setAuthCustomer(authCustomer);
             }
 
+
+            scrapBO.setScrapVOS(scrapVOList);
             scrapBO.setReason(scrapCaseEnum.getKey());
 
             //地址 /ScrapBusiness/addScrap

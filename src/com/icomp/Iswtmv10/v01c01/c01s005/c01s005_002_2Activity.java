@@ -52,23 +52,27 @@ public class c01s005_002_2Activity extends CommonActivity {
     @BindView(R.id.textView4)
     TextView textView4;
 
-    List<ScrapVO> scrapVOList = new ArrayList<>();
+    // 表格行号
+    private Integer row = 0;
+
+    private Map<Integer, ScrapVO> scrapVOMap = new HashMap<>();
+
     // 物料号列表项
     List<CuttingTool> cuttingToolList = new ArrayList<>();
     // 物料号选项
     CuttingTool cuttingTool = new CuttingTool();
 
     // 根据 rfid 查询的数据
-    private Map<String, CuttingToolBind> rfidToMap = new HashMap<>();
-    // 根据才料号查询的数据
-    private Map<String, CuttingTool> materialNumToMap = new HashMap<>();
-    // 根据物料号对应刀身码或状态
-    private Map<String, String> businessCodeToBladeCodeMap = new HashMap<>();
+    private Set<String> rfidSet = new HashSet<>();
+    // 行号对应的rfid
+    private Map<Integer, String> rowTorfidMap = new HashMap<>();
+    // 根据行号对应刀身码或状态
+    private Map<Integer, String> businessCodeToBladeCodeMap = new HashMap<>();
+    // 根据扫描的刀身码，用于验证是否重复
+    private Set<String> bladeCodeSet = new HashSet<>();
 
     // 需要授权的标签
-    Map<String, Boolean> rfid_authorization_map = new HashMap<>();
-
-    ScrapBO scrapBO = new ScrapBO();
+    Set<Integer> rfid_authorization_set = new HashSet<>();
 
 
     // 报废状态下拉列表所有数据
@@ -97,17 +101,19 @@ public class c01s005_002_2Activity extends CommonActivity {
             Map<String, Object> paramMap = PARAM_MAP.get(1);
 
             if (paramMap != null) {
-                scrapBO = (ScrapBO) paramMap.get("scrapBO");
-                rfidToMap = (Map<String, CuttingToolBind>) paramMap.get("rfidToMap");
-                materialNumToMap = (Map<String, CuttingTool>) paramMap.get("materialNumToMap");
-                scrapVOList = (List<ScrapVO>) paramMap.get("scrapVOList");
-                rfid_authorization_map = (Map<String, Boolean>) paramMap.get("rfid_authorization_map");
-                businessCodeToBladeCodeMap = (Map<String, String>) paramMap.get("businessCodeToBladeCodeMap");
+                bladeCodeSet = (Set<String>) paramMap.get("bladeCodeSet");
+                rfidSet = (Set<String>) paramMap.get("rfidSet");
+                rowTorfidMap = (Map<Integer, String>) paramMap.get("rowTorfidMap");
+                scrapVOMap = (Map<Integer, ScrapVO>) paramMap.get("scrapVOMap");
+                rfid_authorization_set = (Set<Integer>) paramMap.get("rfid_authorization_set");
+                businessCodeToBladeCodeMap = (Map<Integer, String>) paramMap.get("businessCodeToBladeCodeMap");
 
-                for (ScrapVO scrapVO : scrapVOList) {
-                    String bl = businessCodeToBladeCodeMap.get(scrapVO.getCuttingToolVO().getBusinessCode());
+                Set<Integer> rows = scrapVOMap.keySet();
+                for (Integer row : rows) {
+                    ScrapVO scrapVO = scrapVOMap.get(row);
+                    String bc = businessCodeToBladeCodeMap.get(row);
 
-                    addLayout(scrapVO.getCuttingToolVO().getBusinessCode(), bl, scrapVO.getCount().toString());
+                    addLayout(scrapVO.getCuttingToolVO().getBusinessCode(), bc, scrapVO.getCount().toString());
                 }
             }
         } catch (Exception e) {
@@ -127,10 +133,9 @@ public class c01s005_002_2Activity extends CommonActivity {
                 break;
             case R.id.btnNext:
 
-                if (scrapVOList != null  && scrapVOList.size() > 0) {
-                    scrapBO.setScrapVOS(scrapVOList);
+                if (scrapVOMap != null  && scrapVOMap.size() > 0) {
 
-                    if (rfid_authorization_map != null && rfid_authorization_map.size() > 0) {
+                    if (rfid_authorization_set != null && rfid_authorization_set.size() > 0) {
                         is_need_authorization = true;
                     } else {
                         is_need_authorization = false;
@@ -138,11 +143,11 @@ public class c01s005_002_2Activity extends CommonActivity {
 
                     // 用于页面之间传值，新方法
                     Map<String, Object> paramMap = new HashMap<>();
-                    paramMap.put("rfidToMap", rfidToMap);
-                    paramMap.put("materialNumToMap", materialNumToMap);
-                    paramMap.put("scrapBO", scrapBO);
-                    paramMap.put("scrapVOList", scrapVOList);
-                    paramMap.put("rfid_authorization_map", rfid_authorization_map);
+                    paramMap.put("bladeCodeSet", bladeCodeSet);
+                    paramMap.put("rfidSet", rfidSet);
+                    paramMap.put("rowTorfidMap", rowTorfidMap);
+                    paramMap.put("scrapVOMap", scrapVOMap);
+                    paramMap.put("rfid_authorization_set", rfid_authorization_set);
                     paramMap.put("businessCodeToBladeCodeMap", businessCodeToBladeCodeMap);
                     PARAM_MAP.put(1, paramMap);
 
@@ -310,31 +315,28 @@ public class c01s005_002_2Activity extends CommonActivity {
                         return;
                     }
 
-                    if (materialNumToMap.containsKey(cuttingTool.getBusinessCode())) {
-                        createAlertDialog(c01s005_002_2Activity.this, "已存在", Toast.LENGTH_SHORT);
-                    } else {
-                        String num = etgrindingQuantity.getText().toString().trim();
-                        materialNumToMap.put(cuttingTool.getBusinessCode(), cuttingTool);
-                        businessCodeToBladeCodeMap.put(cuttingTool.getBusinessCode(), toolBusinessStatusEnum.getName());
+
+                    String num = etgrindingQuantity.getText().toString().trim();
+                    businessCodeToBladeCodeMap.put(row, toolBusinessStatusEnum.getName());
 
 
-                        ScrapVO scrapVO = new ScrapVO();
-                        scrapVO.setStatus(toolBusinessStatusEnum.getKey());
-                        scrapVO.setCount(Integer.parseInt(etgrindingQuantity.getText().toString().trim()));
+                    ScrapVO scrapVO = new ScrapVO();
+                    scrapVO.setStatus(toolBusinessStatusEnum.getKey());
+                    scrapVO.setCount(Integer.parseInt(etgrindingQuantity.getText().toString().trim()));
 
-                        CuttingToolVO ctVO = new CuttingToolVO();
-                        ctVO.setBusinessCode(cuttingTool.getBusinessCode());
-                        ctVO.setCode(cuttingTool.getCode());
+                    CuttingToolVO ctVO = new CuttingToolVO();
+                    ctVO.setBusinessCode(cuttingTool.getBusinessCode());
+                    ctVO.setCode(cuttingTool.getCode());
 
-                        scrapVO.setCuttingToolVO(ctVO);
+                    scrapVO.setCuttingToolVO(ctVO);
 
-                        scrapVOList.add(scrapVO);
+                    scrapVOMap.put(row, scrapVO);
 
-                        addLayout(cuttingTool.getBusinessCode(), toolBusinessStatusEnum.getName(), num);
+                    addLayout(cuttingTool.getBusinessCode(), toolBusinessStatusEnum.getName(), num);
 
-                        dialog.dismiss();
-                    }
+                    dialog.dismiss();
                 }
+
             }
         });
 
@@ -394,7 +396,6 @@ public class c01s005_002_2Activity extends CommonActivity {
             View view1 = LayoutInflater.from(c01s005_002_2Activity.this).inflate(R.layout.item_c03s004_001, null);
             TextView textView = (TextView) view1.findViewById(R.id.tv_01);
             textView.setText(cuttingToolList.get(i).getBusinessCode());
-            //TODO 需要取值数据
             return view1;
         }
     }
@@ -431,13 +432,14 @@ public class c01s005_002_2Activity extends CommonActivity {
                                 List<CuttingTool> cuttingToolListTemp = new ArrayList<>();
                                 // 不要 辅具、配套、其他 项的物料号
                                 for (CuttingTool ct : cuttingToolList) {
-                                    // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
-                                    if (CuttingToolTypeEnum.dj.getKey().equals(ct.getType())) {
-                                        // griding_zt("1","可刃磨钻头"),griding_dp("2","可刃磨刀片"),single_use_dp("3","一次性刀片"),other("9","其他");
-                                        if (!CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(ct.getConsumeType())) {
+                                    // 报废的物料号都要，没有过滤条件
+//                                    // dj("1","刀具"),fj("2","辅具"),pt("3","配套"),other("9","其他");
+//                                    if (CuttingToolTypeEnum.dj.getKey().equals(ct.getType())) {
+//                                        // griding_zt("1","可刃磨钻头"),griding_dp("2","可刃磨刀片"),single_use_dp("3","一次性刀片"),other("9","其他");
+//                                        if (!CuttingToolConsumeTypeEnum.griding_zt.getKey().equals(ct.getConsumeType())) {
                                             cuttingToolListTemp.add(ct);
-                                        }
-                                    }
+//                                        }
+//                                    }
                                 }
 
                                 cuttingToolList = new ArrayList<>(cuttingToolListTemp);
@@ -475,7 +477,7 @@ public class c01s005_002_2Activity extends CommonActivity {
     /**
      * 添加布局
      */
-    private void addLayout(final String cailiao, String laserCode, String num) {
+    private void addLayout(final String cailiao, final String bladeCode, String num) {
         final View mLinearLayout = LayoutInflater.from(this).inflate(R.layout.item_daojubaofei, null);
 
         final TextView tvCaiLiao = (TextView) mLinearLayout.findViewById(R.id.tvCailiao);
@@ -487,40 +489,36 @@ public class c01s005_002_2Activity extends CommonActivity {
         tvCaiLiao.setTransformationMethod(new AllCapTransformationMethod());
 
         tvCaiLiao.setText(cailiao);
-        if (laserCode != null && !"".equals(laserCode) && !"-".equals(laserCode) && (laserCode.indexOf("-") >= 0)) {
-            tvsingleProductCode.setText(laserCode.split("-")[1]);
+        if (bladeCode != null && !"".equals(bladeCode) && !"-".equals(bladeCode) && (bladeCode.indexOf("-") >= 0)) {
+            tvsingleProductCode.setText(bladeCode.split("-")[1]);
         } else {
-            tvsingleProductCode.setText(laserCode);
+            tvsingleProductCode.setText(bladeCode);
         }
         tvNum.setText(num);
+
+        mLinearLayout.setTag(row);
 
         tvRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                materialNumToMap.remove(cailiao);
+                bladeCodeSet.remove(bladeCode);
 
-                for (ScrapVO scrapVO : scrapVOList) {
-                    if (cailiao.equals(scrapVO.getCuttingToolVO().getBusinessCode())) {
-
-                        Set<String> keys = rfidToMap.keySet();
-                        for (String key : keys) {
-                            CuttingToolBind cb = rfidToMap.get(key);
-                            if (scrapVO.getCuttingToolVO().getBusinessCode().equals(cb.getCuttingTool().getBusinessCode())) {
-                                rfidToMap.remove(key);
-                                rfid_authorization_map.remove(key);
-                                break;
-                            }
-                        }
-
-                        scrapVOList.remove(scrapVO);
-                        break;
-                    }
+                String rfid = rowTorfidMap.get((Integer)mLlContainer.getTag());
+                // rfid 不为空时删除相关值
+                if (rfid != null && !"".equals(rfid)) {
+                    rfidSet.remove(rfid);
                 }
+
+                rfid_authorization_set.remove((Integer)mLlContainer.getTag());
+                scrapVOMap.remove((Integer)mLlContainer.getTag());
+                businessCodeToBladeCodeMap.remove((Integer)mLlContainer.getTag());
+
 
                 mLlContainer.removeView(mLinearLayout);
             }
         });
 
+        row++;
         mLlContainer.addView(mLinearLayout);
     }
 
@@ -581,11 +579,11 @@ public class c01s005_002_2Activity extends CommonActivity {
                 });
 
                 // 判断是否已经扫描此 rfid
-                if (rfidToMap.containsKey(rfidString)) {
+                if (rfidSet.contains(rfidString)) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            createAlertDialog(c01s005_002_2Activity.this, "已存在", 1);
+                            createAlertDialog(c01s005_002_2Activity.this, "当前标签已存在", 1);
                         }
                     });
                     return;
@@ -623,7 +621,12 @@ public class c01s005_002_2Activity extends CommonActivity {
                                     CuttingToolBind cuttingToolBind = jsonToObject(response.body(), CuttingToolBind.class);
 
                                     if (cuttingToolBind != null) {
-                                        isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
+                                        // 判断刀身码是否存在
+                                        if (bladeCodeSet.contains(cuttingToolBind.getBladeCode())) {
+                                            Toast.makeText(getApplicationContext(), "刀身码已存在", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
+                                        }
                                     } else {
                                         Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
                                     }
@@ -711,11 +714,13 @@ public class c01s005_002_2Activity extends CommonActivity {
     // 设置值
     public void setValue(String rfid, CuttingToolBind cuttingToolBind) {
         if (is_need_authorization) {
-            rfid_authorization_map.put(rfid, is_need_authorization);
+            rfid_authorization_set.add(row);
         }
 
-        rfidToMap.put(rfidString, cuttingToolBind);
-        businessCodeToBladeCodeMap.put(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode());
+        bladeCodeSet.add(cuttingToolBind.getBladeCode());
+        rfidSet.add(rfid);
+        rowTorfidMap.put(row, rfid);
+        businessCodeToBladeCodeMap.put(row, cuttingToolBind.getBladeCode());
 
         ScrapVO scrapVO = new ScrapVO();
         scrapVO.setCount(1);
@@ -729,7 +734,7 @@ public class c01s005_002_2Activity extends CommonActivity {
         ctbVO.setCode(cuttingToolBind.getCode());
         scrapVO.setCuttingToolBindVO(ctbVO);
 
-        scrapVOList.add(scrapVO);
+        scrapVOMap.put(row, scrapVO);
 
 
         addLayout(cuttingToolBind.getCuttingTool().getBusinessCode(), cuttingToolBind.getBladeCode(), "1");
