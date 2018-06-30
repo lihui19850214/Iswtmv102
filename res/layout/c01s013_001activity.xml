@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView android:text="@string/C01S010" style="@style/FunctionalTitleTextViewStyle" />
+    <TextView android:text="@string/C01S013" style="@style/FunctionalTitleTextViewStyle" />
 
     <LinearLayout style="@style/MiddleLinerLayoutStyle">
         <TextView
                 android:layout_height="wrap_content"
-                android:text="请扫描要换装的合成刀具标签或者输入要换装的合成刀具刀身码"
+                android:text="请输入合成刀的刀身码，或者扫描刀具盒的标签"
                 style="@style/MiddleTextPromptStule"/>
 
         <LinearLayout
