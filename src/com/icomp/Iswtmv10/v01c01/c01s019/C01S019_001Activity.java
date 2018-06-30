@@ -176,7 +176,7 @@ public class C01S019_001Activity extends CommonActivity {
                     startActivity(intent2);
                     finish();
                 } else {
-                    createAlertDialog(C01S019_001Activity.this, "请添加材料", Toast.LENGTH_LONG);
+                    createAlertDialog(C01S019_001Activity.this, "请添加刀具", Toast.LENGTH_LONG);
                 }
                 break;
             case R.id.ivAdd:
@@ -280,7 +280,7 @@ public class C01S019_001Activity extends CommonActivity {
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         tv01.setText(cuttingToolList.get(i).getBusinessCode());
                         cuttingTool = cuttingToolList.get(i);
-                        // TODO 取值不正确
+
                         popupWindow.dismiss();
                     }
                 });
