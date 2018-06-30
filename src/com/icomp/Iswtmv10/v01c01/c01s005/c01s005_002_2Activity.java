@@ -502,16 +502,17 @@ public class c01s005_002_2Activity extends CommonActivity {
             @Override
             public void onClick(View v) {
                 bladeCodeSet.remove(bladeCode);
+                Integer r = (Integer)mLinearLayout.getTag();
 
-                String rfid = rowTorfidMap.get((Integer)mLlContainer.getTag());
+                String rfid = rowTorfidMap.get(r);
                 // rfid 不为空时删除相关值
                 if (rfid != null && !"".equals(rfid)) {
                     rfidSet.remove(rfid);
                 }
 
-                rfid_authorization_set.remove((Integer)mLlContainer.getTag());
-                scrapVOMap.remove((Integer)mLlContainer.getTag());
-                businessCodeToBladeCodeMap.remove((Integer)mLlContainer.getTag());
+                rfid_authorization_set.remove(r);
+                scrapVOMap.remove(r);
+                businessCodeToBladeCodeMap.remove(r);
 
 
                 mLlContainer.removeView(mLinearLayout);
