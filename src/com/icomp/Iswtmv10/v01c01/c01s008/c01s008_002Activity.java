@@ -600,6 +600,8 @@ public class c01s008_002Activity extends CommonActivity {
                 Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
             }
 
+            downCuttingToolVOList = new ArrayList<>();
+
             // 循环拆分数量
             for (int i = 0; i < downCuttingToolVODataList.size(); i++) {
                 Map<String, Object> map = downCuttingToolVODataList.get(i);
