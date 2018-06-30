@@ -27,6 +27,8 @@ import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
+import com.icomp.entity.base.Rfidcontainer;
+import com.ta.utdid2.android.utils.StringUtils;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -361,14 +363,16 @@ public class c01s008_002Activity extends CommonActivity {
 
                         //调用接口，查询合成刀具组成信息
                         IRequest iRequest = retrofit.create(IRequest.class);
-                        Call<String> queryBindInfo = iRequest.queryBindInfo(body);
+                        Call<String> queryBindInfo = iRequest.queryForBind(body);
                         queryBindInfo.enqueue(new MyCallBack<String>() {
                             @Override
                             public void _onResponse(Response<String> response) {
                                 try {
                                     if (response.raw().code() == 200) {
                                         CuttingToolBind cuttingToolBind = jsonToObject(response.body(), CuttingToolBind.class);
-
+                                        if (null == cuttingToolBind){
+                                            cuttingToolBind = createBind(rfidString);
+                                        }
                                         if (cuttingToolBind != null) {
                                             // 判断根据标签扫得到的钻头是否在配置中存在
                                             if (drillingBitSet.contains(cuttingToolBind.getCuttingTool().getBusinessCode())) {
@@ -514,6 +518,46 @@ public class c01s008_002Activity extends CommonActivity {
     }
 
 
+    /**
+     * 创建绑定信息
+     * @param rfid
+     * @return
+     */
+    private CuttingToolBind createBind(String rfid) {
+        CuttingToolBind cuttingToolBind = null;
+        try {
+            RfidContainer rfidContainer = new RfidContainer();
+            rfidContainer.setLaserCode(rfid);
+            for (int j=0; j<downCuttingToolVODataList.size(); j++) {
+                Map<String, Object> map = downCuttingToolVODataList.get(j);
+                DownCuttingToolVO downCuttingToolVO = (DownCuttingToolVO) map.get("downCuttingToolVO");
+                if (null == downCuttingToolVO.getBladeCode() || "".equals(downCuttingToolVO.getBladeCode())){
+                    continue;
+                }
+                if (null!=downCuttingToolVO.getDownRfidLaserCode()&&!"".equals(downCuttingToolVO.getDownRfidLaserCode())){
+                    continue;
+                }
+                downCuttingToolVO.setDownRfidLaserCode(rfid);
+                cuttingToolBind = new CuttingToolBind();
+                cuttingToolBind.setRfidContainer(rfidContainer);
+                CuttingTool cuttingTool = new CuttingTool();
+                cuttingTool.setCode(downCuttingToolVO.getDownCode());
+                cuttingTool.setBusinessCode(downCuttingToolVO.getBusinessCode());
+                cuttingToolBind.setCuttingTool(cuttingTool);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+        return cuttingToolBind;
+    }
+
+
     private void requestData(AuthCustomer authCustomer) {
         try {
             loading.show();
@@ -588,7 +632,7 @@ public class c01s008_002Activity extends CommonActivity {
 
 
             String jsonStr = objectToJson(exChangeVO);
-            RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
+            RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             //调用接口，查询合成刀具组成信息
             IRequest iRequest = retrofit.create(IRequest.class);
