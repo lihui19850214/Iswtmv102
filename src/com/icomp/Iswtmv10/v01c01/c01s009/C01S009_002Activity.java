@@ -656,7 +656,7 @@ public class C01S009_002Activity extends CommonActivity {
                                     if (!drillingBitSet.contains(selectBusinessCode)) {
                                         UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(selectBusinessCode);
                                         upCuttingToolVO.setUpCount(config.getCount());
-                                        upCuttingToolVO.setRfidCode(null);
+                                        upCuttingToolVO.setUpRfidLaserCode(null);
                                         upCuttingToolVO.setBladeCode(null);
                                     }
 
@@ -665,7 +665,7 @@ public class C01S009_002Activity extends CommonActivity {
 
                                     UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(cailiaohao.getTag().toString());
                                     upCuttingToolVO.setUpCount(0);
-                                    upCuttingToolVO.setRfidCode(null);
+                                    upCuttingToolVO.setUpRfidLaserCode(null);
                                     upCuttingToolVO.setBladeCode(null);
 
                                     //
@@ -844,7 +844,7 @@ public class C01S009_002Activity extends CommonActivity {
                 if (code.equals(cailiaohao.getTag().toString())) {
                     UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(code);
                     upCuttingToolVO.setUpCount(upCuttingToolVO.getUpCount() + num);
-                    upCuttingToolVO.setRfidCode(rfid);
+                    upCuttingToolVO.setUpRfidLaserCode(rfid);
                     upCuttingToolVO.setBladeCode(bladeCode);
 
                     huanzhuangshuliang.setText(upCuttingToolVO.getUpCount()+"");
@@ -1094,7 +1094,7 @@ public class C01S009_002Activity extends CommonActivity {
 
             UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(cailiaohao.getTag().toString());
             upCuttingToolVO.setUpCount(0);
-            upCuttingToolVO.setRfidCode(null);
+            upCuttingToolVO.setUpRfidLaserCode(null);
             upCuttingToolVO.setBladeCode(null);
 
             // 换装数据
