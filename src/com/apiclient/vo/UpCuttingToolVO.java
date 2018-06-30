@@ -1,19 +1,43 @@
 package com.apiclient.vo;
 
+
+import com.apiclient.pojo.CuttingTool;
+import com.apiclient.pojo.CuttingToolBind;
+
 /**
  * Created by logan on 2018/4/30.
  */
 public class UpCuttingToolVO {
 
-    private String businessCode;
+    private CuttingTool cuttingTool;
+
+    private CuttingToolBind cuttingToolBind;
 
     private String upCode;
 
     private Integer upCount;
 
-    private String rfidCode;
+    private String upRfidLaserCode;
 
     private String bladeCode;
+
+    private String businessCode;
+
+    public CuttingTool getCuttingTool() {
+        return cuttingTool;
+    }
+
+    public void setCuttingTool(CuttingTool cuttingTool) {
+        this.cuttingTool = cuttingTool;
+    }
+
+    public CuttingToolBind getCuttingToolBind() {
+        return cuttingToolBind;
+    }
+
+    public void setCuttingToolBind(CuttingToolBind cuttingToolBind) {
+        this.cuttingToolBind = cuttingToolBind;
+    }
 
     public String getBusinessCode() {
         return businessCode;
@@ -31,12 +55,12 @@ public class UpCuttingToolVO {
         this.bladeCode = bladeCode;
     }
 
-    public String getRfidCode() {
-        return rfidCode;
+    public String getUpRfidLaserCode() {
+        return upRfidLaserCode;
     }
 
-    public void setRfidCode(String rfidCode) {
-        this.rfidCode = rfidCode;
+    public void setUpRfidLaserCode(String upRfidLaserCode) {
+        this.upRfidLaserCode = upRfidLaserCode;
     }
 
     public String getUpCode() {
