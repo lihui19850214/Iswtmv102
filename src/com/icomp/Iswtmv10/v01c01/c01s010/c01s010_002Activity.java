@@ -729,7 +729,7 @@ public class c01s010_002Activity extends CommonActivity {
                 if (code.equals(cailiaohao.getTag().toString())) {
                     UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(code);
                     upCuttingToolVO.setUpCount(upCuttingToolVO.getUpCount() + num);
-                    upCuttingToolVO.setRfidCode(rfid);
+                    upCuttingToolVO.setUpRfidLaserCode(rfid);
                     upCuttingToolVO.setBladeCode(bladeCode);
 
                     huanzhuangshuliang.setText(upCuttingToolVO.getUpCount()+"");
@@ -895,7 +895,7 @@ public class c01s010_002Activity extends CommonActivity {
                                     if (!drillingBitSet.contains(selectBusinessCode) && !realDataSet.contains(selectBusinessCode)) {
                                         UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(selectBusinessCode);
                                         upCuttingToolVO.setUpCount(config.getCount());
-                                        upCuttingToolVO.setRfidCode(null);
+                                        upCuttingToolVO.setUpRfidLaserCode(null);
                                         upCuttingToolVO.setBladeCode(null);
                                     }
 
@@ -904,7 +904,7 @@ public class c01s010_002Activity extends CommonActivity {
 
                                     UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(cailiaohao.getTag().toString());
                                     upCuttingToolVO.setUpCount(0);
-                                    upCuttingToolVO.setRfidCode(null);
+                                    upCuttingToolVO.setUpRfidLaserCode(null);
                                     upCuttingToolVO.setBladeCode(null);
 
                                     DownCuttingToolVO downCuttingToolVO = downCuttingToolVOMap.get(cailiaohao.getTag().toString());
@@ -1171,7 +1171,7 @@ public class c01s010_002Activity extends CommonActivity {
 
             UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(cailiaohao.getTag().toString());
             upCuttingToolVO.setUpCount(0);
-            upCuttingToolVO.setRfidCode(null);
+            upCuttingToolVO.setUpRfidLaserCode(null);
             upCuttingToolVO.setBladeCode(null);
 
             DownCuttingToolVO downCuttingToolVO = downCuttingToolVOMap.get(cailiaohao.getTag().toString());
