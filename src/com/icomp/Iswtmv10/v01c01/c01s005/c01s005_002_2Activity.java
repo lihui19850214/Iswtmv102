@@ -414,7 +414,7 @@ public class c01s005_002_2Activity extends CommonActivity {
             String jsonStr = objectToJson(synthesisCuttingToolVO);
             RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-            Call<String> getCuttingToolByTCode = iRequest.getCuttingToolByTCode(body);
+            Call<String> getCuttingToolByTCode = iRequest.queryToolForScrap(body);
             getCuttingToolByTCode.enqueue(new MyCallBack<String>() {
                 @Override
                 public void _onResponse(Response<String> response) {
