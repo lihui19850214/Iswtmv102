@@ -12,6 +12,7 @@ import android.widget.*;
 
 import com.apiclient.constants.CuttingToolConsumeTypeEnum;
 import com.apiclient.constants.CuttingToolTypeEnum;
+import com.apiclient.constants.GrindingEnum;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.dto.InFactoryDTO;
 import com.apiclient.pojo.AverageProcessingVolume;
@@ -618,7 +619,11 @@ public class C01S019_001Activity extends CommonActivity {
                                     CuttingToolBind cuttingToolBind = jsonToObject(response.body(), CuttingToolBind.class);
 
                                     if (cuttingToolBind != null) {
-                                        isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
+                                        if (GrindingEnum.outside.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding()) || GrindingEnum.outside_tuceng.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding())) {
+                                            isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "刃磨类型不匹配", Toast.LENGTH_SHORT).show();
+                                        }
                                     } else {
                                         Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
                                     }
