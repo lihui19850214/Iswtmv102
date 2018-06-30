@@ -144,7 +144,7 @@ public class C01S018_002Activity extends CommonActivity {
                     startActivity(intent2);
                     finish();
                 } else {
-                    createAlertDialog(C01S018_002Activity.this, "请添刀具", Toast.LENGTH_LONG);
+                    createAlertDialog(C01S018_002Activity.this, "请添加刀具", Toast.LENGTH_LONG);
                 }
                 break;
 //            case R.id.ivAdd:
