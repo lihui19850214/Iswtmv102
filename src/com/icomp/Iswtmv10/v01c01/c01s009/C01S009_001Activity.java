@@ -208,7 +208,7 @@ public class C01S009_001Activity extends CommonActivity {
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             Map<String, String> headsMap = new HashMap<>();
-            headsMap.put("impower", OperationEnum.SynthesisCuttingTool_Exchange.getKey().toString());
+            headsMap.put("impower", OperationEnum.SynthesisCuttingTool_Config.getKey().toString());
 
             //调用接口，查询合成刀具组成信息
             IRequest iRequest = retrofit.create(IRequest.class);
@@ -288,7 +288,7 @@ public class C01S009_001Activity extends CommonActivity {
             RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
             Map<String, String> headsMap = new HashMap<>();
-            headsMap.put("impower", OperationEnum.SynthesisCuttingTool_Exchange.getKey().toString());
+            headsMap.put("impower", OperationEnum.SynthesisCuttingTool_Config.getKey().toString());
 
             //调用接口，查询合成刀具组成信息
             IRequest iRequest = retrofit.create(IRequest.class);

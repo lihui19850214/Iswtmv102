@@ -185,7 +185,7 @@ public class C01S009_002Activity extends CommonActivity {
                 //---------------------------------哪个配置信息为真实数据所使用，补充换上数据开始----------------------------------
                 // 换上
                 UpCuttingToolVO upCuttingToolVO = new UpCuttingToolVO();
-                upCuttingToolVO.setBladeCode(config.getCuttingTool().getBusinessCode());
+                upCuttingToolVO.setBusinessCode(config.getCuttingTool().getBusinessCode());
                 upCuttingToolVO.setUpCode(config.getCuttingTool().getCode());
                 upCuttingToolVO.setUpCount(0);
 
