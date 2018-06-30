@@ -6,6 +6,7 @@ import android.os.Message;
 import android.view.*;
 import android.widget.*;
 
+import com.apiclient.constants.GrindingEnum;
 import com.apiclient.constants.OperationEnum;
 import com.apiclient.dto.InFactoryDTO;
 import com.apiclient.pojo.*;
@@ -321,7 +322,11 @@ public class C01S018_002Activity extends CommonActivity {
                                     CuttingToolBind cuttingToolBind = jsonToObject(response.body(), CuttingToolBind.class);
 
                                     if (cuttingToolBind != null) {
-                                        isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
+                                        if (GrindingEnum.inside.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding()) || GrindingEnum.outside_tuceng.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding())) {
+                                            isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "刃磨类型不匹配", Toast.LENGTH_SHORT).show();
+                                        }
                                     } else {
                                         if (null != loading && loading.isShowing()) {
                                             loading.dismiss();
