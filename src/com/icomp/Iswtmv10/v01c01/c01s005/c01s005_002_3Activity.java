@@ -92,9 +92,9 @@ public class c01s005_002_3Activity extends CommonActivity {
             businessCodeToBladeCodeMap = (Map<String, String>) paramMap.get("businessCodeToBladeCodeMap");
 
             for (ScrapVO scrapVO : scrapVOList) {
-                String bl = businessCodeToBladeCodeMap.get(scrapVO.getCuttingTool().getBusinessCode());
+                String bl = businessCodeToBladeCodeMap.get(scrapVO.getCuttingToolVO().getBusinessCode());
 
-                addLayout(scrapVO.getCuttingTool().getBusinessCode(), bl, scrapVO.getCount().toString());
+                addLayout(scrapVO.getCuttingToolVO().getBusinessCode(), bl, scrapVO.getCount().toString());
             }
         } catch (Exception e) {
             e.printStackTrace();

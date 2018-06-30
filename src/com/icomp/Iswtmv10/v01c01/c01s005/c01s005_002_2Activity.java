@@ -105,9 +105,9 @@ public class c01s005_002_2Activity extends CommonActivity {
                 businessCodeToBladeCodeMap = (Map<String, String>) paramMap.get("businessCodeToBladeCodeMap");
 
                 for (ScrapVO scrapVO : scrapVOList) {
-                    String bl = businessCodeToBladeCodeMap.get(scrapVO.getCuttingTool().getBusinessCode());
+                    String bl = businessCodeToBladeCodeMap.get(scrapVO.getCuttingToolVO().getBusinessCode());
 
-                    addLayout(scrapVO.getCuttingTool().getBusinessCode(), bl, scrapVO.getCount().toString());
+                    addLayout(scrapVO.getCuttingToolVO().getBusinessCode(), bl, scrapVO.getCount().toString());
                 }
             }
         } catch (Exception e) {
@@ -322,11 +322,11 @@ public class c01s005_002_2Activity extends CommonActivity {
                         scrapVO.setStatus(toolBusinessStatusEnum.getKey());
                         scrapVO.setCount(Integer.parseInt(etgrindingQuantity.getText().toString().trim()));
 
-                        CuttingTool ct = new CuttingTool();
-                        ct.setBusinessCode(cuttingTool.getBusinessCode());
-                        ct.setCode(cuttingTool.getCode());
+                        CuttingToolVO ctVO = new CuttingToolVO();
+                        ctVO.setBusinessCode(cuttingTool.getBusinessCode());
+                        ctVO.setCode(cuttingTool.getCode());
 
-                        scrapVO.setCuttingTool(ct);
+                        scrapVO.setCuttingToolVO(ctVO);
 
                         scrapVOList.add(scrapVO);
 
@@ -500,12 +500,12 @@ public class c01s005_002_2Activity extends CommonActivity {
                 materialNumToMap.remove(cailiao);
 
                 for (ScrapVO scrapVO : scrapVOList) {
-                    if (cailiao.equals(scrapVO.getCuttingTool().getBusinessCode())) {
+                    if (cailiao.equals(scrapVO.getCuttingToolVO().getBusinessCode())) {
 
                         Set<String> keys = rfidToMap.keySet();
                         for (String key : keys) {
                             CuttingToolBind cb = rfidToMap.get(key);
-                            if (scrapVO.getCuttingTool().getBusinessCode().equals(cb.getCuttingTool().getBusinessCode())) {
+                            if (scrapVO.getCuttingToolVO().getBusinessCode().equals(cb.getCuttingTool().getBusinessCode())) {
                                 rfidToMap.remove(key);
                                 rfid_authorization_map.remove(key);
                                 break;
@@ -720,14 +720,14 @@ public class c01s005_002_2Activity extends CommonActivity {
         ScrapVO scrapVO = new ScrapVO();
         scrapVO.setCount(1);
 
-        CuttingTool ct = new CuttingTool();
-        ct.setBusinessCode(cuttingToolBind.getCuttingTool().getBusinessCode());
-        ct.setCode(cuttingToolBind.getCuttingTool().getCode());
-        scrapVO.setCuttingTool(ct);
+        CuttingToolVO ctVO = new CuttingToolVO();
+        ctVO.setBusinessCode(cuttingToolBind.getCuttingTool().getBusinessCode());
+        ctVO.setCode(cuttingToolBind.getCuttingTool().getCode());
+        scrapVO.setCuttingToolVO(ctVO);
 
-        CuttingToolBind ctb = new CuttingToolBind();
-        ctb.setCode(cuttingToolBind.getCode());
-        scrapVO.setCuttingToolBind(ctb);
+        CuttingToolBindVO ctbVO = new CuttingToolBindVO();
+        ctbVO.setCode(cuttingToolBind.getCode());
+        scrapVO.setCuttingToolBindVO(ctbVO);
 
         scrapVOList.add(scrapVO);
 
