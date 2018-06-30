@@ -1201,7 +1201,7 @@ public class C01S009_002Activity extends CommonActivity {
             Set<String> keys = upCuttingToolVOMap.keySet();
             for (String key : keys) {
                 UpCuttingToolVO upCuttingToolVO = upCuttingToolVOMap.get(key);
-                if (upCuttingToolVO.getUpCount() > 0) {
+                if (displaySyntheticKnifeMap.containsKey(upCuttingToolVO.getBusinessCode()) && upCuttingToolVO.getUpCount() > 0) {
                     upCuttingToolVOList.add(upCuttingToolVO);
                 }
             }
