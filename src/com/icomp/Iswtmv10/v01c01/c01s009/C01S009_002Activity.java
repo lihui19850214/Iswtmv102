@@ -1197,6 +1197,7 @@ public class C01S009_002Activity extends CommonActivity {
                 return;
             }
 
+            upCuttingToolVOList = new ArrayList<>();
 
             Set<String> keys = upCuttingToolVOMap.keySet();
             for (String key : keys) {
