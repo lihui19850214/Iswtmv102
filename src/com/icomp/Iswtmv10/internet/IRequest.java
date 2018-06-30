@@ -191,6 +191,15 @@ public interface IRequest {
     @POST("/cuttingToolBusiness/queryBindInfo")
     Call<String> queryBindInfo(@Body RequestBody json);
 
+
+    /**
+     * 扫描标签查询标签是否可以绑定
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/cuttingToolBusiness/queryForBind")
+    Call<String> queryForBind(@Body RequestBody json);
+
     /**
      * 换装
      * @param json 请求数据
@@ -209,7 +218,7 @@ public interface IRequest {
      * @param headers 请求头
      * @return json格式数据
      */
-    @POST("/synthesisCuttingToolBusiness/Unconfig")
+    @POST("/synthesisCuttingToolBusiness/unConfig")
     Call<String> unconfig(@Body RequestBody json, @HeaderMap Map<String, String> headers);
 
     /**
@@ -230,7 +239,7 @@ public interface IRequest {
      * @param headers 请求头
      * @return json格式数据
      */
-    @POST("/synthesisCuttingToolBusiness/Config")
+    @POST("/synthesisCuttingToolBusiness/config")
     Call<String> config(@Body RequestBody json, @HeaderMap Map<String, String> headers);
     // --------------刀具组装结束--------------
 
@@ -451,6 +460,14 @@ public interface IRequest {
      */
     @POST("/outFactoryBusiness/getCuttingToolByTCode")
     Call<String> getCuttingToolByTCode(@Body RequestBody json);
+
+    /**
+     * 输入合成刀T号，查询可报废材料刀具接口
+     * @param json 请求数据
+     * @return json格式数据
+     */
+    @POST("/ScrapBusiness/queryToolForScrap")
+    Call<String> queryToolForScrap(@Body RequestBody json);
 
     /**
      * 获取刃磨记录
