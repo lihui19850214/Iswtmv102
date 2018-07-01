@@ -125,9 +125,6 @@ public class c01s004_003_1Activity extends CommonActivity {
                     createToast(getApplicationContext(), "请确认出库数量和刀身码数量", Toast.LENGTH_SHORT);
                 } else {
 
-                    // 需要授权
-                    is_need_authorization = true;
-
                     authorizationWindow("领料授权签收", new AuthorizationWindowCallBack() {
                         @Override
                         public void success(AuthCustomer authCustomer) {
@@ -166,7 +163,7 @@ public class c01s004_003_1Activity extends CommonActivity {
         try {
             loading.show();
 
-            if (authCustomerMap != null) {
+            if (authCustomerMap != null && is_need_authorization) {
                 AuthCustomer authCustomerLingliao = authCustomerMap.get("lingliao");
                 AuthCustomer authCustomerKezhang = authCustomerMap.get("kezhang");
 
@@ -179,10 +176,6 @@ public class c01s004_003_1Activity extends CommonActivity {
                 outApplyVO.setLlAuthCustomerVO(llAuthCustomerVO);
                 // 科长
                 outApplyVO.setKzAuthCustomerVO(kzAuthCustomerVO);
-            } else {
-//                createAlertDialog(c01s004_003_1Activity.this, getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
-                createToast(getApplicationContext(), getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
-                return;
             }
 
             try {

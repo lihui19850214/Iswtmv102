@@ -15,6 +15,7 @@ import butterknife.OnClick;
 import com.apiclient.constants.CuttingToolConsumeTypeEnum;
 import com.apiclient.constants.CuttingToolTypeEnum;
 import com.apiclient.constants.GrindingEnum;
+import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.AuthCustomer;
 import com.apiclient.pojo.DjOutapplyAkp;
 import com.apiclient.vo.AuthCustomerVO;
@@ -26,6 +27,7 @@ import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
+import com.icomp.common.activity.ExceptionProcessCallBack;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -120,12 +122,15 @@ public class c01s004_003Activity extends CommonActivity {
      */
     private void initView() {
         loading.show();
-        IRequest iRequest = retrofit.create(IRequest.class);
 
         String jsonStr = "{}";
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), jsonStr);
 
-        Call<String> getOrders = iRequest.getOrders(body);
+        Map<String, String> headsMap = new HashMap<>();
+        headsMap.put("impower", OperationEnum.Out_Library.getKey().toString());
+
+        IRequest iRequest = retrofit.create(IRequest.class);
+        Call<String> getOrders = iRequest.getOrders(body, headsMap);
 
         getOrders.enqueue(new MyCallBack<String>() {
             @Override
@@ -137,15 +142,8 @@ public class c01s004_003Activity extends CommonActivity {
                             searchOutLiberaryVOList = new ArrayList<>();
                             createToast(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT);
                         } else {
-                            tv01.setText(searchOutLiberaryVOList.get(0).getName());
-                            searchOutLiberaryVO = searchOutLiberaryVOList.get(0);
-
-                            djOutapplyAkp = searchOutLiberaryVO.getDjOutapplyAkp();
-
-                            Message message = new Message();
-                            message.obj = searchOutLiberaryVO;
-                            //输入授权和扫描授权的handler
-                            outOrderInfoHandler.sendMessage(message);
+                            String inpower = response.headers().get("impower");
+                            inpowerHandler(inpower);
                         }
                     } else {
 //                        createAlertDialog(c01s004_003Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
@@ -170,6 +168,59 @@ public class c01s004_003Activity extends CommonActivity {
                 createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
             }
         });
+    }
+
+    public void inpowerHandler(String inpower) throws IOException {
+        Map<String, String> inpowerMap = jsonToObject(inpower, Map.class);
+
+        // 判断是否显示提示框
+        if ("1".equals(inpowerMap.get("type"))) {
+            // 是否需要授权 true为需要授权；false为不需要授权
+            is_need_authorization = false;
+            setValue();
+        } else if ("2".equals(inpowerMap.get("type"))) {
+            is_need_authorization = true;
+            exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                @Override
+                public void confirm() {
+                    setValue();
+                }
+
+                @Override
+                public void cancel() {
+                    finish();
+                }
+            });
+        } else if ("3".equals(inpowerMap.get("type"))) {
+            is_need_authorization = false;
+            stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
+                @Override
+                public void confirm() {
+                    finish();
+                }
+
+                @Override
+                public void cancel() {
+                    // 实际上没有用
+                    finish();
+                }
+            });
+        } else if ("4".equals(inpowerMap.get("type"))) {
+            is_need_authorization = true;
+            setValue();
+        }
+    }
+
+    private void setValue() {
+        tv01.setText(searchOutLiberaryVOList.get(0).getName());
+        searchOutLiberaryVO = searchOutLiberaryVOList.get(0);
+
+        djOutapplyAkp = searchOutLiberaryVO.getDjOutapplyAkp();
+
+        Message message = new Message();
+        message.obj = searchOutLiberaryVO;
+        //输入授权和扫描授权的handler
+        outOrderInfoHandler.sendMessage(message);
     }
 
     @OnClick({R.id.btnReturn, R.id.btnNext, R.id.ll_02})
