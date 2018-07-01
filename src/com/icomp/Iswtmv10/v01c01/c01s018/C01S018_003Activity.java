@@ -130,6 +130,9 @@ public class C01S018_003Activity extends CommonActivity {
                             if (productLineEquipmentList == null || productLineEquipmentList.size() == 0) {
                                 productLineEquipmentList = new ArrayList<>();
                                 createToast(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT);
+                            } else {
+                                tv01.setText(productLineEquipmentList.get(0).getName());
+                                productLineEquipment = productLineEquipmentList.get(0);
                             }
                         } else {
 //                            createAlertDialog(C01S018_003Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
