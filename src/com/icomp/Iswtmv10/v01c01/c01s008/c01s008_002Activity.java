@@ -110,7 +110,7 @@ public class c01s008_002Activity extends CommonActivity {
             setValue();
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
@@ -171,7 +171,7 @@ public class c01s008_002Activity extends CommonActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                     Intent intent2 = new Intent(c01s008_002Activity.this, C01S008_001Activity.class);
                     startActivity(intent2);
                     finish();
@@ -255,7 +255,8 @@ public class c01s008_002Activity extends CommonActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            createAlertDialog(c01s008_002Activity.this, "请确认拆分数量", Toast.LENGTH_SHORT);
+//                            createAlertDialog(c01s008_002Activity.this, "请确认拆分数量", Toast.LENGTH_SHORT);
+                            createToast(getApplicationContext(), "请确认拆分数量", Toast.LENGTH_SHORT);
                         }
                     });
 
@@ -295,7 +296,7 @@ public class c01s008_002Activity extends CommonActivity {
             scanThread = new scanThread();
             scanThread.start();
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT);
         }
     }
 
@@ -333,14 +334,16 @@ public class c01s008_002Activity extends CommonActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            createAlertDialog(c01s008_002Activity.this, "此标签已经扫描过，请扫描其他标签", Toast.LENGTH_LONG);
+//                            createAlertDialog(c01s008_002Activity.this, "此标签已经扫描过，请扫描其他标签", Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), "此标签已经扫描过，请扫描其他标签", Toast.LENGTH_SHORT);
                         }
                     });
                 } else if (checkRfidData()) {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            createAlertDialog(c01s008_002Activity.this, "拆分数量已满足", Toast.LENGTH_LONG);
+//                            createAlertDialog(c01s008_002Activity.this, "拆分数量已满足", Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), "拆分数量已满足", Toast.LENGTH_SHORT);
                         }
                     });
                 } else {
@@ -379,17 +382,19 @@ public class c01s008_002Activity extends CommonActivity {
                                                 rfidSet.add(rfidString);
                                                 addRfidData(cuttingToolBind.getCuttingTool().getBusinessCode(), rfidString, 1);
                                             } else {
-                                                createAlertDialog(c01s008_002Activity.this, "该标签与列表中钻头不匹配", Toast.LENGTH_SHORT);
+//                                                createAlertDialog(c01s008_002Activity.this, "该标签与列表中钻头不匹配", Toast.LENGTH_SHORT);
+                                                createToast(getApplicationContext(), "该标签与列表中钻头不匹配", Toast.LENGTH_SHORT);
                                             }
                                         } else {
-                                            Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
+                                            createToast(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT);
                                         }
                                     } else {
-                                        createAlertDialog(c01s008_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                                        createAlertDialog(c01s008_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                        createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                    createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                                 } finally {
                                     if (null != loading && loading.isShowing()) {
                                         loading.dismiss();
@@ -405,7 +410,8 @@ public class c01s008_002Activity extends CommonActivity {
                                         if (null != loading && loading.isShowing()) {
                                             loading.dismiss();
                                         }
-                                        createAlertDialog(c01s008_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                                        createAlertDialog(c01s008_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                                        createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                                     }
                                 });
                             }
@@ -418,7 +424,7 @@ public class c01s008_002Activity extends CommonActivity {
                                 if (null != loading && loading.isShowing()) {
                                     loading.dismiss();
                                 }
-                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                             }
                         });
                     }
@@ -511,7 +517,7 @@ public class c01s008_002Activity extends CommonActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                 }
             });
         }
@@ -550,7 +556,7 @@ public class c01s008_002Activity extends CommonActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                 }
             });
         }
@@ -591,13 +597,17 @@ public class c01s008_002Activity extends CommonActivity {
                 headsMap.put("impower", objectToJson(impowerRecorderList));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
+                return;
             } catch (IOException e) {
                 e.printStackTrace();
-                createAlertDialog(c01s008_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+//                createAlertDialog(c01s008_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                createToast(getApplicationContext(), getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                return;
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
+                return;
             }
 
             downCuttingToolVOList = new ArrayList<>();
@@ -650,12 +660,12 @@ public class c01s008_002Activity extends CommonActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            final String errorStr = response.errorBody().string();
-                            createAlertDialog(c01s008_002Activity.this, errorStr, Toast.LENGTH_LONG);
+//                            createAlertDialog(c01s008_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                     } finally {
                         if (null != loading && loading.isShowing()) {
                             loading.dismiss();
@@ -668,7 +678,8 @@ public class c01s008_002Activity extends CommonActivity {
                     if (null != loading && loading.isShowing()) {
                         loading.dismiss();
                     }
-                    createAlertDialog(c01s008_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(c01s008_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
@@ -676,7 +687,7 @@ public class c01s008_002Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
