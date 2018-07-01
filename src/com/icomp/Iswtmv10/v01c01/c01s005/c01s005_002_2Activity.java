@@ -633,7 +633,7 @@ public class c01s005_002_2Activity extends CommonActivity {
 
                     headsMap.put("impower", OperationEnum.Cutting_tool_scap.getKey().toString());
 
-                    Call<String> getOutCuttingToolBind = iRequest.getOutCuttingToolBind(body, headsMap);
+                    Call<String> getOutCuttingToolBind = iRequest.getCuttingToolBind(body, headsMap);
                     getOutCuttingToolBind.enqueue(new MyCallBack<String>() {
                         @Override
                         public void _onResponse(Response<String> response) {
