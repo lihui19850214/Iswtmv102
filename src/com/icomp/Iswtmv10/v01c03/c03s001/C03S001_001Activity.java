@@ -10,24 +10,20 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.SynthesisCuttingToolConfig;
 import com.apiclient.vo.RfidContainerVO;
 import com.apiclient.vo.SynthesisCuttingToolBindVO;
-import com.apiclient.vo.SynthesisCuttingToolInitVO;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
-import com.icomp.common.activity.ExceptionProcessCallBack;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -95,7 +91,8 @@ public class C03S001_001Activity extends CommonActivity {
                 synthesisCuttingToolBindVO = new SynthesisCuttingToolBindVO();
                 synthesisCuttingToolBindVO.setSynthesisCode(et01.getText().toString().trim());
                 if ("".equals(synthesisCuttingToolBindVO.getSynthesisCode())) {
-                    createAlertDialog(C03S001_001Activity.this, getString(R.string.c03s001_001_002), Toast.LENGTH_LONG);
+//                    createAlertDialog(C03S001_001Activity.this, getString(R.string.c03s001_001_002), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.c03s001_001_002), Toast.LENGTH_SHORT);
                 } else {
                     //扫描线程
                     scanThread2 scanThread2 = new scanThread2();
@@ -118,7 +115,7 @@ public class C03S001_001Activity extends CommonActivity {
             scanThread = new scanThread();
             scanThread.start();
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT);
         }
     }
 
@@ -206,14 +203,15 @@ public class C03S001_001Activity extends CommonActivity {
                                 startActivity(intent);
                                 finish();
                             } else {
-                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                createToast(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT);
                             }
                         } else {
-                            createAlertDialog(C03S001_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                            createAlertDialog(C03S001_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                     } finally {
                         loading.dismiss();
                     }
@@ -221,7 +219,8 @@ public class C03S001_001Activity extends CommonActivity {
 
                 @Override
                 public void _onFailure(Throwable t) {
-                    createAlertDialog(C03S001_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(C03S001_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                     loading.dismiss();
                 }
             });
@@ -230,7 +229,7 @@ public class C03S001_001Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 

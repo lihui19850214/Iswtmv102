@@ -1,7 +1,5 @@
 package com.icomp.Iswtmv10.v01c03.c03s001;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Message;
@@ -20,7 +18,6 @@ import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.CommonActivity;
-import com.icomp.common.utils.SysApplication;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -102,7 +99,7 @@ public class C03S001_003Activity extends CommonActivity {
             scanThread = new ScanThread();
             scanThread.start();
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT);
         }
     }
 
@@ -143,7 +140,8 @@ public class C03S001_003Activity extends CommonActivity {
     //点击提交按钮处理方法
     public void next(View view) {
         if (tv01.getText() == null || "".equals(tv01.getText().toString().trim())) {
-            createAlertDialog(C03S001_003Activity.this, "请输入合成刀刀身码", Toast.LENGTH_LONG);
+//            createAlertDialog(C03S001_003Activity.this, "请输入合成刀刀身码", Toast.LENGTH_LONG);
+            createToast(getApplicationContext(), "请输入合成刀刀身码", Toast.LENGTH_SHORT);
         } else {
             requestData(tv01.getText().toString().trim(), null);
         }
@@ -193,11 +191,12 @@ public class C03S001_003Activity extends CommonActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            createAlertDialog(C03S001_003Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                            createAlertDialog(C03S001_003Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                     } finally {
                         loading.dismiss();
                     }
@@ -206,7 +205,8 @@ public class C03S001_003Activity extends CommonActivity {
                 @Override
                 public void _onFailure(Throwable t) {
                     loading.dismiss();
-                    createAlertDialog(C03S001_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(C03S001_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
@@ -217,7 +217,7 @@ public class C03S001_003Activity extends CommonActivity {
                     if (null != loading && loading.isShowing()) {
                         loading.dismiss();
                     }
-                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                      createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                   }
             });
         }

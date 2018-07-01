@@ -15,13 +15,11 @@ import android.widget.TextView;
 import com.apiclient.constants.CuttingToolConsumeTypeEnum;
 import com.apiclient.constants.CuttingToolTypeEnum;
 import com.apiclient.pojo.CuttingTool;
-import com.apiclient.pojo.ProductLineEquipment;
 import com.apiclient.pojo.SynthesisCuttingToolConfig;
 import com.apiclient.pojo.SynthesisCuttingToolLocationConfig;
 import com.icomp.Iswtmv10.R;
 import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.utils.GetItemHeight;
-import com.icomp.common.utils.SysApplication;
 
 import java.util.List;
 import java.util.Map;

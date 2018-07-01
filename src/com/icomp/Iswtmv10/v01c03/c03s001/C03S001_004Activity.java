@@ -7,8 +7,6 @@ import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.icomp.Iswtmv10.R;
-import com.icomp.Iswtmv10.v01c01.c01s005.c01s005_002_2Activity;
-import com.icomp.Iswtmv10.v01c01.c01s005.c01s005_002_4Activity;
 import com.icomp.common.activity.CommonActivity;
 
 /**
