@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Message;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.apiclient.constants.OperationEnum;
 import com.apiclient.pojo.AuthCustomer;
 import com.apiclient.pojo.CuttingToolBind;
 import com.apiclient.pojo.DjOutapplyAkp;
@@ -21,15 +19,12 @@ import com.apiclient.pojo.RfidContainer;
 import com.apiclient.vo.AuthCustomerVO;
 import com.apiclient.vo.OutApplyVO;
 import com.apiclient.vo.SearchOutLiberaryVO;
-import com.apiclient.vo.SynthesisCuttingToolInitVO;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
-import com.icomp.common.activity.ExceptionProcessCallBack;
-import com.icomp.common.utils.FCBCodeHandler;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -95,7 +90,7 @@ public class c01s004_003_2Activity extends CommonActivity {
             tv02.setText(bladeCodeNum+"");
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
 
         // 出库数量==已扫描数量(标签不需要验证)，如果满足就挤掉第一个
@@ -115,7 +110,8 @@ public class c01s004_003_2Activity extends CommonActivity {
             case R.id.btnNext:
 
                 if (outageNumber != bladeCodeNum) {
-                    createAlertDialog(this, "请继续扫描刀盒上的标签", Toast.LENGTH_SHORT);
+//                    createAlertDialog(this, "请继续扫描刀盒上的标签", Toast.LENGTH_SHORT);
+                    createToast(getApplicationContext(), "请继续扫描刀盒上的标签", Toast.LENGTH_SHORT);
                     return;
                 }
 
@@ -173,7 +169,8 @@ public class c01s004_003_2Activity extends CommonActivity {
                 // 科长
                 outApplyVO.setKzAuthCustomerVO(kzAuthCustomerVO);
             } else {
-                createAlertDialog(c01s004_003_2Activity.this, getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
+//                createAlertDialog(c01s004_003_2Activity.this, getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
+                createToast(getApplicationContext(), getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
                 return;
             }
 
@@ -187,7 +184,8 @@ public class c01s004_003_2Activity extends CommonActivity {
                 outApplyVO.setKuguanOperatorCode(authCustomer.getCode());// 操作者code
             } catch (IOException e) {
                 e.printStackTrace();
-                createAlertDialog(c01s004_003_2Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+//                createAlertDialog(c01s004_003_2Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                createToast(getApplicationContext(), getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
                 return;
             }
 
@@ -222,11 +220,12 @@ public class c01s004_003_2Activity extends CommonActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            createAlertDialog(c01s004_003_2Activity.this, response.errorBody().string(), Toast.LENGTH_SHORT);
+//                            createAlertDialog(c01s004_003_2Activity.this, response.errorBody().string(), Toast.LENGTH_SHORT);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                     } finally {
                         if (null != loading && loading.isShowing()) {
                             loading.dismiss();
@@ -239,7 +238,8 @@ public class c01s004_003_2Activity extends CommonActivity {
                     if (null != loading && loading.isShowing()) {
                         loading.dismiss();
                     }
-                    createAlertDialog(c01s004_003_2Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(c01s004_003_2Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
@@ -247,7 +247,7 @@ public class c01s004_003_2Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
@@ -270,7 +270,7 @@ public class c01s004_003_2Activity extends CommonActivity {
             ScanThread scanThread = new ScanThread();
             scanThread.start();
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT);
         }
     }
 
@@ -304,7 +304,7 @@ public class c01s004_003_2Activity extends CommonActivity {
 
                         if (rfidSet.contains(rfidString)) {
                             // 重复扫描
-                            Toast.makeText(getApplicationContext(), "重复扫描", Toast.LENGTH_SHORT).show();
+                            createToast(getApplicationContext(), "重复扫描", Toast.LENGTH_SHORT);
                         } else {
                             if (bladeCodeNum < Integer.parseInt(djOutapplyAkp.getUnitqty())) {
                                 bladeCodeNum++;

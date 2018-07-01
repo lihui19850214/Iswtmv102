@@ -98,7 +98,7 @@ public class c01s004_003_1Activity extends CommonActivity {
             mHandler.postDelayed(mRunnable, 500);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
@@ -121,7 +121,8 @@ public class c01s004_003_1Activity extends CommonActivity {
                 break;
             case R.id.btnNext:
                 if (Integer.parseInt(djOutapplyAkp.getUnitqty()) != rfidMap.size()) {
-                    createAlertDialog(this, "请确认出库数量和刀身码数量", Toast.LENGTH_SHORT);
+//                    createAlertDialog(this, "请确认出库数量和刀身码数量", Toast.LENGTH_SHORT);
+                    createToast(getApplicationContext(), "请确认出库数量和刀身码数量", Toast.LENGTH_SHORT);
                 } else {
 
                     // 需要授权
@@ -179,7 +180,8 @@ public class c01s004_003_1Activity extends CommonActivity {
                 // 科长
                 outApplyVO.setKzAuthCustomerVO(kzAuthCustomerVO);
             } else {
-                createAlertDialog(c01s004_003_1Activity.this, getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
+//                createAlertDialog(c01s004_003_1Activity.this, getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
+                createToast(getApplicationContext(), getString(R.string.authorizedNumberError), Toast.LENGTH_SHORT);
                 return;
             }
 
@@ -193,7 +195,8 @@ public class c01s004_003_1Activity extends CommonActivity {
                 outApplyVO.setKuguanOperatorCode(authCustomer.getCode());// 操作者code
             } catch (IOException e) {
                 e.printStackTrace();
-                createAlertDialog(c01s004_003_1Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+//                createAlertDialog(c01s004_003_1Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                createToast(getApplicationContext(), getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
                 return;
             }
 
@@ -232,11 +235,12 @@ public class c01s004_003_1Activity extends CommonActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            createAlertDialog(c01s004_003_1Activity.this, response.errorBody().string(), Toast.LENGTH_SHORT);
+//                            createAlertDialog(c01s004_003_1Activity.this, response.errorBody().string(), Toast.LENGTH_SHORT);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                     } finally {
                         if (null != loading && loading.isShowing()) {
                             loading.dismiss();
@@ -249,7 +253,8 @@ public class c01s004_003_1Activity extends CommonActivity {
                     if (null != loading && loading.isShowing()) {
                         loading.dismiss();
                     }
-                    createAlertDialog(c01s004_003_1Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(c01s004_003_1Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
@@ -257,7 +262,7 @@ public class c01s004_003_1Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
@@ -277,7 +282,7 @@ public class c01s004_003_1Activity extends CommonActivity {
             ScanThread scanThread = new ScanThread(bladeCode);
             scanThread.start();
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT);
         }
     }
 
@@ -318,7 +323,7 @@ public class c01s004_003_1Activity extends CommonActivity {
 
                         if (rfidMap.containsKey(rfidString)) {
                             // 重复扫描
-                            Toast.makeText(getApplicationContext(), "重复扫描", Toast.LENGTH_SHORT).show();
+                            createToast(getApplicationContext(), "重复扫描", Toast.LENGTH_SHORT);
                         } else {
                             rfidMap.put(rfidString, bladeCode);
                             bladeCodeNum++;
@@ -365,7 +370,8 @@ public class c01s004_003_1Activity extends CommonActivity {
                 @Override
                 public void onClick(View view) {
                     if (null == et_bladeCode.getText().toString().trim() || "".equals(et_bladeCode.getText().toString().trim())) {
-                        createAlertDialog(c01s004_003_1Activity.this, "请输入刀身码", Toast.LENGTH_LONG);
+//                        createAlertDialog(c01s004_003_1Activity.this, "请输入刀身码", Toast.LENGTH_LONG);
+                        createToast(getApplicationContext(), "请输入刀身码", Toast.LENGTH_SHORT);
                     } else {
                         addPopupWindow.dismiss();
                         scan(et_bladeCode.getText().toString().trim());
