@@ -215,6 +215,10 @@ public class C01S013_002Activity extends CommonActivity {
      * 点击零部件种类下拉框
      */
     public void showPopupWindow2() {
+        if (productLineList == null || productLineList.size() == 0) {
+            createToast(getApplicationContext(), "没有选项", Toast.LENGTH_SHORT);
+            return;
+        }
         View view = LayoutInflater.from(C01S013_002Activity.this).inflate(R.layout.spinner_c03s004_001, null);
         ListView listView = (ListView) view.findViewById(R.id.ll_spinner);
         MyAdapter1 myAdapter1 = new MyAdapter1();
