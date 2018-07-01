@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import com.apiclient.pojo.ProductLineAssemblyline;
 import com.apiclient.pojo.ProductLineEquipment;
-import com.apiclient.pojo.RfidContainer;
 import com.apiclient.vo.ProductLineEquipmentVO;
 import com.apiclient.vo.ProductLineVO;
 import com.apiclient.vo.RfidContainerVO;
@@ -129,14 +128,16 @@ public class C03S003_001Activity extends CommonActivity {
                             lineList = jsonToObject(response.body(), List.class, ProductLineAssemblyline.class);
                             if (lineList == null || lineList.size() == 0) {
                                 lineList = new ArrayList<>();
-                                createAlertDialog(C03S003_001Activity.this, "无流水线信息", Toast.LENGTH_LONG);
+//                                createAlertDialog(C03S003_001Activity.this, "无流水线信息", Toast.LENGTH_LONG);
+                                createToast(getApplicationContext(), "无流水线信息", Toast.LENGTH_SHORT);
                             }
                         } else {
-                            createAlertDialog(C03S003_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                            createAlertDialog(C03S003_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                     } finally {
                         loading.dismiss();
                     }
@@ -145,7 +146,8 @@ public class C03S003_001Activity extends CommonActivity {
                 @Override
                 public void _onFailure(Throwable t) {
                     loading.dismiss();
-                    createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
@@ -153,7 +155,7 @@ public class C03S003_001Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
@@ -212,14 +214,16 @@ public class C03S003_001Activity extends CommonActivity {
                                     // 未查询到设备信息
                                     if (equipmentEntityList == null || equipmentEntityList.size() == 0) {
                                         equipmentEntityList = new ArrayList<>();
-                                        createAlertDialog(C03S003_001Activity.this, "无设备信息", Toast.LENGTH_LONG);
+//                                        createAlertDialog(C03S003_001Activity.this, "无设备信息", Toast.LENGTH_LONG);
+                                        createToast(getApplicationContext(), "无设备信息", Toast.LENGTH_SHORT);
                                     }
                                 } else {
-                                    createAlertDialog(C03S003_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                                    createAlertDialog(C03S003_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                    createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                             } finally {
                                 loading.dismiss();
                             }
@@ -228,7 +232,8 @@ public class C03S003_001Activity extends CommonActivity {
                         @Override
                         public void _onFailure(Throwable t) {
                             loading.dismiss();
-                            createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                            createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                         }
                     });
                 } catch (Exception e) {
@@ -236,7 +241,7 @@ public class C03S003_001Activity extends CommonActivity {
                     if (null != loading && loading.isShowing()) {
                         loading.dismiss();
                     }
-                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -332,9 +337,11 @@ public class C03S003_001Activity extends CommonActivity {
     //扫描按钮处理
     private void scan() {
         if ("".equals(tv01.getText().toString().trim())) {
-            createAlertDialog(C03S003_001Activity.this, getString(R.string.c03s003_001_003), Toast.LENGTH_LONG);
+//            createAlertDialog(C03S003_001Activity.this, getString(R.string.c03s003_001_003), Toast.LENGTH_LONG);
+            createToast(getApplicationContext(), getString(R.string.c03s003_001_003), Toast.LENGTH_SHORT);
         }else if ("".equals(tv02.getText().toString().trim())) {
-            createAlertDialog(C03S003_001Activity.this, getString(R.string.c03s003_001_004), Toast.LENGTH_LONG);
+//            createAlertDialog(C03S003_001Activity.this, getString(R.string.c03s003_001_004), Toast.LENGTH_LONG);
+            createToast(getApplicationContext(), getString(R.string.c03s003_001_004), Toast.LENGTH_SHORT);
         } else {
             if (rfidWithUHF.startInventoryTag((byte) 0, (byte) 0)) {
                 //扫描时选择弹框不可用
@@ -348,7 +355,7 @@ public class C03S003_001Activity extends CommonActivity {
                 scanThread = new scanThread();
                 scanThread.start();
             } else {
-                Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+                createToast(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT);
             }
         }
     }
@@ -409,45 +416,26 @@ public class C03S003_001Activity extends CommonActivity {
                                     startActivity(intent);
                                     finish();
                                 } else {
-                                    final String errorStr = response.errorBody().string();
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            createAlertDialog(C03S003_001Activity.this, errorStr, Toast.LENGTH_LONG);
-                                        }
-                                    });
+//                                    createAlertDialog(C03S003_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                    createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                             } finally {
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (null != loading && loading.isShowing()) {
-                                            loading.dismiss();
-                                        }
-                                    }
-                                });
+                                if (null != loading && loading.isShowing()) {
+                                    loading.dismiss();
+                                }
                             }
                         }
 
                         @Override
                         public void _onFailure(Throwable t) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (null != loading && loading.isShowing()) {
-                                        loading.dismiss();
-                                    }
-                                    createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
-                                }
-                            });
+                            if (null != loading && loading.isShowing()) {
+                                loading.dismiss();
+                            }
+//                            createAlertDialog(C03S003_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                         }
                     });
                 } catch (Exception e) {
@@ -458,7 +446,7 @@ public class C03S003_001Activity extends CommonActivity {
                             if (null != loading && loading.isShowing()) {
                                 loading.dismiss();
                             }
-                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                         }
                     });
                 }
