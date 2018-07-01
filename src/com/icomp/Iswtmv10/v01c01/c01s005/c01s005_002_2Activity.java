@@ -646,7 +646,10 @@ public class c01s005_002_2Activity extends CommonActivity {
                                         if (bladeCodeSet.contains(cuttingToolBind.getBladeCode())) {
                                             createToast(getApplicationContext(), "刀身码已存在", Toast.LENGTH_SHORT);
                                         } else {
-                                            isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
+                                            // 是否需要授权 true为需要授权；false为不需要授权
+                                            is_need_authorization = false;
+                                            setValue(rfidString, cuttingToolBind);
+//                                            isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
                                         }
                                     } else {
                                         createToast(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT);
