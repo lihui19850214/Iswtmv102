@@ -1,28 +1,20 @@
 package com.icomp.Iswtmv10.v01c01.c01s005;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.PaintDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.*;
 import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.apiclient.constants.OperationEnum;
 import com.apiclient.constants.ScrapCaseEnum;
-import com.apiclient.constants.ScrapReasonEnum;
-import com.apiclient.constants.ScrapStateEnum;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.ScrapVO;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
-import com.icomp.Iswtmv10.v01c01.c01s005.modul.TongDaoModul;
 import com.icomp.common.activity.AuthorizationWindowCallBack;
 import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.utils.GetItemHeight;
@@ -31,7 +23,6 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -84,6 +75,12 @@ public class c01s005_002_3Activity extends CommonActivity {
             scrapCaseEnumList.add(scrapCaseEnum);
         }
 
+        // 下拉列表框默认选中第一个
+        if (scrapCaseEnumList != null && scrapCaseEnumList.size() > 0) {
+            tv01.setText(scrapCaseEnumList.get(0).getName());
+            scrapCaseEnum = scrapCaseEnumList.get(0);
+        }
+
         try {
             Map<String, Object> paramMap = PARAM_MAP.get(1);
             scrapVOMap = (Map<Integer, ScrapVO>) paramMap.get("scrapVOMap");
@@ -100,7 +97,7 @@ public class c01s005_002_3Activity extends CommonActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
@@ -128,7 +125,8 @@ public class c01s005_002_3Activity extends CommonActivity {
                         }
                     });
                 } else {
-                    createAlertDialog(c01s005_002_3Activity.this, "请选择报废原因", Toast.LENGTH_LONG);
+//                    createAlertDialog(c01s005_002_3Activity.this, "请选择报废原因", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请选择报废原因", Toast.LENGTH_SHORT);
                 }
                 break;
         }
@@ -331,7 +329,8 @@ public class c01s005_002_3Activity extends CommonActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            createAlertDialog(c01s005_002_3Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                            createAlertDialog(c01s005_002_3Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -342,7 +341,8 @@ public class c01s005_002_3Activity extends CommonActivity {
 
                 @Override
                 public void _onFailure(Throwable t) {
-                    createAlertDialog(c01s005_002_3Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(c01s005_002_3Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                     loading.dismiss();
                 }
             });
@@ -351,7 +351,7 @@ public class c01s005_002_3Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
