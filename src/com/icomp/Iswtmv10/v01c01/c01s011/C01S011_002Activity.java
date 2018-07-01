@@ -103,7 +103,12 @@ public class C01S011_002Activity extends CommonActivity {
         bladeCode = (String) paramMap.get("bladeCode");
         rfidCode = (String) paramMap.get("rfidCode");
 
-        et00.setText(synthesisCuttingToolBind.getSynthesisCode()    );
+        if (equipmentEntityList != null && equipmentEntityList.size() > 0) {
+            tv01.setText(equipmentEntityList.get(0).getName());
+            productLineEquipment = equipmentEntityList.get(0);
+        }
+
+        et00.setText(synthesisCuttingToolBind.getSynthesisCode());
     }
 
     /**
@@ -137,7 +142,7 @@ public class C01S011_002Activity extends CommonActivity {
             scanThread = new ScanThread();
             scanThread.start();
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT);
         }
     }
 
@@ -202,23 +207,24 @@ public class C01S011_002Activity extends CommonActivity {
                                             for (int i = 0; i < equipmentEntityList.size(); i++) {
                                                 ProductLineEquipment pe = equipmentEntityList.get(i);
                                                 if (equipment.getCode().equals(pe.getCode())) {
-                                                    tv01.setText(equipmentEntityList.get(0).getName());
-                                                    productLineEquipment = equipmentEntityList.get(0);
+                                                    tv01.setText(pe.getName());
+                                                    productLineEquipment = pe;
                                                 }
                                             }
                                         }
                                     } else {
-                                        Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                        createToast(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT);
                                     }
                                 } else {
-                                    createAlertDialog(C01S011_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                                    createAlertDialog(C01S011_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                    createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 if (null != loading && loading.isShowing()) {
                                     loading.dismiss();
                                 }
-                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                             } finally {
                                 if (null != loading && loading.isShowing()) {
                                     loading.dismiss();
@@ -231,7 +237,8 @@ public class C01S011_002Activity extends CommonActivity {
                             if (null != loading && loading.isShowing()) {
                                 loading.dismiss();
                             }
-                            createAlertDialog(C01S011_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                            createAlertDialog(C01S011_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                         }
                     });
                 } catch (Exception e) {
@@ -242,7 +249,7 @@ public class C01S011_002Activity extends CommonActivity {
                             if (null != loading && loading.isShowing()) {
                                 loading.dismiss();
                             }
-                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                         }
                     });
                 }
@@ -344,7 +351,8 @@ public class C01S011_002Activity extends CommonActivity {
                 }
             });
         } else {
-            createAlertDialog(C01S011_002Activity.this, "请配置生产关联或绑定对应设备标签", Toast.LENGTH_LONG);
+//            createAlertDialog(C01S011_002Activity.this, "请配置生产关联或绑定对应设备标签", Toast.LENGTH_LONG);
+            createToast(getApplicationContext(), "请配置生产关联或绑定对应设备标签", Toast.LENGTH_SHORT);
         }
 
     }
@@ -383,15 +391,16 @@ public class C01S011_002Activity extends CommonActivity {
                 headsMap.put("impower", objectToJson(impowerRecorderList));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                 return;
             } catch (IOException e) {
                 e.printStackTrace();
-                createAlertDialog(C01S011_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+//                createAlertDialog(C01S011_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                createToast(getApplicationContext(), getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
                 return;
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                 return;
             }
 
@@ -430,7 +439,8 @@ public class C01S011_002Activity extends CommonActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            createAlertDialog(C01S011_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                            createAlertDialog(C01S011_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -442,7 +452,8 @@ public class C01S011_002Activity extends CommonActivity {
                 @Override
                 public void _onFailure(Throwable t) {
                     loading.dismiss();
-                    createAlertDialog(C01S011_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S011_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
@@ -450,7 +461,7 @@ public class C01S011_002Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
