@@ -75,7 +75,7 @@ public class c01s010_001Activity extends CommonActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.c01s013_001activity);
+        setContentView(R.layout.activity_c01s010_001);
         ButterKnife.bind(this);
 
         //调用接口
