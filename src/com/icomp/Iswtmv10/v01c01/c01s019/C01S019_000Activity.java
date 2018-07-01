@@ -13,12 +13,9 @@ import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.apiclient.constants.OperationEnum;
 import com.apiclient.dto.InFactoryDTO;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.InOutQueryVO;
-import com.apiclient.vo.OutSideVO;
-import com.apiclient.vo.QueryVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
@@ -172,24 +169,26 @@ public class C01S019_000Activity extends CommonActivity {
                                     et04.setText(customer.getName());
                                 } catch (JsonProcessingException e) {
                                     e.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                    createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                                     return;
                                 } catch (IOException e) {
                                     e.printStackTrace();
-                                    createAlertDialog(C01S019_000Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+//                                    createAlertDialog(C01S019_000Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                                    createToast(getApplicationContext(), getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
                                     return;
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                    createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                                     return;
                                 }
                             }
                         } else {
-                            createAlertDialog(C01S019_000Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                            createAlertDialog(C01S019_000Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                     } finally {
                         if (null != loading && loading.isShowing()) {
                             loading.dismiss();
@@ -202,7 +201,8 @@ public class C01S019_000Activity extends CommonActivity {
                     if (null != loading && loading.isShowing()) {
                         loading.dismiss();
                     }
-                    createAlertDialog(C01S019_000Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_000Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
@@ -210,7 +210,7 @@ public class C01S019_000Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
@@ -230,17 +230,23 @@ public class C01S019_000Activity extends CommonActivity {
             case R.id.btn_next:
 
                 if (et01.getText().toString() == null || "".equals(et01.getText().toString().trim())) {
-                    createAlertDialog(C01S019_000Activity.this, "请输入资材单号", Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_000Activity.this, "请输入资材单号", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请输入资材单号", Toast.LENGTH_SHORT);
                 } else if (et02.getText().toString() == null || "".equals(et02.getText().toString().trim())) {
-                    createAlertDialog(C01S019_000Activity.this, "请输入出厂单号", Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_000Activity.this, "请输入出厂单号", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请输入出厂单号", Toast.LENGTH_SHORT);
                 } else if (et03.getText().toString() == null || "".equals(et03.getText().toString().trim())) {
-                    createAlertDialog(C01S019_000Activity.this, "请输入经手人", Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_000Activity.this, "请输入经手人", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请输入经手人", Toast.LENGTH_SHORT);
                 } else if (et04.getText().toString() == null || "".equals(et04.getText().toString().trim())) {
-                    createAlertDialog(C01S019_000Activity.this, "请输入邮寄人", Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_000Activity.this, "请输入邮寄人", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请输入邮寄人", Toast.LENGTH_SHORT);
                 } else if (sharpenProvider == null) {
-                    createAlertDialog(C01S019_000Activity.this, "请选择外委厂家", Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_000Activity.this, "请选择外委厂家", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请选择外委厂家", Toast.LENGTH_SHORT);
                 } else if (outsideFactoryMode == null) {
-                    createAlertDialog(C01S019_000Activity.this, "请选择外委方式", Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_000Activity.this, "请选择外委方式", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请选择外委方式", Toast.LENGTH_SHORT);
                 } else {
                     inFactoryDTO.setZcCode(et01.getText().toString().trim());//资材单号
                     inFactoryDTO.setOrderNum(et02.getText().toString().trim());//外委单号

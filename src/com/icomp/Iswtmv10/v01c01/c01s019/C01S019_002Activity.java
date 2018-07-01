@@ -12,8 +12,6 @@ import com.apiclient.constants.OperationEnum;
 import com.apiclient.dto.InFactoryDTO;
 import com.apiclient.pojo.*;
 import com.apiclient.vo.GrindingVO;
-import com.apiclient.vo.OutSideVO;
-import com.apiclient.vo.SharpenVO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
@@ -35,7 +33,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
- * 厂外修磨页面2
+ * 厂外修磨页面3
  */
 public class C01S019_002Activity extends CommonActivity {
 
@@ -91,7 +89,7 @@ public class C01S019_002Activity extends CommonActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
@@ -211,15 +209,16 @@ public class C01S019_002Activity extends CommonActivity {
                 headsMap.put("impower", objectToJson(impowerRecorderList));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                 return;
             } catch (IOException e) {
                 e.printStackTrace();
-                createAlertDialog(C01S019_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+//                createAlertDialog(C01S019_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                createToast(getApplicationContext(), getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
                 return;
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                 return;
             }
 
@@ -239,11 +238,12 @@ public class C01S019_002Activity extends CommonActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            createAlertDialog(C01S019_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                            createAlertDialog(C01S019_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                     } finally {
                         loading.dismiss();
                     }
@@ -251,7 +251,8 @@ public class C01S019_002Activity extends CommonActivity {
 
                 @Override
                 public void _onFailure(Throwable t) {
-                    createAlertDialog(C01S019_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                     loading.dismiss();
                 }
             });
@@ -260,7 +261,7 @@ public class C01S019_002Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 

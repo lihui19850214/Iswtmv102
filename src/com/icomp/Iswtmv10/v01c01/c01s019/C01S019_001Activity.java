@@ -23,7 +23,6 @@ import com.icomp.Iswtmv10.R;
 import com.icomp.Iswtmv10.internet.IRequest;
 import com.icomp.Iswtmv10.internet.MyCallBack;
 import com.icomp.Iswtmv10.internet.RetrofitSingle;
-import com.icomp.Iswtmv10.v01c01.c01s018.C01S018_002Activity;
 import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.activity.ExceptionProcessCallBack;
 
@@ -132,7 +131,7 @@ public class C01S019_001Activity extends CommonActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
@@ -176,7 +175,8 @@ public class C01S019_001Activity extends CommonActivity {
                     startActivity(intent2);
                     finish();
                 } else {
-                    createAlertDialog(C01S019_001Activity.this, "请添加刀具", Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_001Activity.this, "请添加刀具", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请添加刀具", Toast.LENGTH_SHORT);
                 }
                 break;
             case R.id.ivAdd:
@@ -297,7 +297,8 @@ public class C01S019_001Activity extends CommonActivity {
             @Override
             public void onClick(View v) {
                 if (null == et_t.getText().toString().trim() || "".equals(et_t.getText().toString().trim())) {
-                    createAlertDialog(C01S019_001Activity.this, "请输入合成刀", Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_001Activity.this, "请输入合成刀", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请输入合成刀", Toast.LENGTH_SHORT);
                 } else {
                     searchBysynthesisCode(et_t.getText().toString().trim(), tv01);
                 }
@@ -315,16 +316,20 @@ public class C01S019_001Activity extends CommonActivity {
             @Override
             public void onClick(View view) {
                 if (null == cuttingTool) {
-                    createAlertDialog(C01S019_001Activity.this, "请选择物料号", Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_001Activity.this, "请选择物料号", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请选择物料号", Toast.LENGTH_SHORT);
                 } else if (null == etgrindingQuantity.getText() || "".equals(etgrindingQuantity.getText().toString().trim())) {
-                    createAlertDialog(C01S019_001Activity.this, "请输入修磨数量", Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_001Activity.this, "请输入修磨数量", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请输入修磨数量", Toast.LENGTH_SHORT);
                 } else {
                     if (Integer.parseInt(etgrindingQuantity.getText().toString()) <= 0) {
-                        createAlertDialog(C01S019_001Activity.this, "数量要大于0", 0);
+//                        createAlertDialog(C01S019_001Activity.this, "数量要大于0", 0);
+                        createToast(getApplicationContext(), "数量要大于0", Toast.LENGTH_SHORT);
                         return;
                     }
                     if (materialNumToMap.containsKey(cuttingTool.getBusinessCode())) {
-                        createAlertDialog(C01S019_001Activity.this, "已存在", Toast.LENGTH_SHORT);
+//                        createAlertDialog(C01S019_001Activity.this, "已存在", Toast.LENGTH_SHORT);
+                        createToast(getApplicationContext(), "已存在", Toast.LENGTH_SHORT);
                     } else {
                         // 修磨数量
                         String num = etgrindingQuantity.getText().toString().trim();
@@ -415,7 +420,7 @@ public class C01S019_001Activity extends CommonActivity {
                                 tv01.setText("");
                                 cuttingToolList = new ArrayList<>();
                                 cuttingTool = null;
-                                Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
+                                createToast(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT);
                             } else {
                                 List<CuttingTool> cuttingToolListTemp = new ArrayList<>();
                                 // 不要 辅具、配套、其他 项的物料号
@@ -436,11 +441,12 @@ public class C01S019_001Activity extends CommonActivity {
                                 }
                             }
                         } else {
-                            createAlertDialog(C01S019_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                            createAlertDialog(C01S019_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                     } finally {
                         loading.dismiss();
                     }
@@ -449,7 +455,8 @@ public class C01S019_001Activity extends CommonActivity {
                 @Override
                 public void _onFailure(Throwable t) {
                     loading.dismiss();
-                    createAlertDialog(C01S019_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S019_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
@@ -457,7 +464,7 @@ public class C01S019_001Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
@@ -543,7 +550,7 @@ public class C01S019_001Activity extends CommonActivity {
             scanThread = new scanThread();
             scanThread.start();
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT);
         }
     }
 
@@ -582,7 +589,8 @@ public class C01S019_001Activity extends CommonActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            createAlertDialog(C01S019_001Activity.this, "已存在", 1);
+//                            createAlertDialog(C01S019_001Activity.this, "已存在", 1);
+                            createToast(getApplicationContext(), "已存在", Toast.LENGTH_SHORT);
                         }
                     });
                     return;
@@ -622,17 +630,18 @@ public class C01S019_001Activity extends CommonActivity {
                                         if (GrindingEnum.outside.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding()) || GrindingEnum.outside_tuceng.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding())) {
                                             isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
                                         } else {
-                                            Toast.makeText(getApplicationContext(), "刃磨类型不匹配", Toast.LENGTH_SHORT).show();
+                                            createToast(getApplicationContext(), "刃磨类型不匹配", Toast.LENGTH_SHORT);
                                         }
                                     } else {
-                                        Toast.makeText(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT).show();
+                                        createToast(getApplicationContext(), "没有查询到信息", Toast.LENGTH_SHORT);
                                     }
                                 } else {
-                                    createAlertDialog(C01S019_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                                    createAlertDialog(C01S019_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                    createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
-                                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                             } finally {
                                 if (null != loading && loading.isShowing()) {
                                     loading.dismiss();
@@ -645,7 +654,8 @@ public class C01S019_001Activity extends CommonActivity {
                             if (null != loading && loading.isShowing()) {
                                 loading.dismiss();
                             }
-                            createAlertDialog(C01S019_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                            createAlertDialog(C01S019_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                         }
                     });
                 } catch (Exception e) {
@@ -656,7 +666,7 @@ public class C01S019_001Activity extends CommonActivity {
                             if (null != loading && loading.isShowing()) {
                                 loading.dismiss();
                             }
-                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                         }
                     });
                 }
