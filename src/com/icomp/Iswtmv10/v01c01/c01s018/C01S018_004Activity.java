@@ -14,10 +14,8 @@ import com.icomp.common.activity.CommonActivity;
 import com.icomp.common.utils.SysApplication;
 
 /**
- * 厂内修磨页面4
- * Created by FanLL on 2017/7/10.
+ * 厂内修磨页面3
  */
-
 public class C01S018_004Activity extends CommonActivity {
 
     @BindView(R.id.btnGoOn)
@@ -30,7 +28,6 @@ public class C01S018_004Activity extends CommonActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_c01s018_004);
         ButterKnife.bind(this);
-
     }
 
     @OnClick({R.id.btnGoOn, R.id.btnComplete})

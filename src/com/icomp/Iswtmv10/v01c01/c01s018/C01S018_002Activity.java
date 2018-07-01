@@ -30,7 +30,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
- * 厂内修磨页面2
+ * 厂内修磨页面1
  */
 public class C01S018_002Activity extends CommonActivity {
 
@@ -144,7 +144,8 @@ public class C01S018_002Activity extends CommonActivity {
                     startActivity(intent2);
                     finish();
                 } else {
-                    createAlertDialog(C01S018_002Activity.this, "请添加刀具", Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S018_002Activity.this, "请添加刀具", Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), "请添加刀具", Toast.LENGTH_SHORT);
                 }
                 break;
 //            case R.id.ivAdd:
@@ -243,7 +244,7 @@ public class C01S018_002Activity extends CommonActivity {
             scanThread = new scanThread();
             scanThread.start();
         } else {
-            Toast.makeText(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.initFail), Toast.LENGTH_SHORT);
         }
     }
 
@@ -283,7 +284,8 @@ public class C01S018_002Activity extends CommonActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            createAlertDialog(C01S018_002Activity.this, "已存在", 1);
+//                            createAlertDialog(C01S018_002Activity.this, "已存在", 1);
+                            createToast(getApplicationContext(), "已存在", Toast.LENGTH_SHORT);
                         }
                     });
                     return;
@@ -325,19 +327,20 @@ public class C01S018_002Activity extends CommonActivity {
                                         if (GrindingEnum.inside.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding()) || GrindingEnum.outside_tuceng.getKey().equals(cuttingToolBind.getCuttingTool().getGrinding())) {
                                             isShowExceptionBox(response.headers().get("impower"), rfidString, cuttingToolBind);
                                         } else {
-                                            Toast.makeText(getApplicationContext(), "刃磨类型不匹配", Toast.LENGTH_SHORT).show();
+                                            createToast(getApplicationContext(), "刃磨类型不匹配", Toast.LENGTH_SHORT);
                                         }
                                     } else {
                                         if (null != loading && loading.isShowing()) {
                                             loading.dismiss();
                                         }
-                                        Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                        createToast(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT);
                                     }
                                 } else {
                                     if (null != loading && loading.isShowing()) {
                                         loading.dismiss();
                                     }
-                                    createAlertDialog(C01S018_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                                    createAlertDialog(C01S018_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                                    createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -347,7 +350,7 @@ public class C01S018_002Activity extends CommonActivity {
                                         if (null != loading && loading.isShowing()) {
                                             loading.dismiss();
                                         }
-                                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                                        createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                                     }
                                 });
                             } finally {
@@ -362,7 +365,8 @@ public class C01S018_002Activity extends CommonActivity {
                             if (null != loading && loading.isShowing()) {
                                 loading.dismiss();
                             }
-                            createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                            createAlertDialog(C01S018_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                         }
                     });
                 } catch (Exception e) {
@@ -373,7 +377,7 @@ public class C01S018_002Activity extends CommonActivity {
                             if (null != loading && loading.isShowing()) {
                                 loading.dismiss();
                             }
-                            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                         }
                     });
                 }
