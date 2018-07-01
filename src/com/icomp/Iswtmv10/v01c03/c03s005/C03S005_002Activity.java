@@ -9,7 +9,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.apiclient.pojo.AuthCustomer;
-import com.apiclient.pojo.RfidContainer;
 import com.apiclient.vo.AuthCustomerVO;
 import com.apiclient.vo.RfidContainerVO;
 import com.icomp.Iswtmv10.R;

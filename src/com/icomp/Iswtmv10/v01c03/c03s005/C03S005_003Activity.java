@@ -6,13 +6,10 @@ import android.view.View;
 
 import com.icomp.Iswtmv10.R;
 import com.icomp.common.activity.CommonActivity;
-import com.icomp.common.utils.SysApplication;
 
 /**
  * 员工卡初始化页面3
- * Created by FanLL on 2017/6/14.
  */
-
 public class C03S005_003Activity extends CommonActivity {
 
     @Override

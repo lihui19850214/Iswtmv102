@@ -72,7 +72,8 @@ public class C03S005_001Activity extends CommonActivity {
         btnSearch.setClickable(false);
         params.setEmployeeCode(et01.getText().toString().trim());
         if ("".equals(params.getEmployeeCode())) {
-            createAlertDialog(C03S005_001Activity.this, getString(R.string.c03s005_001_002), Toast.LENGTH_LONG);
+//            createAlertDialog(C03S005_001Activity.this, getString(R.string.c03s005_001_002), Toast.LENGTH_LONG);
+            createToast(getApplicationContext(), getString(R.string.c03s005_001_002), Toast.LENGTH_SHORT);
             btnSearch.setClickable(true);
         } else {
             search();
@@ -104,14 +105,15 @@ public class C03S005_001Activity extends CommonActivity {
                                 startActivity(intent);
                                 finish();
                             } else {
-                                Toast.makeText(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT).show();
+                                createToast(getApplicationContext(), getString(R.string.queryNoMessage), Toast.LENGTH_SHORT);
                             }
                         } else {
-                            createAlertDialog(C03S005_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                            createAlertDialog(C03S005_001Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                        createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                     } finally {
                         loading.dismiss();
                         btnSearch.setClickable(true);
@@ -122,7 +124,8 @@ public class C03S005_001Activity extends CommonActivity {
                 public void _onFailure(Throwable t) {
                     loading.dismiss();
                     btnSearch.setClickable(true);
-                    createAlertDialog(C03S005_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(C03S005_001Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
@@ -130,7 +133,7 @@ public class C03S005_001Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
