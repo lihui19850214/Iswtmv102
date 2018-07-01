@@ -1,21 +1,11 @@
 package com.icomp.Iswtmv10.v01c01.c01s010;
-/**
- * 刀具换装页面3
- */
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Message;
-import android.support.annotation.IdRes;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.*;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +32,9 @@ import retrofit2.Retrofit;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * 刀具换装页面3
+ */
 public class c01s010_003Activity extends CommonActivity {
 
     @BindView(R.id.tlContainer)
@@ -225,7 +218,7 @@ public class c01s010_003Activity extends CommonActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                    createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                 }
             });
         }
@@ -268,15 +261,16 @@ public class c01s010_003Activity extends CommonActivity {
                 headsMap.put("impower", objectToJson(impowerRecorderList));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                 return;
             } catch (IOException e) {
                 e.printStackTrace();
-                createAlertDialog(c01s010_003Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+//                createAlertDialog(c01s010_003Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                createToast(getApplicationContext(), getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
                 return;
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
                 return;
             }
 
@@ -343,7 +337,8 @@ public class c01s010_003Activity extends CommonActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            createAlertDialog(c01s010_003Activity.this, response.errorBody().string(), Toast.LENGTH_SHORT);
+//                            createAlertDialog(c01s010_003Activity.this, response.errorBody().string(), Toast.LENGTH_SHORT);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -355,7 +350,8 @@ public class c01s010_003Activity extends CommonActivity {
                 @Override
                 public void _onFailure(Throwable t) {
                     loading.dismiss();
-                    createAlertDialog(c01s010_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(c01s010_003Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
@@ -363,21 +359,8 @@ public class c01s010_003Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
-    }
-
-    private String encodeHeadInfo(String headInfo) {
-        StringBuffer stringBuffer = new StringBuffer();
-        for (int i = 0, length = headInfo.length(); i < length; i++) {
-            char c = headInfo.charAt(i);
-            if (c <= '\u001f' || c >= '\u007f') {
-                stringBuffer.append(String.format("\\u%04x", (int) c));
-            } else {
-                stringBuffer.append(c);
-            }
-        }
-        return stringBuffer.toString();
     }
 
 }
