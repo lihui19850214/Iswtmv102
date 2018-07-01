@@ -1488,4 +1488,9 @@ public abstract class CommonActivity extends Activity {
         dialog.getWindow().setLayout((int) (screenWidth * 1), (int) (screenHeight * 0.6));
     }
 
+    // 无阻碍提示信息
+    public void createToast(Context context, CharSequence text, int duration) {
+        Toast.makeText(context, text, duration).show();
+    }
+
 }
