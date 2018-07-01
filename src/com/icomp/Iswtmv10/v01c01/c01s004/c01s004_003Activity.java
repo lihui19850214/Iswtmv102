@@ -173,42 +173,16 @@ public class c01s004_003Activity extends CommonActivity {
     public void inpowerHandler(String inpower) throws IOException {
         Map<String, String> inpowerMap = jsonToObject(inpower, Map.class);
 
-        // 判断是否显示提示框
-        if ("1".equals(inpowerMap.get("type"))) {
-            // 是否需要授权 true为需要授权；false为不需要授权
+        // 出库返回4不弹授权框
+        if ("4".equals(inpowerMap.get("type"))) {
             is_need_authorization = false;
-            setValue();
-        } else if ("2".equals(inpowerMap.get("type"))) {
-            is_need_authorization = true;
-            exceptionProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                @Override
-                public void confirm() {
-                    setValue();
-                }
-
-                @Override
-                public void cancel() {
-                    finish();
-                }
-            });
-        } else if ("3".equals(inpowerMap.get("type"))) {
-            is_need_authorization = false;
-            stopProcessShowDialogAlert(inpowerMap.get("message"), new ExceptionProcessCallBack() {
-                @Override
-                public void confirm() {
-                    finish();
-                }
-
-                @Override
-                public void cancel() {
-                    // 实际上没有用
-                    finish();
-                }
-            });
-        } else if ("4".equals(inpowerMap.get("type"))) {
-            is_need_authorization = true;
-            setValue();
         }
+        // 其他值都需要弹授权框
+        else {
+            is_need_authorization = true;
+        }
+
+        setValue();
     }
 
     private void setValue() {
