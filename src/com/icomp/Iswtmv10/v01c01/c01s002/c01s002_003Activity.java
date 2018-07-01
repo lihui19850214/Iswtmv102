@@ -6,13 +6,15 @@ import android.view.View;
 import android.widget.Button;
 
 import com.icomp.Iswtmv10.R;
-import com.icomp.Iswtmv10.v01c00.c00s000.C00S000_002Activity;
 import com.icomp.common.activity.CommonActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * 清空标签页面2
+ */
 public class c01s002_003Activity extends CommonActivity {
     @BindView(R.id.btnGoOn)
     Button mBtnGoOn;
