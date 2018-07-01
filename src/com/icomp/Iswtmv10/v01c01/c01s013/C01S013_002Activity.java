@@ -112,18 +112,26 @@ public class C01S013_002Activity extends CommonActivity {
             bladeCode = (String) paramMap.get("bladeCode");
             rfidCode = (String) paramMap.get("rfidCode");
 
+            if (productLineList == null) {
+                productLineList = new ArrayList<>();
+            }
+
             tv00.setText(synthesisCuttingToolBind.getSynthesisCuttingTool().getSynthesisCode());
-            tv10.setText(process.getName());
-            tv11.setText(equipment.getName());
+            tv10.setText((process==null)? "" : process.getName());
+            tv11.setText((equipment==null)? "" : equipment.getName());
 
             for (UnInstallReasonEnum unInstallReasonEnum : UnInstallReasonEnum.values()) {
                 removeReasonList.add(unInstallReasonEnum);
             }
 
+            if (removeReasonList != null && removeReasonList.size() > 0) {
+                tv01.setText(removeReasonList.get(0).getName());
+                unInstallReasonEnum = removeReasonList.get(0);
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
@@ -286,13 +294,17 @@ public class C01S013_002Activity extends CommonActivity {
 //        showDialogAlert("加工零部件：齿轮-001\n加工数量：1200");
 
         if (unInstallReasonEnum == null) {
-            createAlertDialog(C01S013_002Activity.this, "请选择卸下原因", Toast.LENGTH_LONG);
+//            createAlertDialog(C01S013_002Activity.this, "请选择卸下原因", Toast.LENGTH_LONG);
+            createToast(getApplicationContext(), "请选择卸下原因", Toast.LENGTH_SHORT);
         } else if (productLine == null) {
-            createAlertDialog(C01S013_002Activity.this, "请选择加工零部件", Toast.LENGTH_LONG);
+//            createAlertDialog(C01S013_002Activity.this, "请选择加工零部件", Toast.LENGTH_LONG);
+            createToast(getApplicationContext(), "请选择加工零部件", Toast.LENGTH_SHORT);
         } else if ("".equals(et01.getText().toString().trim())) {
-            createAlertDialog(C01S013_002Activity.this, "请输入加工量", Toast.LENGTH_LONG);
+//            createAlertDialog(C01S013_002Activity.this, "请输入加工量", Toast.LENGTH_LONG);
+            createToast(getApplicationContext(), "请输入加工量", Toast.LENGTH_SHORT);
         } else if (0 == Integer.valueOf(et01.getText().toString().trim())) {
-            createAlertDialog(C01S013_002Activity.this, "加工量不能为0", Toast.LENGTH_LONG);
+//            createAlertDialog(C01S013_002Activity.this, "加工量不能为0", Toast.LENGTH_LONG);
+            createToast(getApplicationContext(), "加工量不能为0", Toast.LENGTH_SHORT);
         } else {
 
             authorizationWindow(new AuthorizationWindowCallBack() {
@@ -360,13 +372,17 @@ public class C01S013_002Activity extends CommonActivity {
                 headsMap.put("impower", objectToJson(impowerRecorderList));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
+                return;
             } catch (IOException e) {
                 e.printStackTrace();
-                createAlertDialog(C01S013_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+//                createAlertDialog(C01S013_002Activity.this, getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                createToast(getApplicationContext(), getString(R.string.loginInfoError), Toast.LENGTH_SHORT);
+                return;
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+                createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
+                return;
             }
 
 
@@ -416,7 +432,8 @@ public class C01S013_002Activity extends CommonActivity {
                             startActivity(intent);
                             finish();
                         } else {
-                            createAlertDialog(C01S013_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+//                            createAlertDialog(C01S013_002Activity.this, response.errorBody().string(), Toast.LENGTH_LONG);
+                            createToast(getApplicationContext(), response.errorBody().string(), Toast.LENGTH_SHORT);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -428,7 +445,8 @@ public class C01S013_002Activity extends CommonActivity {
                 @Override
                 public void _onFailure(Throwable t) {
                     loading.dismiss();
-                    createAlertDialog(C01S013_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+//                    createAlertDialog(C01S013_002Activity.this, getString(R.string.netConnection), Toast.LENGTH_LONG);
+                    createToast(getApplicationContext(), getString(R.string.netConnection), Toast.LENGTH_SHORT);
                 }
             });
         } catch (Exception e) {
@@ -436,7 +454,7 @@ public class C01S013_002Activity extends CommonActivity {
             if (null != loading && loading.isShowing()) {
                 loading.dismiss();
             }
-            Toast.makeText(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT).show();
+            createToast(getApplicationContext(), getString(R.string.dataError), Toast.LENGTH_SHORT);
         }
     }
 
