@@ -38,6 +38,7 @@ public  class RetrofitSingle {
 //        mRetrofit = new Retrofit.Builder().baseUrl("http://175.190.96.205:8080")//纪伟家测试地址
 //        mRetrofit = new Retrofit.Builder().baseUrl("http://10.135.66.249:8086")//客户演示地址1
 //        mRetrofit = new Retrofit.Builder().baseUrl("http://10.135.66.52:8086")//客户演示地址2
+//        mRetrofit = new Retrofit.Builder().baseUrl("http://10.135.66.249:8086")//客户演示地址3
                     .addConverterFactory(ScalarsConverterFactory.create())
                     .client(genericClient())
                     .build();
