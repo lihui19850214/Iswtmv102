@@ -1,22 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+              style="@style/OverallSituationLinerLayoutStyle">
 
     <TextView android:text="@string/C02S005" style="@style/FunctionalTitleTextViewStyle"/>
 
     <LinearLayout style="@style/MiddleLinerLayoutStyle">
+
         <TextView
-        style="@style/MiddleTextPromptStule"
-        android:layout_height="wrap_content"
-        android:gravity="start|bottom"
-        android:layout_marginTop="30dp"
-        android:text="请设置手持机射频强度" />
+                android:text="请设置手持机射频强度"
+                style="@style/MiddleTextPromptStule"
+                android:layout_height="wrap_content"/>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:layout_marginTop="50dp">
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="center"
+                    android:text="@string/power"/>
+
+            <TextView
+                    android:id="@+id/tv_power"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/textview_border2"
+                    android:textColor="@color/baseColor"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:text="5"/>
+
+            <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:textColor="@color/baseColor"
+                    android:textSize="@dimen/text_content_size"
+                    android:gravity="center"
+                    android:text="dBm"/>
+        </LinearLayout>
 
         <SeekBar
             android:id="@+id/seekBar1"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             style="@style/seekBar" />
 
 
