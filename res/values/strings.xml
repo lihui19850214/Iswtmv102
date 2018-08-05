@@ -285,7 +285,7 @@
     <string name="logoText">爱康普智能刀具管理</string>
     <string name="logoInfo">读取进度</string>
     <string name="webInfoMsg">Web服务未开启，请联系系统管理员!</string>
-    <string name="power">功率</string>
+    <string name="power">输出功率：</string>
     <string name="C03S004_2">扫描数量不能为0</string>
     <string name="nameIsNotNull">用户名不能为空</string>
     <string name="passWordIsNotNull">密码不能为空</string>
@@ -299,5 +299,9 @@
     <string name="authorizedNumberError">授权人数不对</string>
     <string name="loginInfoError">登陆信息错误，请重新登陆</string>
     <string name="scanSuccess">扫描成功</string>
+    <string name="uhf_msg_set_power_fail">设置功率失败</string>
+    <string name="uhf_msg_set_power_succ">设置功率成功</string>
+    <string name="uhf_msg_read_power_fail">读取功率失败</string>
+    <string name="uhf_msg_read_power_succ">读取功率成功</string>
 
 </resources>
