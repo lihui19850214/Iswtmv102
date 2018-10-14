@@ -372,7 +372,7 @@ public class C01S024_001Activity extends CommonActivity {
         tvPersonnelInfoJob.setText(authCustomer.getAuthPosition().getName());//职务
     }
 
-
+    //暂时不需要
 //    //重写键盘上扫描按键的方法
 //    @Override
 //    protected void btnScan() {
