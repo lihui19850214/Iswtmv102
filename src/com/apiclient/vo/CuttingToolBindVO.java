@@ -1,6 +1,7 @@
 package com.apiclient.vo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
 * Created by jiangchenkeji
@@ -187,6 +188,88 @@ public class CuttingToolBindVO implements Serializable{
      */
     private Integer startRecord;
 
+    private Integer unbind;
+
+    /**
+      * @fieldName createTime
+     * @fieldType  Timestamp
+     * @Description  创建时间 开始时间
+     */
+    private Timestamp createTimeBegin;
+    /**
+      * @fieldName createTime
+     * @fieldType  Timestamp
+     * @Description  创建时间 结束时间
+     */
+    private Timestamp createTimeEnd;
+    /**
+      * @fieldName createTime
+     * @fieldType  Timestamp
+     * @Description  创建时间
+     */
+    private Timestamp createTime;
+
+    /**
+      * @fieldName operatorUserCode
+     * @fieldType  String
+     * @Description  操作者code
+     */
+    private String operatorCode;
+
+    /**
+      * @fieldName operatorUserName
+     * @fieldType  String
+     * @Description  操作者姓名
+     */
+    private String operatorName;
+
+    public Timestamp getCreateTimeBegin() {
+        return createTimeBegin;
+    }
+
+    public void setCreateTimeBegin(Timestamp createTimeBegin) {
+        this.createTimeBegin = createTimeBegin;
+    }
+
+    public Timestamp getCreateTimeEnd() {
+        return createTimeEnd;
+    }
+
+    public void setCreateTimeEnd(Timestamp createTimeEnd) {
+        this.createTimeEnd = createTimeEnd;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getOperatorCode() {
+        return operatorCode;
+    }
+
+    public void setOperatorCode(String operatorCode) {
+        this.operatorCode = operatorCode;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
+
+    public Integer getUnbind() {
+        return unbind;
+    }
+
+    public void setUnbind(Integer unbind) {
+        this.unbind = unbind;
+    }
 
     /* id */
     public Integer getId() {
