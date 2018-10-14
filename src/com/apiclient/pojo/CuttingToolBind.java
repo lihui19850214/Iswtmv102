@@ -1,13 +1,14 @@
 package com.apiclient.pojo;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
 * Created by jiangchenkeji
 * Automated Build
 * 实体 CuttingToolBind 
 */
-public class CuttingToolBind implements Serializable {
+public class CuttingToolBind implements Serializable{
 
     // 序列化接口属性
     private static final long serialVersionUID = 1L;
@@ -134,7 +135,50 @@ public class CuttingToolBind implements Serializable {
      */
     private RfidContainer rfidContainer;
 
+    /**
+      * @fieldName createTime
+     * @fieldType  Timestamp
+     * @Description  创建时间
+     */
+    private Timestamp createTime;
 
+    /**
+      * @fieldName operatorUserCode
+     * @fieldType  String
+     * @Description  操作者code
+     */
+    private String operatorCode;
+
+    /**
+      * @fieldName operatorUserName
+     * @fieldType  String
+     * @Description  操作者姓名
+     */
+    private String operatorName;
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getOperatorCode() {
+        return operatorCode;
+    }
+
+    public void setOperatorCode(String operatorCode) {
+        this.operatorCode = operatorCode;
+    }
+
+    public String getOperatorName() {
+        return operatorName;
+    }
+
+    public void setOperatorName(String operatorName) {
+        this.operatorName = operatorName;
+    }
 
     /* id */
     public Integer getId() {
